@@ -12,21 +12,37 @@
 <body data-page="muscle">
 
 <main>
-  <div class="wrap page-hero">
-    <span class="pill"><i data-icon="dumbbell"></i><span data-i18n="mPill"></span></span>
-    <h1 data-i18n="mTitle"></h1>
-    <p class="lead" data-i18n="mLead"></p>
+  <div class="wrap page-hero has-fig">
+    <div>
+      <span class="pill"><span data-i18n="mPill"></span></span>
+      <h1 data-i18n="mTitle"></h1>
+      <p class="lead" data-i18n="mLead"></p>
+    </div>
+    <div class="fig hero-fig" data-fig="curl"></div>
   </div>
+
+  <!-- Muscle groups: pick one, see its exercises (js/muscle-groups.js) -->
+  <section class="tight" id="groups">
+    <div class="wrap">
+      <div class="sec-head">
+        <h2 data-i18n="mgTitle"></h2>
+        <p data-i18n="mgSub"></p>
+      </div>
+      <div class="mg-grid" id="mgGrid"></div>
+    </div>
+  </section>
+
+  <section class="tight" id="mgDetail"></section>
 
   <!-- Principles -->
   <section class="tight">
     <div class="wrap">
       <div class="sec-head"><h2 data-i18n="prinTitle"></h2></div>
       <div class="cards">
-        <div class="tip"><div class="ico" data-icon="trending"></div><h3 data-i18n="mp1t"></h3><p data-i18n="mp1d"></p></div>
-        <div class="tip"><div class="ico" data-icon="repeat"></div><h3 data-i18n="mp2t"></h3><p data-i18n="mp2d"></p></div>
-        <div class="tip"><div class="ico" data-icon="calendar"></div><h3 data-i18n="mp3t"></h3><p data-i18n="mp3d"></p></div>
-        <div class="tip"><div class="ico" data-icon="egg"></div><h3 data-i18n="mp4t"></h3><p data-i18n="mp4d"></p></div>
+        <div class="tip"><div class="fig" data-fig="dbpress"></div><h3 data-i18n="mp1t"></h3><p data-i18n="mp1d"></p></div>
+        <div class="tip"><div class="fig" data-fig="curl"></div><h3 data-i18n="mp2t"></h3><p data-i18n="mp2d"></p></div>
+        <div class="tip"><div class="fig" data-fig="squat"></div><h3 data-i18n="mp3t"></h3><p data-i18n="mp3d"></p></div>
+        <div class="tip"><div class="fig" data-fig="sleep"></div><h3 data-i18n="mp4t"></h3><p data-i18n="mp4d"></p></div>
       </div>
     </div>
   </section>
@@ -48,17 +64,6 @@
     </div>
   </section>
 
-  <!-- Exercises -->
-  <section class="tight">
-    <div class="wrap">
-      <div class="sec-head">
-        <h2 data-i18n="exTitle"></h2>
-        <p data-i18n="exSubM"></p>
-      </div>
-      <div id="exBrowser" data-cats="lower,upper,core"></div>
-    </div>
-  </section>
-
   <section class="tight">
     <div class="wrap">
       <div class="cta">
@@ -73,9 +78,10 @@
 <script src="js/data.js"></script>
 <script src="js/utils.js"></script>
 <script src="js/icons.js"></script>
+<script src="js/figures.js"></script>
 <script src="js/layout.js"></script>
 <script src="js/auth.js"></script>
-<script src="js/exercises.js"></script>
+<script src="js/muscle-groups.js"></script>
 <script src="js/calculators.js"></script>
 <script src="js/main.js"></script>
 </body>

@@ -18,7 +18,8 @@ function renderExercises() {
         <h3>${tx[`part_${cat}`]} <small style="color:var(--muted);font-weight:400">(${items.length})</small></h3>
         <div class="ex-grid">
           ${items.map(e => `
-            <div class="ex-card">
+            <div class="ex-card has-fig">
+              <div class="fig" data-fig="${e.id}"></div>
               <b>${e[lang]}</b>
               <p>${lang === "th" ? e.cth : e.cen}</p>
               <span class="tag acc">${tx[`equip_${e.eq}`]}</span>${e.jump ? `<span class="tag">${tx.tagJump}</span>` : ""}${e.adv ? `<span class="tag">${tx.tagAdv}</span>` : ""}${e.timed ? `<span class="tag">${tx.tagTimed}</span>` : ""}

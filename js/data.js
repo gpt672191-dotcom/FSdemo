@@ -29,12 +29,22 @@ const EX = [
   { id: "pulldown", cat: "upper", eq: "gym", th: "แลทพูลดาวน์", en: "Lat pulldown", cth: "ดึงบาร์ลงมาที่อกบน", cen: "Pull bar to upper chest" },
   { id: "cablerow", cat: "upper", eq: "gym", th: "เคเบิลโรว์", en: "Seated cable row", cth: "หลังตรง ดึงเข้าหาท้อง", cen: "Tall back, pull to your belly" },
   { id: "chestpress", cat: "upper", eq: "gym", th: "เชสต์เพรสเครื่อง", en: "Chest press machine", cth: "ดันออกช้าๆ อย่าล็อกศอก", cen: "Press out slowly, soft elbows" },
+  { id: "lateralraise", cat: "upper", eq: "db", th: "ยกดัมเบลด้านข้าง", en: "Lateral raise", cth: "ยกถึงระดับไหล่ ศอกงอเล็กน้อย", cen: "Raise to shoulder height, soft elbows" },
+  { id: "frontraise", cat: "upper", eq: "db", th: "ยกดัมเบลด้านหน้า", en: "Front raise", cth: "ยกตรงไปข้างหน้าถึงระดับไหล่ ไม่เหวี่ยง", cen: "Lift straight forward to shoulder height, no swinging" },
+  { id: "tricepext", cat: "upper", eq: "db", th: "ไทรเซ็ปส์เหนือศีรษะ", en: "Overhead triceps extension", cth: "ศอกชี้ขึ้นนิ่งๆ เหยียดแขนขึ้นตรง", cen: "Keep elbows pointing up, extend straight overhead" },
+  { id: "hammercurl", cat: "upper", eq: "db", th: "แฮมเมอร์เคิร์ล", en: "Hammer curl", cth: "หันฝ่ามือเข้าหากัน ศอกชิดลำตัว", cen: "Palms face each other, elbows by your sides" },
+  { id: "pullup", cat: "upper", eq: "gym", th: "ดึงข้อ (ใช้เครื่องช่วยได้)", en: "Pull-up (assisted OK)", cth: "ดึงอกขึ้นหาบาร์ ลงช้าๆ", cen: "Pull chest toward the bar, lower slowly" },
+  { id: "pushdown", cat: "upper", eq: "gym", th: "เคเบิลพุชดาวน์", en: "Cable triceps pushdown", cth: "ศอกชิดลำตัว กดลงจนแขนตรง", cen: "Elbows pinned, press down until arms are straight" },
+  { id: "kickback", cat: "lower", eq: "none", side: 1, th: "เตะขาไปด้านหลัง (Donkey kick)", en: "Donkey kick", cth: "งอเข่า 90 องศา ดันส้นเท้าขึ้นเพดาน", cen: "Knee bent 90°, push heel toward the ceiling" },
+  { id: "hipthrust", cat: "lower", eq: "none", th: "ฮิปทรัสต์ (หลังพิงเก้าอี้)", en: "Hip thrust (back on a bench)", cth: "หลังพิงขอบเก้าอี้ ดันสะโพกขึ้นจนตัวตรง", cen: "Upper back on a bench, drive hips up to a straight line" },
   // Core
   { id: "plank", cat: "core", eq: "none", timed: 1, th: "แพลงก์", en: "Plank", cth: "ลำตัวตรง เกร็งหน้าท้องและก้น", cen: "Straight line, brace abs and glutes" },
   { id: "deadbug", cat: "core", eq: "none", side: 1, th: "เดดบั๊ก", en: "Dead bug", cth: "หลังล่างแนบพื้นตลอดเวลา", cen: "Keep lower back pressed to the floor" },
   { id: "birddog", cat: "core", eq: "none", side: 1, th: "เบิร์ดด็อก", en: "Bird dog", cth: "เหยียดแขนและขาตรงข้าม ลำตัวนิ่ง", cen: "Reach opposite arm and leg, keep torso still" },
   { id: "sideplank", cat: "core", eq: "none", timed: 1, side: 1, th: "แพลงก์ด้านข้าง", en: "Side plank", cth: "คุกเข่าได้ถ้ายังไม่แข็งแรง", cen: "Drop to knees if needed" },
   { id: "crunch", cat: "core", eq: "none", th: "ครันช์", en: "Crunch", cth: "ยกสะบักขึ้นจากพื้น อย่าดึงคอ", cen: "Lift shoulder blades, don't pull your neck" },
+  { id: "legraise", cat: "core", eq: "none", th: "นอนยกขา", en: "Lying leg raise", cth: "หลังล่างแนบพื้น ลดขาลงช้าๆ", cen: "Lower back flat, lower legs slowly" },
+  { id: "shouldertap", cat: "core", eq: "none", th: "แพลงก์แตะไหล่", en: "Plank shoulder taps", cth: "สะโพกนิ่ง ไม่บิดตัว", cen: "Keep hips still, don't rock side to side" },
   // Cardio
   { id: "jj", cat: "cardio", eq: "none", jump: 1, th: "จัมปิงแจ็ค", en: "Jumping jacks", cth: "ลงพื้นด้วยปลายเท้าเบาๆ", cen: "Land lightly on the balls of your feet" },
   { id: "stepjack", cat: "cardio", eq: "none", th: "สเต็ปแจ็ค (ไม่กระโดด)", en: "Step jacks (no jump)", cth: "ก้าวออกข้างทีละข้างพร้อมยกแขน", cen: "Step out one side at a time, raise arms" },
@@ -56,6 +66,21 @@ const EX = [
   { id: "tspine", cat: "mobility", eq: "none", timed: 1, side: 1, th: "บิดหลังส่วนบน", en: "Thoracic rotation", cth: "นอนตะแคง เปิดแขนบนไปอีกด้าน", cen: "Lie on side, open top arm to the other side" },
   { id: "dog", cat: "mobility", eq: "none", timed: 1, th: "ท่าสุนัขก้มหน้า", en: "Downward dog", cth: "ดันสะโพกขึ้น งอเข่าได้", cen: "Push hips up, bend knees if needed" }
 ];
+
+/* Muscle groups each exercise trains (first = main muscle). Used by the muscle page. */
+const MUSCLE_GROUPS = ["chest", "back", "shoulders", "arms", "legs", "glutes", "core"];
+const MUSCLES = {
+  pushup: ["chest", "arms", "shoulders"], inclinepush: ["chest", "arms"], floorpress: ["chest", "arms"], chestpress: ["chest", "arms"],
+  dip: ["arms", "chest"],
+  dbrow: ["back", "arms"], pulldown: ["back", "arms"], cablerow: ["back", "arms"], pullup: ["back", "arms"], superman: ["back", "glutes"],
+  dbpress: ["shoulders", "arms"], lateralraise: ["shoulders"], frontraise: ["shoulders"], pikepush: ["shoulders", "arms", "chest"],
+  curl: ["arms"], hammercurl: ["arms"], tricepext: ["arms"], pushdown: ["arms"],
+  squat: ["legs", "glutes"], lunge: ["legs", "glutes"], wallsit: ["legs"], calf: ["legs"], jsquat: ["legs", "glutes"],
+  gsquat: ["legs", "glutes", "core"], legpress: ["legs", "glutes"], legcurl: ["legs"],
+  bridge: ["glutes", "legs"], hipthrust: ["glutes", "legs"], kickback: ["glutes"], rdl: ["glutes", "legs", "back"],
+  plank: ["core", "shoulders"], deadbug: ["core"], birddog: ["core", "back", "glutes"], sideplank: ["core"], crunch: ["core"],
+  legraise: ["core"], shouldertap: ["core", "shoulders"]
+};
 
 /* Day templates: ordered slot categories (first N used by session length) */
 const TEMPLATES = {

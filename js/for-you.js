@@ -93,7 +93,8 @@ function renderForYou() {
     <a class="btn" href="planner.html?${q}">${icon("sparkle")}${tx.rPlanBtn}</a>`;
 
   $("#fyEx").innerHTML = pickExercises(r).map(e => `
-    <div class="ex-card">
+    <div class="ex-card has-fig">
+      <div class="fig" data-fig="${e.id}"></div>
       <b>${e[lang]}</b>
       <p>${lang === "th" ? e.cth : e.cen}</p>
       <span class="tag acc">${tx[`part_${e.cat}`].split(" (")[0]}</span>

@@ -1,6 +1,7 @@
 // เริ่มต้นหน้าเว็บ — ต้องโหลดเป็นไฟล์สุดท้ายเสมอ (Start-up — always load this file last)
 
 renderAll();
+if (typeof FIGURES !== "undefined") FIGURES.start(); // animated characters
 
 // Sections hidden until login (e.g. #myplans) can't be scrolled to on load, so scroll after rendering
 if (location.hash) {

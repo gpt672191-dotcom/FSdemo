@@ -91,9 +91,12 @@ function renderPlan() {
       <div class="phase">${t.main}</div>
       <ol>
         ${d.list.map(ex => `
-          <li>
-            <div class="ex-top"><span class="ex-name">${ex[lang]}</span><span class="ex-dose">${dose(ex, a)}</span></div>
-            <div class="ex-cue">${lang === "th" ? ex.cth : ex.cen}</div>
+          <li class="ex-row">
+            <div class="fig mini" data-fig="${ex.id}"></div>
+            <div class="ex-body">
+              <div class="ex-top"><span class="ex-name">${ex[lang]}</span><span class="ex-dose">${dose(ex, a)}</span></div>
+              <div class="ex-cue">${lang === "th" ? ex.cth : ex.cen}</div>
+            </div>
           </li>`).join("")}
       </ol>
       <div class="phase">${t.cool}</div>
