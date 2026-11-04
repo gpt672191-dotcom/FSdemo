@@ -15,7 +15,7 @@ function renderGroups() {
   const tx = t();
   $("#mgGrid").innerHTML = MUSCLE_GROUPS.map(g => `
     <button type="button" class="mg-card${g === mgSel ? " on" : ""}" data-g="${g}" aria-pressed="${g === mgSel}">
-      <div class="bm-wrap">${bodyMap(g)}</div>
+      <div class="bm-wrap zoom">${bodyMap(g, true)}</div>
       <b>${tx[`mg_${g}`]}</b>
       <small>${tx.mgCount(exercisesFor(g).length)}</small>
     </button>`).join("");

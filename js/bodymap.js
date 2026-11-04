@@ -1,5 +1,5 @@
 // ภาพร่างกายด้านหน้า + ด้านหลัง ไฮไลต์กล้ามเนื้อที่เลือกเป็นสีแดงอ่อน (Body map)
-// วิธีใช้: bodyMap("chest") คืนค่า <svg> — กลุ่มที่ใช้ได้: chest back shoulders arms legs glutes core
+// วิธีใช้: bodyMap("chest") ได้ภาพทั้งตัว, bodyMap("chest", true) ซูมเฉพาะส่วนนั้น — กลุ่มที่ใช้ได้: chest back shoulders arms legs glutes core
 // วาดเฉพาะร่างกายซีกซ้าย แล้วสะท้อนเป็นซีกขวาอัตโนมัติ
 
 const bodyMap = (() => {
@@ -61,8 +61,21 @@ const bodyMap = (() => {
     </g>`;
   }
 
-  return group => {
+  // Close-up framing per group: x, y, width, height in the full drawing (front view at x 3, back view at x 67)
+  const ZOOM = {
+    chest:     [9, 15, 48, 33],
+    back:      [71, 16, 52, 36],
+    shoulders: [7, 15, 52, 36],
+    arms:      [5, 20, 56, 39],
+    legs:      [4, 64, 54, 37],
+    glutes:    [77, 52, 40, 28],
+    core:      [13, 30, 40, 28]
+  };
+
+  // zoom = true: close-up on the highlighted area (used on the small cards)
+  return (group, zoom) => {
     const hl = HL[group] || {};
-    return `<svg class="bodymap" viewBox="0 0 130 120" aria-hidden="true">${view(FRONT, hl.f || [], 3, false)}${view(BACK, hl.b || [], 67, true)}</svg>`;
+    const vb = zoom && ZOOM[group] ? ZOOM[group].join(" ") : "0 0 130 120";
+    return `<svg class="bodymap" viewBox="${vb}" aria-hidden="true">${view(FRONT, hl.f || [], 3, false)}${view(BACK, hl.b || [], 67, true)}</svg>`;
   };
 })();
