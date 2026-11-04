@@ -33,7 +33,7 @@
 html { scroll-behavior: smooth; }
 body {
   margin: 0;
-  font-family: "Anuphan", system-ui, -apple-system, "Segoe UI", Tahoma, sans-serif;
+  font-family: "IBM Plex Sans Thai", system-ui, -apple-system, "Segoe UI", Tahoma, sans-serif;
   background: var(--bg);
   color: var(--text);
   line-height: 1.6;
