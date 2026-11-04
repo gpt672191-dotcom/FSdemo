@@ -20,7 +20,7 @@ const navLinks = NAV.map(n =>
 document.body.insertAdjacentHTML("afterbegin", `
 <header>
   <div class="wrap nav">
-    <a href="index.html" class="logo"><span class="logo-mark">FS</span> FitStart AI</a>
+    <a href="index.html" class="logo" aria-label="FitStart AI"><img class="logo-mark" src="img/logo.svg" alt="" width="34" height="34"><span>FitStart</span><span class="logo-ai">AI</span></a>
     <nav class="nav-links" id="navLinks">${navLinks}</nav>
     <div class="nav-right">
       <div class="lang" role="group" aria-label="Language">
