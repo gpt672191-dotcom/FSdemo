@@ -33,7 +33,7 @@
 html { scroll-behavior: smooth; }
 body {
   margin: 0;
-  font-family: "Prompt", system-ui, -apple-system, "Segoe UI", Tahoma, sans-serif;
+  font-family: "Anuphan", system-ui, -apple-system, "Segoe UI", Tahoma, sans-serif;
   background: var(--bg);
   color: var(--text);
   line-height: 1.6;
@@ -49,7 +49,7 @@ header {
   border-bottom: 1px solid var(--line);
 }
 .nav { display: flex; align-items: center; justify-content: space-between; gap: 12px; height: 64px; }
-.logo { font-weight: 700; font-size: 1.2rem; text-decoration: none; display: flex; align-items: center; gap: 8px; }
+.logo { font-weight: 600; font-size: 1.2rem; text-decoration: none; display: flex; align-items: center; gap: 8px; }
 .logo-mark {
   width: 30px; height: 30px; border-radius: 9px; background: var(--accent); color: var(--accent-ink);
   display: grid; place-items: center; font-size: .9rem;
@@ -88,7 +88,8 @@ header {
   display: inline-flex; align-items: center; gap: 6px; background: var(--accent-soft); color: var(--accent);
   padding: 4px 12px; border-radius: 999px; font-size: .85rem; font-weight: 600;
 }
-h1 { font-size: clamp(2rem, 5vw, 3.2rem); line-height: 1.2; margin: 16px 0; }
+h1 { font-size: clamp(2rem, 5vw, 3.1rem); line-height: 1.25; margin: 16px 0; font-weight: 600; letter-spacing: -0.01em; }
+h2, h3 { font-weight: 600; }
 h1 em { font-style: normal; color: var(--accent); }
 .lead { color: var(--muted); font-size: 1.1rem; margin: 0 0 28px; max-width: 34em; }
 .btn {
@@ -122,7 +123,7 @@ section { padding-block: 56px; }
 .step { background: var(--surface); border: 1px solid var(--line); border-radius: var(--radius); padding: 22px; }
 .step .num {
   width: 36px; height: 36px; border-radius: 10px; background: var(--accent-soft); color: var(--accent);
-  display: grid; place-items: center; font-weight: 700; margin-bottom: 12px;
+  display: grid; place-items: center; font-weight: 600; margin-bottom: 12px;
 }
 .step h3 { margin: 0 0 6px; font-size: 1.1rem; }
 .step p { margin: 0; color: var(--muted); font-size: .95rem; }
@@ -159,7 +160,7 @@ section { padding-block: 56px; }
   display: flex; gap: 14px; align-items: flex-start;
 }
 .summary .ai-badge {
-  flex: none; background: var(--accent); color: var(--accent-ink); font-weight: 700; font-size: .8rem;
+  flex: none; background: var(--accent); color: var(--accent-ink); font-weight: 600; font-size: .8rem;
   padding: 4px 8px; border-radius: 8px;
 }
 .summary p { margin: 0; }
@@ -201,7 +202,7 @@ section { padding-block: 56px; }
   background: linear-gradient(90deg, #60a5fa 0 22%, #22c55e 22% 50%, #f59e0b 50% 62%, #ef4444 62% 100%); }
 .bmi-bar i { position: absolute; top: -4px; width: 4px; height: 16px; border-radius: 2px; background: var(--text); transform: translateX(-50%); transition: left .3s; }
 
-.timer-display { font-size: 3.6rem; font-weight: 700; text-align: center; font-variant-numeric: tabular-nums; margin: 6px 0 4px; }
+.timer-display { font-size: 3.6rem; font-weight: 600; text-align: center; font-variant-numeric: tabular-nums; margin: 6px 0 4px; }
 .timer-ring { height: 6px; background: var(--surface-2); border-radius: 99px; overflow: hidden; margin-bottom: 16px; }
 .timer-ring div { height: 100%; width: 100%; background: var(--accent); transition: width .25s linear; }
 .center { display: flex; justify-content: center; gap: 8px; flex-wrap: wrap; }
@@ -230,7 +231,7 @@ footer { border-top: 1px solid var(--line); padding-block: 28px; color: var(--mu
 }
 .avatar {
   width: 28px; height: 28px; border-radius: 50%; background: var(--accent); color: var(--accent-ink);
-  display: grid; place-items: center; font-weight: 700; font-size: .85rem;
+  display: grid; place-items: center; font-weight: 600; font-size: .85rem;
 }
 .user-btn .uname { max-width: 110px; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
 .dropdown {
