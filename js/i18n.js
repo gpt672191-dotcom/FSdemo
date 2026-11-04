@@ -7,7 +7,7 @@ const T = {
     navHome: "หน้าแรก", navMuscle: "สร้างกล้าม", navLose: "ลดน้ำหนัก", navPlan: "สร้างแผน", navBmi: "คำนวณ BMI", navMore: "อื่นๆ",
     menu: "เมนู",
     disclaimer: "ข้อมูลในเว็บนี้ใช้เพื่อเป็นแนวทางเท่านั้น ไม่ใช่คำแนะนำทางการแพทย์",
-    min: "นาที", sec: "วิ", kcal: "kcal",
+    min: "นาที", sec: " วินาที", kcal: "kcal",
     equip_none: "ไม่มีอุปกรณ์", equip_db: "ดัมเบล", equip_gym: "ฟิตเนส/ยิม",
 
     /* ----- หน้าแรก ----- */
@@ -119,6 +119,9 @@ const T = {
     coolTxt: "เดินช้าๆ แล้วยืดกล้ามเนื้อส่วนที่ใช้ ค้างท่าละ 20–30 วินาที (3–5 นาที)",
     rest: "พัก", sets: "เซ็ต", reps: "ครั้ง", perSide: "ข้างละ",
     regen: "สุ่มท่าใหม่", print: "พิมพ์แผน",
+    restDay: "พัก", stDays: "วัน/สัปดาห์", stMin: "นาที/ครั้ง", stRest: "พักระหว่างเซ็ต", stLevel: "ระดับ",
+    printTitle: "แผนออกกำลังกายของฉัน", tickNote: "ติ๊กช่องเมื่อทำเสร็จ · 4 ช่อง = สัปดาห์ที่ 1–4",
+    printFoot: "สร้างจาก FitStart AI · gpt672191-dotcom.github.io/FSdemo · หากรู้สึกเจ็บให้หยุดทันที",
     planNote: "หากรู้สึกเจ็บ (ไม่ใช่แค่เมื่อย) ให้หยุดทันที ผู้มีโรคประจำตัวควรปรึกษาแพทย์ก่อนเริ่ม",
 
     /* ----- หน้า BMI ----- */
@@ -218,7 +221,7 @@ const T = {
     navHome: "Home", navMuscle: "Build muscle", navLose: "Lose weight", navPlan: "Plan builder", navBmi: "BMI", navMore: "More",
     menu: "Menu",
     disclaimer: "This site offers general guidance only and is not medical advice.",
-    min: "min", sec: "s", kcal: "kcal",
+    min: "min", sec: " s", kcal: "kcal",
     equip_none: "No equipment", equip_db: "Dumbbells", equip_gym: "Gym",
 
     /* ----- Home ----- */
@@ -330,6 +333,9 @@ const T = {
     coolTxt: "Walk slowly, then stretch the muscles you used, 20–30 s each (3–5 min)",
     rest: "rest", sets: "sets", reps: "reps", perSide: "each side",
     regen: "Shuffle exercises", print: "Print plan",
+    restDay: "Rest", stDays: "days/week", stMin: "min/session", stRest: "rest between sets", stLevel: "level",
+    printTitle: "My workout plan", tickNote: "Tick a box when done · 4 boxes = weeks 1–4",
+    printFoot: "Made with FitStart AI · gpt672191-dotcom.github.io/FSdemo · Stop right away if you feel pain",
     planNote: "If you feel pain (not just effort), stop right away. If you have a medical condition, check with a doctor first.",
 
     /* ----- BMI ----- */

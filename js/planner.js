@@ -29,11 +29,7 @@ function dose(ex, a) {
   return `${sets} × ${reps}${side}`;
 }
 
-function restText(a) {
-  const t = T[lang];
-  const s = a.goal === "muscle" ? 90 : a.goal === "flex" ? 15 : a.goal === "lose" ? 30 : 45;
-  return `${t.rest} ${s}${t.sec}`;
-}
+const restSec = a => (a.goal === "muscle" ? 90 : a.goal === "flex" ? 15 : a.goal === "lose" ? 30 : 45);
 
 function buildPlan(a, seed) {
   const rand = rng(seed);
@@ -79,35 +75,58 @@ function renderPlan() {
   const total = +a.time;
 
   const summary = t.sumTpl(t.sumGoal[a.goal], t.lvName[a.level], a.days, a.time, t.sumFocus[a.goal]);
-  const week = t.week.map((d, i) => `<div class="wd ${active.has(i) ? "on" : ""}">${d}</div>`).join("");
-  const cards = days.map(d => `
-    <article class="day">
-      <div class="day-head">
-        <h3>${t.weekFull[d.weekday]} · ${t.dayType[d.type]}</h3>
-        <small>~${total} ${t.min} · ${restText(a)}</small>
+  const byDay = Object.fromEntries(days.map(d => [d.weekday, d]));
+
+  // Week strip: training days show the day type, the rest say "rest"
+  const week = t.week.map((d, i) => `
+    <div class="wk ${active.has(i) ? "on" : ""}">
+      <b>${d}</b><small>${active.has(i) ? t.dayType[byDay[i].type] : t.restDay}</small>
+    </div>`).join("");
+
+  const stats = [
+    [a.days, t.stDays], [a.time, t.stMin], [`${restSec(a)}${t.sec}`, t.stRest], [t.lvName[a.level], t.stLevel]
+  ].map(([v, l]) => `<div class="pstat"><b>${v}</b><small>${l}</small></div>`).join("");
+
+  const ticks = `<span class="ticks print-only" aria-hidden="true"><i></i><i></i><i></i><i></i></span>`;
+
+  const cards = days.map((d, n) => `
+    <article class="pday">
+      <div class="pday-head">
+        <span class="pday-num">${n + 1}</span>
+        <div class="pday-title"><h3>${t.weekFull[d.weekday]}</h3><span>${t.dayType[d.type]}</span></div>
+        <span class="pday-meta">~${total} ${t.min}</span>
       </div>
-      <div class="phase">${t.warm}</div>
-      <div class="phase-line">${t.warmTxt}</div>
-      <div class="phase">${t.main}</div>
-      <ol>
-        ${d.list.map(ex => `
-          <li class="ex-row">
+      <div class="phase-row"><span class="phase-tag">${t.warm}</span><span>${t.warmTxt}</span></div>
+      <ol class="pex-list">
+        ${d.list.map((ex, k) => `
+          <li class="pex">
             <div class="fig mini" data-fig="${ex.id}"></div>
-            <div class="ex-body">
-              <div class="ex-top"><span class="ex-name">${ex[lang]}</span><span class="ex-dose">${dose(ex, a)}</span></div>
-              <div class="ex-cue">${lang === "th" ? ex.cth : ex.cen}</div>
+            <div class="pex-body">
+              <div class="pex-name"><span class="pex-n">${k + 1}</span>${ex[lang]}</div>
+              <div class="pex-cue">${lang === "th" ? ex.cth : ex.cen}</div>
+              <span class="pex-dose">${dose(ex, a)}</span>
             </div>
+            ${ticks}
           </li>`).join("")}
       </ol>
-      <div class="phase">${t.cool}</div>
-      <div class="phase-line" style="padding-bottom:14px">${t.coolTxt}</div>
+      <div class="phase-row"><span class="phase-tag">${t.cool}</span><span>${t.coolTxt}</span></div>
     </article>`).join("");
 
+  const u = typeof currentUser === "function" ? currentUser() : null;
+  const dateFmt = new Intl.DateTimeFormat(lang === "th" ? "th-TH" : "en-GB", { dateStyle: "long" });
+
   box.innerHTML = `
+    <div class="print-head print-only">
+      <img src="img/logo.svg" alt="" width="40" height="40">
+      <div><b>${t.printTitle}</b><small>FitStart AI${u ? ` · ${esc(u.name)}` : ""} · ${dateFmt.format(new Date())}</small></div>
+    </div>
     <div class="summary"><span class="ai-badge">AI</span><p>${summary}</p></div>
-    <div class="week">${week}</div>
-    <div class="days">${cards}</div>
+    <div class="pstats">${stats}</div>
+    <div class="week2">${week}</div>
+    <p class="tick-note print-only">${t.tickNote}</p>
+    <div class="pdays">${cards}</div>
     <p class="note">${icon("alert")} ${t.planNote}</p>
+    <p class="print-foot print-only">${t.printFoot}</p>
     <div class="plan-actions">
       <button type="button" class="btn" id="saveBtn">${icon("save")}${t.savePlan}</button>
       <button type="button" class="btn ghost" id="regen">${icon("refresh")}${t.regen}</button>

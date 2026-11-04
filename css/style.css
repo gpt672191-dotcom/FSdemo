@@ -293,7 +293,7 @@ footer { border-top: 1px solid var(--line); padding-block: 28px; color: var(--mu
 }
 
 @media print {
-  header, .hero, #how, #tools, #tips, #faq, footer, .panel form, .plan-actions { display: none !important; }
+  body > header, .hero, #how, #tools, #tips, #faq, footer, .panel form, .plan-actions { display: none !important; }
   .panel { border: 0; box-shadow: none; padding: 0; }
 }
 
@@ -524,3 +524,89 @@ section.tight { padding-block: 32px; }
 @media (prefers-reduced-motion: reduce) { .bm-m.hl { animation: none; } }
 .bm-wrap.zoom { padding: 4px; }
 .bm-wrap.zoom .bodymap { width: 100%; height: 100%; }
+
+/* ---------- Plan output (planner.html) ---------- */
+.print-only { display: none; }
+.pstats { display: grid; grid-template-columns: repeat(4, 1fr); gap: 10px; margin-bottom: 14px; }
+.pstat { background: var(--surface-2); border-radius: 12px; padding: 12px 14px; }
+.pstat b { display: block; font-size: 1.25rem; font-weight: 600; }
+.pstat small { color: var(--muted); font-size: .82rem; }
+@media (max-width: 620px) { .pstats { grid-template-columns: repeat(2, 1fr); } }
+
+.week2 { display: grid; grid-template-columns: repeat(7, 1fr); gap: 6px; margin-bottom: 22px; }
+.wk { border-radius: 12px; padding: 9px 4px; text-align: center; background: var(--surface-2); color: var(--muted); min-width: 0; }
+.wk b { display: block; font-weight: 600; font-size: .95rem; }
+.wk small { display: block; font-size: .72rem; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; opacity: .85; }
+.wk.on { background: var(--accent-soft); color: var(--accent); box-shadow: inset 0 0 0 1.5px color-mix(in srgb, var(--accent) 45%, transparent); }
+
+.pdays { display: grid; gap: 18px; }
+.pday { border: 1px solid var(--line); border-radius: 18px; background: var(--surface); overflow: hidden; }
+.pday-head { display: flex; align-items: center; gap: 14px; padding: 16px 20px; border-bottom: 1px solid var(--line); }
+.pday-num {
+  width: 36px; height: 36px; border-radius: 11px; flex: none; display: grid; place-items: center;
+  background: var(--accent); color: var(--accent-ink); font-weight: 600;
+}
+.pday-title { flex: 1; min-width: 0; }
+.pday-title h3 { margin: 0; font-size: 1.1rem; }
+.pday-title span { color: var(--muted); font-size: .9rem; }
+.pday-meta { color: var(--muted); font-size: .88rem; white-space: nowrap; background: var(--surface-2); padding: 4px 10px; border-radius: 999px; }
+.phase-row { display: flex; gap: 10px; align-items: baseline; padding: 12px 20px; color: var(--muted); font-size: .9rem; }
+.phase-tag {
+  flex: none; font-size: .75rem; font-weight: 600; padding: 2px 9px; border-radius: 999px;
+  background: var(--surface-2); color: var(--text);
+}
+.pex-list {
+  list-style: none; margin: 0; padding: 4px 20px; display: grid; gap: 10px;
+  grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+}
+.pex { display: flex; gap: 14px; align-items: center; padding: 10px; border-radius: 14px; background: var(--surface-2); }
+.pex .fig.mini { width: 84px; flex: none; border-radius: 10px; }
+.pex-body { flex: 1; min-width: 0; }
+.pex-name { font-weight: 600; display: flex; gap: 8px; align-items: baseline; line-height: 1.35; }
+.pex-n { color: var(--muted); font-weight: 400; font-size: .85rem; }
+.pex-cue { color: var(--muted); font-size: .85rem; margin: 2px 0 6px; line-height: 1.45; }
+.pex-dose {
+  display: inline-block; font-size: .82rem; font-weight: 600; color: var(--accent);
+  background: var(--accent-soft); padding: 3px 10px; border-radius: 999px;
+}
+@media (max-width: 520px) { .pex-list { grid-template-columns: 1fr; padding-inline: 12px; } .pday-head, .phase-row { padding-inline: 14px; } }
+
+/* ---------- Printing the plan ---------- */
+@page { size: A4; margin: 12mm; }
+@media print {
+  :root {
+    --bg: #fff; --surface: #fff; --surface-2: #f4f6f3; --text: #111; --muted: #555; --line: #d8ddd5;
+    --accent: #16884a; --accent-ink: #fff; --accent-soft: #e4f4ea;
+    --fig-bg1: #f3f7f1; --fig-bg2: #f3f7f1; --fig-shirt2: #177a43; --fig-short: #2f3b52; --fig-short2: #1f2838;
+  }
+  * { -webkit-print-color-adjust: exact; print-color-adjust: exact; }
+  body { background: #fff; font-size: 11pt; }
+  body > header, footer, .toast, .modal-bg, .page-hero, #planForm, #myplans, .plan-actions, .note { display: none !important; }
+  main section, .wrap { padding: 0 !important; margin: 0 !important; max-width: none !important; }
+  .panel { border: 0 !important; box-shadow: none !important; padding: 0 !important; }
+  #plan { margin: 0; }
+  .print-only { display: block; }
+  .print-head { display: flex; align-items: center; gap: 12px; padding-bottom: 10px; margin-bottom: 12px; border-bottom: 2px solid #16884a; }
+  .print-head b { display: block; font-size: 17pt; }
+  .print-head small { color: #555; }
+  .summary { padding: 10px 14px; margin-bottom: 10px; }
+  .pstats { gap: 8px; margin-bottom: 10px; }
+  .pstat { padding: 8px 10px; border: 1px solid var(--line); background: #fff; }
+  .week2 { margin-bottom: 8px; }
+  .wk { border: 1px solid var(--line); background: #fff; }
+  .wk.on { background: var(--accent-soft); }
+  .tick-note { font-size: 9pt; color: #555; margin: 0 0 8px; }
+  .pdays { gap: 10px; }
+  .pday { break-inside: avoid; page-break-inside: avoid; border-radius: 10px; }
+  .pday-head { padding: 8px 12px; }
+  .phase-row { padding: 6px 12px; font-size: 9.5pt; }
+  .pex-list { grid-template-columns: 1fr 1fr; gap: 6px; padding: 2px 12px; }
+  .pex { padding: 6px; background: #fff; border: 1px solid var(--line); break-inside: avoid; }
+  .pex .fig.mini { width: 58px; }
+  .pex-cue { font-size: 8.5pt; margin-bottom: 3px; }
+  .pex-dose { font-size: 8.5pt; }
+  .ticks { display: flex; gap: 3px; flex: none; align-self: flex-start; }
+  .ticks i { width: 11px; height: 11px; border: 1.2px solid #888; border-radius: 3px; }
+  .print-foot { font-size: 8.5pt; color: #777; text-align: center; margin-top: 10px; }
+  .fig .zzz, .bm-m.hl { animation: none !important; }
+}
