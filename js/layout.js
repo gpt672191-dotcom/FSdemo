@@ -17,17 +17,8 @@ const navLinks = NAV.map(n =>
   `<a href="${n.href}" data-i18n="${n.key}"${n.page === PAGE ? ' class="active" aria-current="page"' : ""}></a>`
 ).join("");
 
-// Animated background: soft colour blobs, dot grid, and a glow that follows the mouse
-document.body.insertAdjacentHTML("afterbegin", '<div class="bg-fx" aria-hidden="true"><span class="blob b1"></span><span class="blob b2"></span><span class="blob b3"></span><span class="dots"></span><span class="spot"></span></div>');
-if (matchMedia("(pointer: fine)").matches && !matchMedia("(prefers-reduced-motion: reduce)").matches) {
-  const fx = document.querySelector(".bg-fx");
-  let raf = 0, mx = 0, my = 0;
-  addEventListener("pointermove", e => {
-    mx = e.clientX; my = e.clientY;
-    if (!raf) raf = requestAnimationFrame(() => { fx.style.setProperty("--mx", mx + "px"); fx.style.setProperty("--my", my + "px"); fx.classList.add("lit"); raf = 0; });
-  }, { passive: true });
-  document.addEventListener("pointerleave", () => fx.classList.remove("lit"));
-}
+// Animated background: soft colour blobs and a dot grid
+document.body.insertAdjacentHTML("afterbegin", '<div class="bg-fx" aria-hidden="true"><span class="blob b1"></span><span class="blob b2"></span><span class="blob b3"></span><span class="dots"></span></div>');
 
 document.body.insertAdjacentHTML("afterbegin", `
 <header>

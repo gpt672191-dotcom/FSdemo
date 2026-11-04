@@ -638,13 +638,7 @@ section.tight { padding-block: 32px; }
           mask-image: radial-gradient(ellipse 80% 55% at 50% 0%, #000 0%, transparent 75%);
   opacity: .55;
 }
-.bg-fx .spot {
-  position: absolute; left: var(--mx, 50%); top: var(--my, 30%); width: 620px; height: 620px;
-  transform: translate(-50%, -50%); border-radius: 50%; opacity: 0; transition: opacity .6s;
-  background: radial-gradient(circle, color-mix(in srgb, var(--accent) 16%, transparent) 0%, transparent 62%);
-}
-.bg-fx.lit .spot { opacity: 1; }
-@media (prefers-reduced-motion: reduce) { .bg-fx .blob { animation: none; } .bg-fx .spot { display: none; } }
+@media (prefers-reduced-motion: reduce) { .bg-fx .blob { animation: none; } }
 @media print { .bg-fx { display: none !important; } }
 
 /* ---------- Cards float while hovered ---------- */
