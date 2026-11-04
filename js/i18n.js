@@ -32,7 +32,7 @@ const T = {
     s3t: "ทำตามและพัฒนา", s3d: "ใช้ตัวจับเวลาพักระหว่างเซ็ต แล้วค่อยๆ เพิ่มความยากทุก 2–3 สัปดาห์",
 
     /* ----- หน้าสร้างกล้าม ----- */
-    mPill: "💪 สร้างกล้าม",
+    mPill: "สร้างกล้าม",
     mTitle: "สร้างกล้ามเนื้อสำหรับมือใหม่",
     mLead: "กล้ามเนื้อโตจาก 3 อย่าง: ฝึกแรงต้านอย่างสม่ำเสมอ กินโปรตีนให้พอ และพักผ่อนให้เพียงพอ",
     prinTitle: "หลักการสำคัญ",
@@ -51,7 +51,7 @@ const T = {
     mCtaBtn: "สร้างแผนสร้างกล้าม",
 
     /* ----- หน้าลดน้ำหนัก ----- */
-    lPill: "🔥 ลดน้ำหนัก",
+    lPill: "ลดน้ำหนัก",
     lTitle: "ลดน้ำหนักแบบยั่งยืน",
     lLead: "หัวใจของการลดน้ำหนักคือกินพลังงานน้อยกว่าที่ใช้เล็กน้อย ร่วมกับออกกำลังกายเพื่อรักษากล้ามเนื้อ",
     lp1t: "ขาดดุลพอดีๆ", lp1d: "กินน้อยกว่าที่ร่างกายใช้ประมาณ 300–500 kcal/วัน จะลดได้ราว 0.25–0.5 กก./สัปดาห์",
@@ -70,7 +70,7 @@ const T = {
     lCta: "เริ่มลดน้ำหนักวันนี้", lCtaSub: "ให้ AI จัดตารางวงจรเผาผลาญที่เหมาะกับคุณ", lCtaBtn: "สร้างแผนลดน้ำหนัก",
 
     /* ----- หน้าสร้างแผน ----- */
-    planPill: "📋 สร้างแผน",
+    planPill: "สร้างแผน",
     planTitle: "สร้างแผนออกกำลังกาย", planSub: "เลือกคำตอบที่ตรงกับคุณที่สุด แล้วให้ AI จัดตารางให้",
     qGoal: "เป้าหมายหลัก", qLevel: "ระดับความฟิตตอนนี้", qDays: "ออกกำลังกายได้กี่วันต่อสัปดาห์",
     qTime: "เวลาต่อครั้ง", qEquip: "อุปกรณ์ที่มี", qImpact: "ข้อจำกัดของข้อต่อ",
@@ -79,7 +79,7 @@ const T = {
     days_2: "2 วัน", days_3: "3 วัน", days_4: "4 วัน", days_5: "5 วัน",
     time_15: "15 นาที", time_30: "30 นาที", time_45: "45 นาที",
     impact_any: "ไม่มี", impact_low: "เข่า/ข้อเท้าไม่ค่อยดี (ไม่กระโดด)",
-    generate: "✨ ให้ AI สร้างแผน",
+    generate: "ให้ AI สร้างแผน",
     thinking: "AI กำลังวิเคราะห์ข้อมูลของคุณ...",
     sumGoal: { lose: "ลดน้ำหนัก", muscle: "เพิ่มกล้ามเนื้อ", endure: "เพิ่มความอึด", flex: "เพิ่มความยืดหยุ่น" },
     sumFocus: {
@@ -97,11 +97,11 @@ const T = {
     warmTxt: "ย่ำเท้าอยู่กับที่ หมุนแขน หมุนสะโพก (5 นาที)",
     coolTxt: "เดินช้าๆ แล้วยืดกล้ามเนื้อส่วนที่ใช้ ค้างท่าละ 20–30 วินาที (3–5 นาที)",
     rest: "พัก", sets: "เซ็ต", reps: "ครั้ง", perSide: "ข้างละ",
-    regen: "🔄 สุ่มท่าใหม่", print: "🖨️ พิมพ์แผน",
+    regen: "สุ่มท่าใหม่", print: "พิมพ์แผน",
     planNote: "หากรู้สึกเจ็บ (ไม่ใช่แค่เมื่อย) ให้หยุดทันที ผู้มีโรคประจำตัวควรปรึกษาแพทย์ก่อนเริ่ม",
 
     /* ----- หน้า BMI ----- */
-    bmiPill: "⚖️ คำนวณ BMI",
+    bmiPill: "คำนวณ BMI",
     bmiTitle: "คำนวณ BMI", bmiSub: "ใช้เกณฑ์สำหรับคนเอเชีย (WHO Asia-Pacific)",
     bmiLead: "ดัชนีมวลกาย (BMI) คือน้ำหนักเทียบกับส่วนสูง ใช้ดูคร่าวๆ ว่าน้ำหนักอยู่ในเกณฑ์ใด",
     bmiEmpty: "กรอกส่วนสูงและน้ำหนักเพื่อดูผล",
@@ -118,7 +118,7 @@ const T = {
     bmiNote: "BMI ไม่ได้แยกกล้ามเนื้อกับไขมัน คนที่มีกล้ามเนื้อมากอาจได้ค่าสูงแม้ไม่อ้วน",
 
     /* ----- หน้าอื่นๆ ----- */
-    morePill: "🧰 อื่นๆ",
+    morePill: "อื่นๆ",
     moreTitle: "เครื่องมือและความรู้เพิ่มเติม", moreLead: "ตัวจับเวลาพัก เคล็ดลับสำหรับมือใหม่ และคำถามที่พบบ่อย",
     timerTitle: "จับเวลาพัก", timerSub: "เลือกเวลา แล้วกดเริ่ม จะมีเสียงเตือนเมื่อหมดเวลา",
     start: "เริ่ม", pause: "หยุดชั่วคราว", reset: "รีเซ็ต",
@@ -145,10 +145,10 @@ const T = {
     errName: "กรุณากรอกชื่อ", errEmail: "รูปแบบอีเมลไม่ถูกต้อง", errPwLen: "รหัสผ่านต้องมีอย่างน้อย 8 ตัวอักษร",
     errPwMatch: "รหัสผ่านทั้งสองช่องไม่ตรงกัน", errTaken: "อีเมลนี้สมัครไว้แล้ว ลองเข้าสู่ระบบแทน",
     errLogin: "อีเมลหรือรหัสผ่านไม่ถูกต้อง",
-    welcomeNew: n => `สมัครสำเร็จ ยินดีต้อนรับ ${n}!`, welcomeBack: n => `สวัสดี ${n} 👋`, byeMsg: "ออกจากระบบแล้ว",
+    welcomeNew: n => `สมัครสำเร็จ ยินดีต้อนรับ ${n}!`, welcomeBack: n => `สวัสดี ${n}`, byeMsg: "ออกจากระบบแล้ว",
     myPlans: "แผนของฉัน", myPlansSub: "แผนออกกำลังกายที่คุณบันทึกไว้",
     noPlans: "ยังไม่มีแผนที่บันทึก ลองสร้างแผนแล้วกด \"บันทึกแผน\"",
-    savePlan: "💾 บันทึกแผน", savedMsg: "บันทึกแผนแล้ว ดูได้ที่ \"แผนของฉัน\"", alreadySaved: "แผนนี้บันทึกไว้แล้ว",
+    savePlan: "บันทึกแผน", savedMsg: "บันทึกแผนแล้ว ดูได้ที่ \"แผนของฉัน\"", alreadySaved: "แผนนี้บันทึกไว้แล้ว",
     loginToSave: "เข้าสู่ระบบเพื่อบันทึกแผน",
     open: "เปิดดู", del: "ลบ", delConfirm: "กดอีกครั้งเพื่อลบ", deleted: "ลบแผนแล้ว", savedOn: "บันทึกเมื่อ",
     bodyInfo: "ข้อมูลร่างกาย (ใช้คำนวณคำแนะนำ)",
@@ -156,14 +156,14 @@ const T = {
 
     /* ----- หน้าข้อมูลส่วนตัว ----- */
     navForYou: "แนะนำ", navProfile: "ข้อมูลส่วนตัว",
-    pPill: "👤 ข้อมูลส่วนตัว", pTitle: "ข้อมูลส่วนตัว", pLead: "ข้อมูลของคุณใช้คำนวณคำแนะนำในหมวด \"แนะนำ\"",
+    pPill: "ข้อมูลส่วนตัว", pTitle: "ข้อมูลส่วนตัว", pLead: "ข้อมูลของคุณใช้คำนวณคำแนะนำในหมวด \"แนะนำ\"",
     needLogin: "เข้าสู่ระบบหรือสมัครสมาชิกเพื่อดูหน้านี้", needLoginSub: "สมัครฟรี กรอกน้ำหนัก ส่วนสูง อายุ แล้วรับคำแนะนำเฉพาะคุณ",
     memberSince: "สมาชิกตั้งแต่", editTitle: "แก้ไขข้อมูล", saveBtn: "บันทึกข้อมูล", savedProfile: "บันทึกข้อมูลแล้ว",
     notSet: "ยังไม่ได้กรอก", years: "ปี", cm: "ซม.", kg: "กก.",
     plansCount: n => `บันทึกแผนไว้ ${n} แผน`, seePlans: "ดูแผนของฉัน →", seeForYou: "ดูคำแนะนำสำหรับฉัน →",
 
     /* ----- หน้าแนะนำ ----- */
-    rPill: "✨ แนะนำสำหรับคุณ", rTitle: "คำแนะนำสำหรับคุณ",
+    rPill: "แนะนำสำหรับคุณ", rTitle: "คำแนะนำสำหรับคุณ",
     rLead: n => `คำนวณจากข้อมูลร่างกายของ ${n}`, rLeadGuest: "คำแนะนำเฉพาะคุณ จากน้ำหนัก ส่วนสูง และอายุ",
     needProfile: "ยังไม่มีข้อมูลน้ำหนัก ส่วนสูง หรืออายุ", needProfileSub: "กรอกข้อมูลในหน้าข้อมูลส่วนตัวก่อน แล้วกลับมาดูคำแนะนำ",
     goProfile: "ไปกรอกข้อมูล",
@@ -180,7 +180,7 @@ const T = {
     rActNote: "เลือกระดับกิจกรรมให้ตรงกับคุณ ตัวเลขด้านบนจะคำนวณใหม่ทันที",
     rPlanTitle: "แผนที่แนะนำ",
     rPlanDesc: (g, d, m, low) => `${g} · ${d} วัน/สัปดาห์ · ครั้งละ ${m} นาที · ไม่ต้องใช้อุปกรณ์${low ? " · ไม่มีท่ากระโดด" : ""}`,
-    rPlanBtn: "✨ สร้างแผนนี้เลย",
+    rPlanBtn: "สร้างแผนนี้เลย",
     rExTitle: "ท่าที่เหมาะกับคุณ", rExSub: "ทำได้ที่บ้าน ไม่ต้องใช้อุปกรณ์",
     rTipsTitle: "ข้อควรรู้สำหรับคุณ",
     tipWarm: "วอร์มอัพ 5 นาทีทุกครั้งก่อนเริ่ม และคูลดาวน์หลังจบ",
@@ -222,7 +222,7 @@ const T = {
     s3t: "Follow and progress", s3d: "Use the rest timer between sets and make it a bit harder every 2–3 weeks.",
 
     /* ----- Build muscle ----- */
-    mPill: "💪 Build muscle",
+    mPill: "Build muscle",
     mTitle: "Building muscle for beginners",
     mLead: "Muscle grows from three things: regular strength training, enough protein, and enough rest.",
     prinTitle: "Key principles",
@@ -241,7 +241,7 @@ const T = {
     mCtaBtn: "Build a muscle plan",
 
     /* ----- Lose weight ----- */
-    lPill: "🔥 Lose weight",
+    lPill: "Lose weight",
     lTitle: "Lose weight, sustainably",
     lLead: "The core of weight loss is eating slightly less energy than you burn, while training to keep your muscle.",
     lp1t: "A modest deficit", lp1d: "Eat about 300–500 kcal/day less than you burn to lose roughly 0.25–0.5 kg per week.",
@@ -260,7 +260,7 @@ const T = {
     lCta: "Start losing weight today", lCtaSub: "Let AI build a fat-burning circuit plan for you.", lCtaBtn: "Build a weight-loss plan",
 
     /* ----- Plan builder ----- */
-    planPill: "📋 Plan builder",
+    planPill: "Plan builder",
     planTitle: "Build your workout plan", planSub: "Choose the answers that fit you best and let AI build your schedule",
     qGoal: "Main goal", qLevel: "Current fitness level", qDays: "Days per week",
     qTime: "Time per session", qEquip: "Equipment", qImpact: "Joint limitations",
@@ -269,7 +269,7 @@ const T = {
     days_2: "2 days", days_3: "3 days", days_4: "4 days", days_5: "5 days",
     time_15: "15 min", time_30: "30 min", time_45: "45 min",
     impact_any: "None", impact_low: "Sensitive knees/ankles (no jumping)",
-    generate: "✨ Generate with AI",
+    generate: "Generate with AI",
     thinking: "AI is analyzing your answers...",
     sumGoal: { lose: "weight loss", muscle: "muscle gain", endure: "endurance", flex: "flexibility" },
     sumFocus: {
@@ -287,11 +287,11 @@ const T = {
     warmTxt: "March in place, arm circles, hip circles (5 min)",
     coolTxt: "Walk slowly, then stretch the muscles you used, 20–30 s each (3–5 min)",
     rest: "rest", sets: "sets", reps: "reps", perSide: "each side",
-    regen: "🔄 Shuffle exercises", print: "🖨️ Print plan",
+    regen: "Shuffle exercises", print: "Print plan",
     planNote: "If you feel pain (not just effort), stop right away. If you have a medical condition, check with a doctor first.",
 
     /* ----- BMI ----- */
-    bmiPill: "⚖️ BMI",
+    bmiPill: "BMI",
     bmiTitle: "BMI calculator", bmiSub: "Uses Asian cut-offs (WHO Asia-Pacific)",
     bmiLead: "Body mass index (BMI) compares your weight to your height to give a rough idea of your weight range.",
     bmiEmpty: "Enter height and weight to see your result",
@@ -308,7 +308,7 @@ const T = {
     bmiNote: "BMI doesn't separate muscle from fat. Very muscular people can score high without carrying excess fat.",
 
     /* ----- More ----- */
-    morePill: "🧰 More",
+    morePill: "More",
     moreTitle: "Tools and extra know-how", moreLead: "Rest timer, beginner tips, and frequently asked questions",
     timerTitle: "Rest timer", timerSub: "Pick a time and press start. It beeps when time is up.",
     start: "Start", pause: "Pause", reset: "Reset",
@@ -335,10 +335,10 @@ const T = {
     errName: "Please enter your name", errEmail: "That email doesn't look right", errPwLen: "Password must be at least 8 characters",
     errPwMatch: "Passwords don't match", errTaken: "This email is already registered. Try logging in.",
     errLogin: "Wrong email or password",
-    welcomeNew: n => `Account created. Welcome, ${n}!`, welcomeBack: n => `Hi ${n} 👋`, byeMsg: "You're logged out",
+    welcomeNew: n => `Account created. Welcome, ${n}!`, welcomeBack: n => `Hi ${n}`, byeMsg: "You're logged out",
     myPlans: "My plans", myPlansSub: "Workout plans you've saved",
     noPlans: "No saved plans yet. Build a plan and press \"Save plan\".",
-    savePlan: "💾 Save plan", savedMsg: "Plan saved. Find it under \"My plans\".", alreadySaved: "This plan is already saved",
+    savePlan: "Save plan", savedMsg: "Plan saved. Find it under \"My plans\".", alreadySaved: "This plan is already saved",
     loginToSave: "Log in to save your plan",
     open: "Open", del: "Delete", delConfirm: "Tap again to delete", deleted: "Plan deleted", savedOn: "Saved",
     bodyInfo: "Body info (used for your recommendations)",
@@ -346,14 +346,14 @@ const T = {
 
     /* ----- Profile ----- */
     navForYou: "For you", navProfile: "My profile",
-    pPill: "👤 My profile", pTitle: "My profile", pLead: "Your details power the recommendations in \"For you\".",
+    pPill: "My profile", pTitle: "My profile", pLead: "Your details power the recommendations in \"For you\".",
     needLogin: "Log in or sign up to see this page", needLoginSub: "It's free. Enter your weight, height and age to get advice made for you.",
     memberSince: "Member since", editTitle: "Edit details", saveBtn: "Save details", savedProfile: "Details saved",
     notSet: "Not set", years: "yrs", cm: "cm", kg: "kg",
     plansCount: n => `${n} saved plan${n === 1 ? "" : "s"}`, seePlans: "See my plans →", seeForYou: "See my recommendations →",
 
     /* ----- For you ----- */
-    rPill: "✨ For you", rTitle: "Recommendations for you",
+    rPill: "For you", rTitle: "Recommendations for you",
     rLead: n => `Based on ${n}'s body details`, rLeadGuest: "Advice made for you, from your weight, height and age",
     needProfile: "Your weight, height or age is missing", needProfileSub: "Fill in your profile first, then come back for your recommendations.",
     goProfile: "Fill in my profile",
@@ -370,7 +370,7 @@ const T = {
     rActNote: "Pick the activity level that fits you; the numbers above update right away.",
     rPlanTitle: "Recommended plan",
     rPlanDesc: (g, d, m, low) => `${g} · ${d} days/week · ${m} min per session · no equipment${low ? " · no jumping" : ""}`,
-    rPlanBtn: "✨ Build this plan",
+    rPlanBtn: "Build this plan",
     rExTitle: "Exercises that suit you", rExSub: "Do them at home, no equipment needed",
     rTipsTitle: "Good to know for you",
     tipWarm: "Warm up for 5 minutes before every session and cool down after.",

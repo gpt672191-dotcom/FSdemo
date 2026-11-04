@@ -104,11 +104,11 @@ function renderPlan() {
     <div class="summary"><span class="ai-badge">AI</span><p>${summary}</p></div>
     <div class="week">${week}</div>
     <div class="days">${cards}</div>
-    <p class="note">⚠️ ${t.planNote}</p>
+    <p class="note">${icon("alert")} ${t.planNote}</p>
     <div class="plan-actions">
-      <button type="button" class="btn" id="saveBtn">${t.savePlan}</button>
-      <button type="button" class="btn ghost" id="regen">${t.regen}</button>
-      <button type="button" class="btn ghost" id="printBtn">${t.print}</button>
+      <button type="button" class="btn" id="saveBtn">${icon("save")}${t.savePlan}</button>
+      <button type="button" class="btn ghost" id="regen">${icon("refresh")}${t.regen}</button>
+      <button type="button" class="btn ghost" id="printBtn">${icon("printer")}${t.print}</button>
     </div>`;
   $("#saveBtn").onclick = savePlan;
   $("#regen").onclick = () => generate({ ...lastPlan.answers }, false);

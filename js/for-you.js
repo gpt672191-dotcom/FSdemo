@@ -90,7 +90,7 @@ function renderForYou() {
   const q = new URLSearchParams(r.plan).toString();
   $("#fyPlan").innerHTML = `
     <p style="margin:0 0 14px">${tx.rPlanDesc(tx[`goal_${r.goal}`], r.plan.days, r.plan.time, r.lowImpact)}</p>
-    <a class="btn" href="planner.html?${q}">${tx.rPlanBtn}</a>`;
+    <a class="btn" href="planner.html?${q}">${icon("sparkle")}${tx.rPlanBtn}</a>`;
 
   $("#fyEx").innerHTML = pickExercises(r).map(e => `
     <div class="ex-card">

@@ -40,7 +40,7 @@ document.body.insertAdjacentHTML("afterbegin", `
           <button type="button" id="logoutBtn" data-i18n="logout"></button>
         </div>
       </div>
-      <button type="button" class="menu-btn" id="menuBtn" aria-controls="navLinks" aria-expanded="false">☰</button>
+      <button type="button" class="menu-btn" id="menuBtn" aria-controls="navLinks" aria-expanded="false"><i data-icon="menu"></i></button>
     </div>
   </div>
 </header>
@@ -102,7 +102,7 @@ document.body.insertAdjacentHTML("afterbegin", `
       <button type="submit" class="btn" id="authSubmit"></button>
     </form>
     <div class="switch-line"><span id="switchText"></span> <button type="button" id="switchBtn"></button></div>
-    <div class="demo-note">🧪 <span data-i18n="demoNote"></span></div>
+    <div class="demo-note"><i data-icon="flask"></i> <span data-i18n="demoNote"></span></div>
   </div>
 </div>`);
 
