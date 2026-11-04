@@ -610,3 +610,39 @@ section.tight { padding-block: 32px; }
   .print-foot { font-size: 8.5pt; color: #777; text-align: center; margin-top: 10px; }
   .fig .zzz, .bm-m.hl { animation: none !important; }
 }
+
+/* ---------- Animated background (added by js/layout.js) ---------- */
+.bg-fx { position: fixed; inset: 0; z-index: -1; overflow: hidden; pointer-events: none; }
+.bg-fx .blob {
+  position: absolute; width: 46vmax; height: 46vmax; border-radius: 50%;
+  filter: blur(80px); opacity: .16; will-change: transform;
+  animation: bgDrift 28s ease-in-out infinite alternate;
+}
+.bg-fx .b1 { background: #22c55e; top: -20vmax; left: -14vmax; }
+.bg-fx .b2 { background: #06b6d4; bottom: -22vmax; right: -16vmax; animation-duration: 34s; animation-delay: -10s; }
+.bg-fx .b3 { background: #a3e635; top: 38%; left: 42%; width: 30vmax; height: 30vmax; opacity: .1; animation-duration: 40s; animation-delay: -18s; }
+@media (prefers-color-scheme: dark) {
+  .bg-fx .blob { opacity: .2; }
+  .bg-fx .b3 { opacity: .1; }
+}
+@keyframes bgDrift {
+  0%   { transform: translate(0, 0) scale(1); }
+  50%  { transform: translate(9vmax, 6vmax) scale(1.12); }
+  100% { transform: translate(-6vmax, 11vmax) scale(.94); }
+}
+.bg-fx .dots {
+  position: absolute; inset: 0;
+  background-image: radial-gradient(circle, color-mix(in srgb, var(--text) 16%, transparent) 1px, transparent 1.3px);
+  background-size: 26px 26px;
+  -webkit-mask-image: radial-gradient(ellipse 80% 55% at 50% 0%, #000 0%, transparent 75%);
+          mask-image: radial-gradient(ellipse 80% 55% at 50% 0%, #000 0%, transparent 75%);
+  opacity: .55;
+}
+.bg-fx .spot {
+  position: absolute; left: var(--mx, 50%); top: var(--my, 30%); width: 620px; height: 620px;
+  transform: translate(-50%, -50%); border-radius: 50%; opacity: 0; transition: opacity .6s;
+  background: radial-gradient(circle, color-mix(in srgb, var(--accent) 16%, transparent) 0%, transparent 62%);
+}
+.bg-fx.lit .spot { opacity: 1; }
+@media (prefers-reduced-motion: reduce) { .bg-fx .blob { animation: none; } .bg-fx .spot { display: none; } }
+@media print { .bg-fx { display: none !important; } }
