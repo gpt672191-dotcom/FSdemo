@@ -15,7 +15,7 @@ function renderGroups() {
   const tx = t();
   $("#mgGrid").innerHTML = MUSCLE_GROUPS.map(g => `
     <button type="button" class="mg-card${g === mgSel ? " on" : ""}" data-g="${g}" aria-pressed="${g === mgSel}">
-      <div class="fig" data-fig="${MG_FIG[g]}"></div>
+      <div class="bm-wrap">${bodyMap(g)}</div>
       <b>${tx[`mg_${g}`]}</b>
       <small>${tx.mgCount(exercisesFor(g).length)}</small>
     </button>`).join("");
@@ -50,7 +50,7 @@ function renderDetail() {
           <p class="lead" style="margin:0 0 14px">${tx[`mgd_${g}`]}</p>
           <ul class="tip-list">${tx[`mgt_${g}`].map(s => `<li>${s}</li>`).join("")}</ul>
         </div>
-        <div class="fig" data-fig="${MG_FIG[g]}"></div>
+        <div class="bm-wrap big">${bodyMap(g)}</div>
       </div>
       <div class="sec-head" style="margin:28px 0 16px"><h2 style="font-size:1.3rem">${tx.mgExTitle(tx[`mg_${g}`], all.length)}</h2></div>
       <div class="ex-filter">${filters}</div>
