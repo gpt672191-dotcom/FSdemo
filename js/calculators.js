@@ -3,6 +3,8 @@
 
 /* ---------- Protein: 1.6–2.2 g per kg body weight ---------- */
 if ($("#protOut")) {
+  const u = currentUser();
+  if (u && hasBody(u.profile)) $("#pw").value = u.profile.weight;
   const renderProtein = () => {
     const tx = t(), w = num("pw", 25, 250), out = $("#protOut");
     if (isNaN(w)) { out.innerHTML = `<span style="color:var(--muted)">${tx.calEmpty}</span>`; return; }
@@ -21,24 +23,26 @@ if ($("#protOut")) {
 
 /* ---------- Calories: Mifflin-St Jeor BMR × activity factor ---------- */
 if ($("#calOut")) {
-  const FACTORS = [1.2, 1.375, 1.55, 1.725, 1.9];
+  // Prefill from the logged-in user's profile, if any
+  const u = currentUser();
+  if (u && hasBody(u.profile)) {
+    const p = u.profile;
+    $("#cSex").value = p.sex; $("#cAge").value = p.age; $("#cH").value = p.height; $("#cW").value = p.weight;
+  }
   const renderCalories = () => {
     const tx = t(), out = $("#calOut");
     // Activity select text follows the language
-    const sel = $("#cAct"), cur = sel.value || "1";
-    sel.innerHTML = FACTORS.map((_, i) => `<option value="${i + 1}">${tx[`act_${i + 1}`]}</option>`).join("");
+    const sel = $("#cAct"), cur = sel.value || String((u && u.profile && u.profile.activity) || 1);
+    sel.innerHTML = ACT_FACTORS.map((_, i) => `<option value="${i + 1}">${tx[`act_${i + 1}`]}</option>`).join("");
     sel.value = cur;
-    $("#cSex").options[0].textContent = tx.male;
-    $("#cSex").options[1].textContent = tx.female;
 
-    const age = num("cAge", 15, 90), h = num("cH", 100, 230), w = num("cW", 25, 250);
+    const age = num("cAge", 13, 90), h = num("cH", 100, 230), w = num("cW", 25, 250), sex = $("#cSex").value;
     if (isNaN(age) || isNaN(h) || isNaN(w)) { out.innerHTML = `<span style="color:var(--muted)">${tx.calEmpty}</span>`; return; }
-    const bmr = 10 * w + 6.25 * h - 5 * age + ($("#cSex").value === "m" ? 5 : -161);
-    const tdee = bmr * FACTORS[+sel.value - 1];
-    // Common safe floor: 1,500 kcal (men) / 1,200 kcal (women)
-    const floor = $("#cSex").value === "m" ? 1500 : 1200;
+    const bmr = health.bmr(w, h, age, sex);
+    const tdee = bmr * ACT_FACTORS[+sel.value - 1];
+    const floor = health.minKcal(sex);
     const lose = Math.max(floor, tdee - 500), fast = Math.max(floor, tdee - 750);
-    const r = x => Math.round(x / 10) * 10;
+    const r = round10;
     out.innerHTML = `
       <div class="result-row">
         <div class="result"><small>${tx.calBmr}</small><b>${r(bmr)}</b> ${tx.kcal}</div>

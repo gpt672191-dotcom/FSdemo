@@ -3,9 +3,13 @@
 let answers = { ...DEFAULTS, ...store.get("fs-answers", {}) };
 let lastPlan = store.get("fs-plan", null); // { answers, seed }
 
-// Links like planner.html?goal=muscle pre-select the goal
-const urlGoal = new URLSearchParams(location.search).get("goal");
-if (OPTIONS.goal.includes(urlGoal)) answers.goal = urlGoal;
+// Links like planner.html?goal=muscle&impact=low pre-select answers
+{
+  const q = new URLSearchParams(location.search);
+  for (const key of Object.keys(OPTIONS)) {
+    if (OPTIONS[key].includes(q.get(key))) answers[key] = q.get(key);
+  }
+}
 
 /* ---------- Plan generation ---------- */
 function allowedEquip(eq) { return eq === "gym" ? ["none", "db", "gym"] : eq === "db" ? ["none", "db"] : ["none"]; }

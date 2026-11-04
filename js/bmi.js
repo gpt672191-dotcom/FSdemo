@@ -29,6 +29,12 @@ function renderBmiTable() {
   ).join("");
 }
 
+// Prefill from the logged-in user's profile, if any
+{
+  const u = currentUser();
+  if (u && hasBody(u.profile)) { $("#h").value = u.profile.height; $("#w").value = u.profile.weight; }
+}
+
 $("#h").addEventListener("input", renderBMI);
 $("#w").addEventListener("input", renderBMI);
 onRender(renderBMI);

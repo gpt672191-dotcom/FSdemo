@@ -1,0 +1,101 @@
+<!DOCTYPE html>
+<html lang="th">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>ข้อมูลส่วนตัว · FitStart AI</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Prompt:wght@400;500;600;700&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="css/style.css">
+</head>
+<body data-page="profile">
+
+<main>
+  <div class="wrap page-hero">
+    <span class="pill" data-i18n="pPill"></span>
+    <h1 data-i18n="pTitle"></h1>
+    <p class="lead" data-i18n="pLead"></p>
+  </div>
+
+  <!-- Not logged in -->
+  <section class="tight" id="pGuest" hidden>
+    <div class="wrap">
+      <div class="empty">
+        <p style="font-size:1.1rem;color:var(--text);font-weight:600;margin:0 0 4px" data-i18n="needLogin"></p>
+        <p style="margin:0 0 16px" data-i18n="needLoginSub"></p>
+        <div class="btn-row" style="justify-content:center">
+          <button type="button" class="btn" id="pSignup" data-i18n="signup"></button>
+          <button type="button" class="btn ghost" id="pLogin" data-i18n="login"></button>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Logged in -->
+  <div id="pMain" hidden>
+    <section class="tight">
+      <div class="wrap">
+        <div class="panel">
+          <div class="profile-head">
+            <span class="avatar big" id="pAvatar"></span>
+            <div>
+              <h2 id="pName" style="margin:0;font-size:1.4rem"></h2>
+              <div id="pEmail" style="color:var(--muted)"></div>
+              <small id="pSince" style="color:var(--muted)"></small>
+            </div>
+          </div>
+          <div class="result-row" id="pStats" style="margin-top:20px"></div>
+          <div class="btn-row" style="margin-top:18px">
+            <a class="btn" href="for-you.html" data-i18n="seeForYou"></a>
+            <a class="btn ghost" href="planner.html#myplans"><span id="pPlans"></span>&nbsp;·&nbsp;<span data-i18n="seePlans"></span></a>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section class="tight">
+      <div class="wrap">
+        <div class="panel">
+          <h2 style="margin:0 0 16px;font-size:1.25rem" data-i18n="editTitle"></h2>
+          <form id="profileForm" novalidate>
+            <div class="field" style="margin-bottom:12px">
+              <label for="fName" data-i18n="name"></label>
+              <input id="fName" type="text" maxlength="40" autocomplete="name">
+            </div>
+            <div class="calc-grid">
+              <div class="field">
+                <label for="fSex" data-i18n="sex"></label>
+                <select id="fSex"><option value="m"></option><option value="f"></option></select>
+              </div>
+              <div class="field">
+                <label for="fAge" data-i18n="age"></label>
+                <input id="fAge" type="number" inputmode="numeric" min="13" max="90">
+              </div>
+              <div class="field">
+                <label for="fH" data-i18n="height"></label>
+                <input id="fH" type="number" inputmode="decimal" min="100" max="230">
+              </div>
+              <div class="field">
+                <label for="fW" data-i18n="weight"></label>
+                <input id="fW" type="number" inputmode="decimal" min="25" max="250">
+              </div>
+            </div>
+            <div class="form-err" id="fErr" role="alert"></div>
+            <button type="submit" class="btn" data-i18n="saveBtn"></button>
+          </form>
+        </div>
+      </div>
+    </section>
+  </div>
+</main>
+
+<script src="js/i18n.js"></script>
+<script src="js/data.js"></script>
+<script src="js/utils.js"></script>
+<script src="js/layout.js"></script>
+<script src="js/auth.js"></script>
+<script src="js/profile.js"></script>
+<script src="js/main.js"></script>
+</body>
+</html>

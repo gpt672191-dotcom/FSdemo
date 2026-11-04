@@ -64,7 +64,7 @@ header {
   display: none; width: 40px; height: 40px; border-radius: 10px; border: 1px solid var(--line);
   background: var(--surface); color: var(--text); font-size: 1.2rem; cursor: pointer;
 }
-@media (max-width: 960px) {
+@media (max-width: 1120px) {
   .menu-btn { display: grid; place-items: center; }
   .nav-links {
     display: none; position: absolute; top: 64px; left: 0; right: 0; flex-direction: column; align-items: stretch;
@@ -365,6 +365,18 @@ section.tight { padding-block: 32px; }
 .foot-links { display: flex; flex-wrap: wrap; justify-content: center; gap: 6px 18px; margin-bottom: 10px; }
 .foot-links a { text-decoration: none; }
 .foot-links a:hover { color: var(--text); }
+
+/* Profile & for-you */
+.profile-head { display: flex; align-items: center; gap: 16px; flex-wrap: wrap; }
+.avatar.big { width: 64px; height: 64px; font-size: 1.6rem; }
+.panel-title { margin: 0 0 14px; font-size: 1.2rem; }
+.result small + b { display: inline-block; margin-top: 2px; }
+.result b + small { margin-top: 4px; }
+.tip-list { margin: 0; padding-left: 1.2em; display: grid; gap: 8px; }
+.tip-list li::marker { color: var(--accent); }
+.body-title { font-weight: 600; font-size: .9rem; margin: 6px 0 8px; padding-top: 12px; border-top: 1px solid var(--line); }
+#bodyFields .field-row { margin-bottom: 0; }
+#bodyFields .field { margin-bottom: 10px; }
 
 @media print {
   #planForm, #myplans, .page-hero, .menu-btn { display: none !important; }

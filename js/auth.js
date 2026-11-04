@@ -45,6 +45,7 @@ function renderAuth() {
   $("#switchBtn").textContent = up ? tx.login : tx.signup;
   $("#nameField").hidden = !up;
   $("#pw2Field").hidden = !up;
+  $("#bodyFields").hidden = !up;
   $("#aPw").autocomplete = up ? "new-password" : "current-password";
   $$(".tabs button").forEach(b => b.classList.toggle("on", b.dataset.tab === authMode));
   $$(".pw-toggle").forEach(b => { b.textContent = $("#" + b.dataset.for).type === "password" ? tx.show : tx.hide; });
@@ -78,9 +79,11 @@ $("#authForm").addEventListener("submit", async e => {
     if (!name) return fail(tx.errName);
     if (pw.length < 8) return fail(tx.errPwLen);
     if (pw !== pw2) return fail(tx.errPwMatch);
+    const profile = readBody("a");
+    if (profile.error) return fail(tx[profile.error]);
     if (users[email]) return fail(tx.errTaken);
     const salt = newSalt();
-    users[email] = { name, email, salt, hash: await hashPw(pw, salt), created: Date.now(), plans: [] };
+    users[email] = { name, email, salt, hash: await hashPw(pw, salt), created: Date.now(), plans: [], profile: profile.data };
     setUsers(users);
     loginAs(email);
     toast(tx.welcomeNew(name));
@@ -94,6 +97,26 @@ $("#authForm").addEventListener("submit", async e => {
   closeAuth();
   if (next) next();
 });
+
+// Read sex / age / height / weight from inputs named <prefix>Sex, <prefix>Age, <prefix>H, <prefix>W
+function readBody(prefix) {
+  const age = num(prefix + "Age", 13, 90), h = num(prefix + "H", 100, 230), w = num(prefix + "W", 25, 250);
+  if (isNaN(age)) return { error: "errAge" };
+  if (isNaN(h)) return { error: "errHeight" };
+  if (isNaN(w)) return { error: "errWeight" };
+  return { data: { sex: $("#" + prefix + "Sex").value, age: Math.round(age), height: h, weight: w } };
+}
+
+// Change the logged-in user's record and save it
+function updateUser(fn) {
+  const users = getUsers();
+  if (!users[session]) return;
+  fn(users[session]);
+  setUsers(users);
+}
+
+// True when the profile has everything the recommendations need
+const hasBody = p => !!(p && p.age && p.height && p.weight);
 
 function loginAs(email) { session = email; store.set("fs-session", email); renderAll(); }
 function logout() {

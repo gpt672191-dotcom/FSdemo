@@ -41,6 +41,19 @@ function num(id, min, max) {
   return v >= min && v <= max ? v : NaN;
 }
 
+/* ---------- Health formulas (shared by BMI, calculators, profile, for-you) ---------- */
+const ACT_FACTORS = [1.2, 1.375, 1.55, 1.725, 1.9]; // activity levels 1–5
+const health = {
+  bmi: (w, h) => w / ((h / 100) ** 2),
+  // Asian cut-offs (WHO Asia-Pacific): 0 under, 1 normal, 2 overweight, 3 obese
+  bmiIdx: b => (b < 18.5 ? 0 : b < 23 ? 1 : b < 25 ? 2 : 3),
+  ideal: h => [18.5 * (h / 100) ** 2, 22.9 * (h / 100) ** 2],
+  // Mifflin-St Jeor
+  bmr: (w, h, age, sex) => 10 * w + 6.25 * h - 5 * age + (sex === "f" ? -161 : 5),
+  minKcal: sex => (sex === "f" ? 1200 : 1500)
+};
+const round10 = x => Math.round(x / 10) * 10;
+
 /* ---------- Toast ---------- */
 let toastId;
 function toast(msg) {

@@ -1,0 +1,104 @@
+<!DOCTYPE html>
+<html lang="th">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>แนะนำสำหรับคุณ · FitStart AI</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Prompt:wght@400;500;600;700&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="css/style.css">
+</head>
+<body data-page="foryou">
+
+<main>
+  <div class="wrap page-hero">
+    <span class="pill" data-i18n="rPill"></span>
+    <h1 data-i18n="rTitle"></h1>
+    <p class="lead" id="fyLead"></p>
+  </div>
+
+  <!-- Not logged in -->
+  <section class="tight" id="fyGuest" hidden>
+    <div class="wrap">
+      <div class="empty">
+        <p style="font-size:1.1rem;color:var(--text);font-weight:600;margin:0 0 4px" data-i18n="needLogin"></p>
+        <p style="margin:0 0 16px" data-i18n="needLoginSub"></p>
+        <div class="btn-row" style="justify-content:center">
+          <button type="button" class="btn" id="fySignup" data-i18n="signup"></button>
+          <button type="button" class="btn ghost" id="fyLogin" data-i18n="login"></button>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Logged in, but body details missing -->
+  <section class="tight" id="fyNoBody" hidden>
+    <div class="wrap">
+      <div class="empty">
+        <p style="font-size:1.1rem;color:var(--text);font-weight:600;margin:0 0 4px" data-i18n="needProfile"></p>
+        <p style="margin:0 0 16px" data-i18n="needProfileSub"></p>
+        <a class="btn" href="profile.html" data-i18n="goProfile"></a>
+      </div>
+    </div>
+  </section>
+
+  <!-- Recommendations -->
+  <div id="fyMain" hidden>
+    <section class="tight">
+      <div class="wrap two-col">
+        <div class="panel">
+          <h2 class="panel-title" data-i18n="rGoalTitle"></h2>
+          <div id="fyGoal"></div>
+        </div>
+        <div class="panel">
+          <h2 class="panel-title" data-i18n="rPlanTitle"></h2>
+          <div id="fyPlan"></div>
+        </div>
+      </div>
+    </section>
+
+    <section class="tight">
+      <div class="wrap">
+        <div class="panel">
+          <h2 class="panel-title" data-i18n="rNumbers"></h2>
+          <div class="result-row" id="fyNumbers"></div>
+          <div class="field" style="margin-top:16px;max-width:420px">
+            <label for="fyAct" data-i18n="activity"></label>
+            <select id="fyAct"></select>
+          </div>
+          <p class="hint" data-i18n="rActNote"></p>
+        </div>
+      </div>
+    </section>
+
+    <section class="tight">
+      <div class="wrap">
+        <div class="sec-head">
+          <h2 data-i18n="rExTitle"></h2>
+          <p data-i18n="rExSub"></p>
+        </div>
+        <div class="ex-grid" id="fyEx"></div>
+      </div>
+    </section>
+
+    <section class="tight">
+      <div class="wrap">
+        <div class="panel">
+          <h2 class="panel-title" data-i18n="rTipsTitle"></h2>
+          <ul class="tip-list" id="fyTips"></ul>
+        </div>
+      </div>
+    </section>
+  </div>
+</main>
+
+<script src="js/i18n.js"></script>
+<script src="js/data.js"></script>
+<script src="js/utils.js"></script>
+<script src="js/layout.js"></script>
+<script src="js/auth.js"></script>
+<script src="js/for-you.js"></script>
+<script src="js/main.js"></script>
+</body>
+</html>

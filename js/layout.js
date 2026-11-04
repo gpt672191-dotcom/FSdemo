@@ -4,6 +4,7 @@
 
 const NAV = [
   { page: "home",   href: "index.html",       key: "navHome" },
+  { page: "foryou", href: "for-you.html",     key: "navForYou" },
   { page: "muscle", href: "muscle.html",      key: "navMuscle" },
   { page: "lose",   href: "weight-loss.html", key: "navLose" },
   { page: "plan",   href: "planner.html",     key: "navPlan" },
@@ -33,6 +34,8 @@ document.body.insertAdjacentHTML("afterbegin", `
         </button>
         <div class="dropdown" id="dropdown" hidden>
           <div class="who" id="whoEmail"></div>
+          <a href="profile.html" data-i18n="navProfile"></a>
+          <a href="for-you.html" data-i18n="navForYou"></a>
           <a href="planner.html#myplans" id="ddPlans" data-i18n="myPlans"></a>
           <button type="button" id="logoutBtn" data-i18n="logout"></button>
         </div>
@@ -74,6 +77,27 @@ document.body.insertAdjacentHTML("afterbegin", `
           <button type="button" class="pw-toggle" data-for="aPw2"></button>
         </div>
       </div>
+      <div id="bodyFields">
+        <div class="body-title" data-i18n="bodyInfo"></div>
+        <div class="field-row">
+          <div class="field">
+            <label for="aSex" data-i18n="sex"></label>
+            <select id="aSex"><option value="m"></option><option value="f"></option></select>
+          </div>
+          <div class="field">
+            <label for="aAge" data-i18n="age"></label>
+            <input id="aAge" type="number" inputmode="numeric" min="13" max="90" placeholder="25">
+          </div>
+          <div class="field">
+            <label for="aH" data-i18n="height"></label>
+            <input id="aH" type="number" inputmode="decimal" min="100" max="230" placeholder="165">
+          </div>
+          <div class="field">
+            <label for="aW" data-i18n="weight"></label>
+            <input id="aW" type="number" inputmode="decimal" min="25" max="250" placeholder="60">
+          </div>
+        </div>
+      </div>
       <div class="form-err" id="authErr" role="alert"></div>
       <button type="submit" class="btn" id="authSubmit"></button>
     </form>
@@ -106,4 +130,6 @@ $$(".lang button").forEach(b => b.onclick = () => { lang = b.dataset.lang; store
 onRender(() => {
   $$(".lang button").forEach(b => b.classList.toggle("on", b.dataset.lang === lang));
   $("#menuBtn").setAttribute("aria-label", t().menu);
+  // Male/female labels in every sex <select> on the page
+  $$("select#aSex, select#cSex, select#fSex").forEach(s => { s.options[0].textContent = t().male; s.options[1].textContent = t().female; });
 });
