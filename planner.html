@@ -1,0 +1,78 @@
+<!DOCTYPE html>
+<html lang="th">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>สร้างแผน · FitStart AI</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Prompt:wght@400;500;600;700&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="css/style.css">
+</head>
+<body data-page="plan">
+
+<main>
+  <div class="wrap page-hero">
+    <span class="pill" data-i18n="planPill"></span>
+    <h1 data-i18n="planTitle"></h1>
+    <p class="lead" data-i18n="planSub"></p>
+  </div>
+
+  <section class="tight">
+    <div class="wrap">
+      <div class="panel">
+        <form id="planForm">
+          <div class="form-grid">
+            <div class="q">
+              <div class="q-label" data-i18n="qGoal"></div>
+              <div class="chips" data-group="goal"></div>
+            </div>
+            <div class="q">
+              <div class="q-label" data-i18n="qLevel"></div>
+              <div class="chips" data-group="level"></div>
+            </div>
+            <div class="q">
+              <div class="q-label" data-i18n="qDays"></div>
+              <div class="chips" data-group="days"></div>
+            </div>
+            <div class="q">
+              <div class="q-label" data-i18n="qTime"></div>
+              <div class="chips" data-group="time"></div>
+            </div>
+            <div class="q">
+              <div class="q-label" data-i18n="qEquip"></div>
+              <div class="chips" data-group="equip"></div>
+            </div>
+            <div class="q">
+              <div class="q-label" data-i18n="qImpact"></div>
+              <div class="chips" data-group="impact"></div>
+            </div>
+          </div>
+          <button type="submit" class="btn" data-i18n="generate"></button>
+        </form>
+        <div id="plan" aria-live="polite"></div>
+      </div>
+    </div>
+  </section>
+
+  <!-- My plans (logged-in only) -->
+  <section id="myplans" hidden>
+    <div class="wrap">
+      <div class="sec-head">
+        <h2 data-i18n="myPlans"></h2>
+        <p data-i18n="myPlansSub"></p>
+      </div>
+      <div class="saved-list" id="savedList"></div>
+    </div>
+  </section>
+</main>
+
+<script src="js/i18n.js"></script>
+<script src="js/data.js"></script>
+<script src="js/utils.js"></script>
+<script src="js/layout.js"></script>
+<script src="js/auth.js"></script>
+<script src="js/planner.js"></script>
+<script src="js/main.js"></script>
+</body>
+</html>

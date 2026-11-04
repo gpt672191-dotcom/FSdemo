@@ -1,4 +1,11 @@
-// สร้างแผนออกกำลังกาย (Plan generator and form)
+// หน้าสร้างแผน: สร้างแผน ฟอร์มคำถาม และแผนที่บันทึกไว้ (Plan builder page)
+
+let answers = { ...DEFAULTS, ...store.get("fs-answers", {}) };
+let lastPlan = store.get("fs-plan", null); // { answers, seed }
+
+// Links like planner.html?goal=muscle pre-select the goal
+const urlGoal = new URLSearchParams(location.search).get("goal");
+if (OPTIONS.goal.includes(urlGoal)) answers.goal = urlGoal;
 
 /* ---------- Plan generation ---------- */
 function allowedEquip(eq) { return eq === "gym" ? ["none", "db", "gym"] : eq === "db" ? ["none", "db"] : ["none"]; }
@@ -130,3 +137,67 @@ $("#planForm").addEventListener("change", e => {
   if (e.target.name) { answers[e.target.name] = e.target.value; store.set("fs-answers", answers); }
 });
 $("#planForm").addEventListener("submit", e => { e.preventDefault(); generate({ ...answers }); });
+onRender(renderChips);
+onRender(renderPlan);
+
+/* ---------- Saved plans (needs auth.js) ---------- */
+function savePlan() {
+  const tx = t();
+  if (!lastPlan) return;
+  if (!currentUser()) { toast(tx.loginToSave); openAuth("login", savePlan); return; }
+  const users = getUsers(), u = users[session];
+  if (u.plans.some(p => p.seed === lastPlan.seed && JSON.stringify(p.answers) === JSON.stringify(lastPlan.answers))) {
+    toast(tx.alreadySaved); return;
+  }
+  u.plans.unshift({ answers: lastPlan.answers, seed: lastPlan.seed, savedAt: Date.now() });
+  setUsers(users);
+  renderSaved();
+  toast(tx.savedMsg);
+}
+
+function renderSaved() {
+  const box = $("#savedList"), u = currentUser(), tx = t();
+  $("#myplans").hidden = !u;
+  if (!u) { box.innerHTML = ""; return; }
+  if (!u.plans.length) { box.innerHTML = `<div class="empty">${tx.noPlans}</div>`; return; }
+  const dateFmt = new Intl.DateTimeFormat(lang === "th" ? "th-TH" : "en-GB", { dateStyle: "medium", timeStyle: "short" });
+  box.innerHTML = u.plans.map((p, i) => {
+    const a = p.answers;
+    return `
+      <div class="saved">
+        <div>
+          <b>${tx.sumGoal[a.goal].replace(/^./, c => c.toUpperCase())} · ${tx.lvName[a.level]}</b>
+          <small>${a.days} × ${a.time} ${tx.min} · ${tx[`equip_${a.equip}`]} · ${tx.savedOn} ${dateFmt.format(p.savedAt)}</small>
+        </div>
+        <div class="acts">
+          <button type="button" class="btn sm" data-open="${i}">${tx.open}</button>
+          <button type="button" class="btn sm ghost" data-del="${i}">${tx.del}</button>
+        </div>
+      </div>`;
+  }).join("");
+}
+onRender(renderSaved);
+
+$("#savedList").addEventListener("click", e => {
+  const tx = t();
+  const openI = e.target.dataset.open, delI = e.target.dataset.del;
+  const users = getUsers(), u = users[session];
+  if (!u) return;
+  if (openI !== undefined) {
+    const p = u.plans[+openI];
+    lastPlan = { answers: p.answers, seed: p.seed };
+    answers = { ...p.answers };
+    store.set("fs-plan", lastPlan); store.set("fs-answers", answers);
+    renderChips(); renderPlan();
+    $("#plan").scrollIntoView({ behavior: "smooth", block: "start" });
+  }
+  if (delI !== undefined) {
+    // Two-step delete: first tap arms the button, second tap deletes
+    if (e.target.dataset.armed) {
+      u.plans.splice(+delI, 1); setUsers(users); renderSaved(); toast(tx.deleted);
+    } else {
+      e.target.dataset.armed = "1"; e.target.textContent = tx.delConfirm;
+      setTimeout(() => { if (e.target.isConnected) { delete e.target.dataset.armed; e.target.textContent = tx.del; } }, 3000);
+    }
+  }
+});

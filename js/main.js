@@ -1,14 +1,9 @@
-// เริ่มต้นแอป และสลับภาษา (Start-up and language switch)
+// เริ่มต้นหน้าเว็บ — ต้องโหลดเป็นไฟล์สุดท้ายเสมอ (Start-up — always load this file last)
 
-/* ---------- Language ---------- */
-function applyLang() {
-  const t = T[lang];
-  document.documentElement.lang = lang;
-  $$("[data-i18n]").forEach(el => { el.textContent = t[el.dataset.i18n]; });
-  $$("[data-i18n-html]").forEach(el => { el.innerHTML = t[el.dataset.i18nHtml]; });
-  $$(".lang button").forEach(b => b.classList.toggle("on", b.dataset.lang === lang));
-  renderChips(); renderPlan(); renderBMI(); drawTimer(); renderAuth(); renderAccount();
+renderAll();
+
+// Sections hidden until login (e.g. #myplans) can't be scrolled to on load, so scroll after rendering
+if (location.hash) {
+  const target = document.getElementById(location.hash.slice(1));
+  if (target && !target.hidden) setTimeout(() => target.scrollIntoView(), 50);
 }
-$$(".lang button").forEach(b => b.onclick = () => { lang = b.dataset.lang; store.set("fs-lang", lang); applyLang(); });
-
-applyLang();

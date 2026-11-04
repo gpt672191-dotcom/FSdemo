@@ -54,9 +54,25 @@ header {
   width: 30px; height: 30px; border-radius: 9px; background: var(--accent); color: var(--accent-ink);
   display: grid; place-items: center; font-size: .9rem;
 }
-.nav-links { display: flex; gap: 22px; align-items: center; }
-.nav-links a { text-decoration: none; color: var(--muted); font-size: .95rem; }
-.nav-links a:hover { color: var(--text); }
+.nav-links { display: flex; gap: 4px; align-items: center; }
+.nav-links a {
+  text-decoration: none; color: var(--muted); font-size: .93rem; padding: 6px 12px; border-radius: 999px; white-space: nowrap;
+}
+.nav-links a:hover { color: var(--text); background: var(--surface-2); }
+.nav-links a.active { color: var(--accent); background: var(--accent-soft); font-weight: 600; }
+.menu-btn {
+  display: none; width: 40px; height: 40px; border-radius: 10px; border: 1px solid var(--line);
+  background: var(--surface); color: var(--text); font-size: 1.2rem; cursor: pointer;
+}
+@media (max-width: 960px) {
+  .menu-btn { display: grid; place-items: center; }
+  .nav-links {
+    display: none; position: absolute; top: 64px; left: 0; right: 0; flex-direction: column; align-items: stretch;
+    background: var(--bg); border-bottom: 1px solid var(--line); padding: 10px 16px 16px; gap: 2px;
+  }
+  .nav-links.open { display: flex; }
+  .nav-links a { padding: 12px 14px; border-radius: 10px; font-size: 1rem; }
+}
 .lang {
   display: flex; border: 1px solid var(--line); border-radius: 999px; overflow: hidden;
 }
@@ -65,7 +81,6 @@ header {
   font: inherit; font-size: .85rem; font-weight: 600;
 }
 .lang button.on { background: var(--text); color: var(--bg); }
-@media (max-width: 720px) { .nav-links a { display: none; } }
 
 /* Hero */
 .hero { padding-block: 72px 56px; display: grid; grid-template-columns: 1.2fr 1fr; gap: 40px; align-items: center; }
@@ -278,4 +293,79 @@ footer { border-top: 1px solid var(--line); padding-block: 28px; color: var(--mu
 @media print {
   header, .hero, #how, #tools, #tips, #faq, footer, .panel form, .plan-actions { display: none !important; }
   .panel { border: 0; box-shadow: none; padding: 0; }
+}
+
+/* ---------- Multi-page additions ---------- */
+.page-hero { padding-block: 48px 8px; }
+.page-hero .pill { margin-bottom: 4px; }
+.page-hero h1 { font-size: clamp(1.8rem, 4.5vw, 2.6rem); margin: 10px 0 10px; }
+.page-hero .lead { margin-bottom: 0; }
+section.tight { padding-block: 32px; }
+
+/* Category cards (home) */
+.cats { display: grid; grid-template-columns: repeat(auto-fill, minmax(220px, 1fr)); gap: 16px; }
+.cat {
+  display: flex; flex-direction: column; gap: 6px; text-decoration: none; background: var(--surface);
+  border: 1px solid var(--line); border-radius: var(--radius); padding: 22px; transition: transform .15s, border-color .15s;
+}
+.cat:hover { transform: translateY(-3px); border-color: var(--accent); }
+.cat .ico { font-size: 2rem; }
+.cat h3 { margin: 4px 0 0; font-size: 1.15rem; }
+.cat p { margin: 0; color: var(--muted); font-size: .92rem; flex: 1; }
+.cat .go { color: var(--accent); font-weight: 600; font-size: .92rem; margin-top: 6px; }
+
+/* Principle cards */
+.cards { display: grid; grid-template-columns: repeat(auto-fill, minmax(230px, 1fr)); gap: 14px; }
+
+/* Exercise browser */
+.ex-filter { display: flex; flex-wrap: wrap; gap: 8px; margin-bottom: 18px; justify-content: center; }
+.ex-filter button {
+  border: 1px solid var(--line); background: var(--surface-2); color: var(--text); padding: 8px 16px;
+  border-radius: 999px; font: inherit; font-size: .9rem; cursor: pointer;
+}
+.ex-filter button.on { background: var(--accent); color: var(--accent-ink); border-color: var(--accent); }
+.ex-group h3 { margin: 22px 0 10px; font-size: 1.05rem; }
+.ex-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(240px, 1fr)); gap: 10px; }
+.ex-card { background: var(--surface); border: 1px solid var(--line); border-radius: 12px; padding: 14px 16px; }
+.ex-card b { display: block; }
+.ex-card p { margin: 4px 0 8px; color: var(--muted); font-size: .88rem; }
+.tag { display: inline-block; font-size: .75rem; padding: 2px 8px; border-radius: 999px; background: var(--surface-2); color: var(--muted); margin-right: 4px; }
+.tag.acc { background: var(--accent-soft); color: var(--accent); }
+
+/* Calculators */
+.calc-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(150px, 1fr)); gap: 12px; margin-bottom: 14px; }
+.field select {
+  width: 100%; padding: 11px 12px; border-radius: 10px; border: 1px solid var(--line);
+  background: var(--surface-2); color: var(--text); font: inherit;
+}
+.result-row { display: grid; grid-template-columns: repeat(auto-fill, minmax(170px, 1fr)); gap: 10px; }
+.result { background: var(--surface-2); border-radius: 12px; padding: 14px; }
+.result small { display: block; color: var(--muted); font-size: .82rem; }
+.result b { font-size: 1.5rem; }
+.result.acc { background: var(--accent-soft); }
+.result.acc b { color: var(--accent); }
+.hint { color: var(--muted); font-size: .85rem; margin: 12px 0 0; }
+.bmi-table { width: 100%; border-collapse: collapse; font-size: .95rem; }
+.bmi-table td { padding: 10px 12px; border-bottom: 1px solid var(--line); }
+.bmi-table tr:last-child td { border-bottom: 0; }
+.dot { display: inline-block; width: 10px; height: 10px; border-radius: 50%; margin-right: 8px; }
+.two-col { display: grid; grid-template-columns: 1.2fr 1fr; gap: 16px; align-items: start; }
+@media (max-width: 820px) { .two-col { grid-template-columns: 1fr; } }
+
+/* Call-to-action band */
+.cta {
+  background: var(--accent); color: var(--accent-ink); border-radius: 20px; padding: 32px 28px;
+  display: flex; justify-content: space-between; align-items: center; gap: 20px; flex-wrap: wrap;
+}
+.cta h2 { margin: 0 0 4px; font-size: 1.4rem; }
+.cta p { margin: 0; opacity: .85; }
+.cta .btn { background: var(--accent-ink); color: var(--accent); }
+
+/* Footer links */
+.foot-links { display: flex; flex-wrap: wrap; justify-content: center; gap: 6px 18px; margin-bottom: 10px; }
+.foot-links a { text-decoration: none; }
+.foot-links a:hover { color: var(--text); }
+
+@media print {
+  #planForm, #myplans, .page-hero, .menu-btn { display: none !important; }
 }

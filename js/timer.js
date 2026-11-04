@@ -1,28 +1,11 @@
-// เครื่องคำนวณ BMI และตัวจับเวลาพัก (BMI calculator and rest timer)
+// ตัวจับเวลาพักระหว่างเซ็ต (Rest timer)
 
-/* ---------- BMI ---------- */
-function renderBMI() {
-  const t = T[lang], h = parseFloat($("#h").value), w = parseFloat($("#w").value), out = $("#bmiOut");
-  if (!(h >= 100 && h <= 230 && w >= 25 && w <= 250)) { out.innerHTML = `<span style="color:var(--muted)">${t.bmiEmpty}</span>`; return; }
-  const bmi = w / ((h / 100) ** 2);
-  const idx = bmi < 18.5 ? 0 : bmi < 23 ? 1 : bmi < 25 ? 2 : 3;
-  // Map BMI 14–34 onto the bar
-  const pos = Math.min(100, Math.max(0, (bmi - 14) / 20 * 100));
-  out.innerHTML = `
-    <b>${bmi.toFixed(1)}</b> · ${t.bmiCat[idx]}
-    <div class="bmi-bar"><i style="left:${pos}%"></i></div>
-    <div style="color:var(--muted);font-size:.92rem">${t.bmiAdvice[idx]}</div>`;
-}
-$("#h").addEventListener("input", renderBMI);
-$("#w").addEventListener("input", renderBMI);
-
-/* ---------- Rest timer ---------- */
 let tTotal = 60, tLeft = 60, tId = null, tEnd = 0;
 function fmt(s) { return `${String(Math.floor(s / 60)).padStart(2, "0")}:${String(s % 60).padStart(2, "0")}`; }
 function drawTimer() {
   $("#tDisplay").textContent = fmt(Math.ceil(tLeft));
   $("#tBar").style.width = `${(tLeft / tTotal) * 100}%`;
-  $("#tStart").textContent = tId ? T[lang].pause : T[lang].start;
+  $("#tStart").textContent = tId ? t().pause : t().start;
 }
 function beep() {
   try {
@@ -53,3 +36,4 @@ $("#presets").addEventListener("click", e => {
   const s = e.target.dataset.sec; if (!s) return;
   stopTimer(); tTotal = tLeft = +s; drawTimer();
 });
+onRender(drawTimer);

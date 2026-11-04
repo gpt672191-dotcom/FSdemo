@@ -1,0 +1,97 @@
+<!DOCTYPE html>
+<html lang="th">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>ลดน้ำหนัก · FitStart AI</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Prompt:wght@400;500;600;700&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="css/style.css">
+</head>
+<body data-page="lose">
+
+<main>
+  <div class="wrap page-hero">
+    <span class="pill" data-i18n="lPill"></span>
+    <h1 data-i18n="lTitle"></h1>
+    <p class="lead" data-i18n="lLead"></p>
+  </div>
+
+  <!-- Principles -->
+  <section class="tight">
+    <div class="wrap">
+      <div class="sec-head"><h2 data-i18n="prinTitle"></h2></div>
+      <div class="cards">
+        <div class="tip"><div class="ico">⚖️</div><h3 data-i18n="lp1t"></h3><p data-i18n="lp1d"></p></div>
+        <div class="tip"><div class="ico">🏋️</div><h3 data-i18n="lp2t"></h3><p data-i18n="lp2d"></p></div>
+        <div class="tip"><div class="ico">🚶</div><h3 data-i18n="lp3t"></h3><p data-i18n="lp3d"></p></div>
+        <div class="tip"><div class="ico">😴</div><h3 data-i18n="lp4t"></h3><p data-i18n="lp4d"></p></div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Calorie calculator -->
+  <section class="tight">
+    <div class="wrap">
+      <div class="panel">
+        <h2 style="margin:0 0 4px;font-size:1.3rem" data-i18n="calTitle"></h2>
+        <p style="margin:0 0 16px;color:var(--muted)" data-i18n="calSub"></p>
+        <div class="calc-grid">
+          <div class="field">
+            <label for="cSex" data-i18n="sex"></label>
+            <select id="cSex"><option value="m"></option><option value="f"></option></select>
+          </div>
+          <div class="field">
+            <label for="cAge" data-i18n="age"></label>
+            <input id="cAge" type="number" inputmode="numeric" min="15" max="90" placeholder="25">
+          </div>
+          <div class="field">
+            <label for="cH" data-i18n="height"></label>
+            <input id="cH" type="number" inputmode="decimal" min="100" max="230" placeholder="165">
+          </div>
+          <div class="field">
+            <label for="cW" data-i18n="weight"></label>
+            <input id="cW" type="number" inputmode="decimal" min="25" max="250" placeholder="60">
+          </div>
+        </div>
+        <div class="field" style="margin-bottom:16px">
+          <label for="cAct" data-i18n="activity"></label>
+          <select id="cAct"></select>
+        </div>
+        <div id="calOut"></div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Exercises -->
+  <section class="tight">
+    <div class="wrap">
+      <div class="sec-head">
+        <h2 data-i18n="exTitle"></h2>
+        <p data-i18n="exSubL"></p>
+      </div>
+      <div id="exBrowser" data-cats="cardio,lower"></div>
+    </div>
+  </section>
+
+  <section class="tight">
+    <div class="wrap">
+      <div class="cta">
+        <div><h2 data-i18n="lCta"></h2><p data-i18n="lCtaSub"></p></div>
+        <a href="planner.html?goal=lose" class="btn" data-i18n="lCtaBtn"></a>
+      </div>
+    </div>
+  </section>
+</main>
+
+<script src="js/i18n.js"></script>
+<script src="js/data.js"></script>
+<script src="js/utils.js"></script>
+<script src="js/layout.js"></script>
+<script src="js/auth.js"></script>
+<script src="js/exercises.js"></script>
+<script src="js/calculators.js"></script>
+<script src="js/main.js"></script>
+</body>
+</html>

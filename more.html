@@ -1,0 +1,80 @@
+<!DOCTYPE html>
+<html lang="th">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>อื่นๆ · FitStart AI</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Prompt:wght@400;500;600;700&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="css/style.css">
+</head>
+<body data-page="more">
+
+<main>
+  <div class="wrap page-hero">
+    <span class="pill" data-i18n="morePill"></span>
+    <h1 data-i18n="moreTitle"></h1>
+    <p class="lead" data-i18n="moreLead"></p>
+  </div>
+
+  <!-- Rest timer -->
+  <section class="tight" id="timer">
+    <div class="wrap" style="max-width:520px">
+      <div class="panel tool">
+        <h3 data-i18n="timerTitle"></h3>
+        <p data-i18n="timerSub"></p>
+        <div class="center" id="presets">
+          <button type="button" class="btn ghost" data-sec="30">30s</button>
+          <button type="button" class="btn ghost" data-sec="60">60s</button>
+          <button type="button" class="btn ghost" data-sec="90">90s</button>
+          <button type="button" class="btn ghost" data-sec="120">120s</button>
+        </div>
+        <div class="timer-display" id="tDisplay">01:00</div>
+        <div class="timer-ring"><div id="tBar"></div></div>
+        <div class="center">
+          <button type="button" class="btn" id="tStart"></button>
+          <button type="button" class="btn ghost" id="tReset" data-i18n="reset"></button>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Tips -->
+  <section class="tight" id="tips">
+    <div class="wrap">
+      <div class="sec-head">
+        <h2 data-i18n="tipsTitle"></h2>
+        <p data-i18n="tipsSub"></p>
+      </div>
+      <div class="tips">
+        <div class="tip"><div class="ico">🐢</div><h3 data-i18n="t1t"></h3><p data-i18n="t1d"></p></div>
+        <div class="tip"><div class="ico">💧</div><h3 data-i18n="t2t"></h3><p data-i18n="t2d"></p></div>
+        <div class="tip"><div class="ico">😴</div><h3 data-i18n="t3t"></h3><p data-i18n="t3d"></p></div>
+        <div class="tip"><div class="ico">📈</div><h3 data-i18n="t4t"></h3><p data-i18n="t4d"></p></div>
+      </div>
+    </div>
+  </section>
+
+  <!-- FAQ -->
+  <section class="tight" id="faq">
+    <div class="wrap faq">
+      <div class="sec-head"><h2 data-i18n="faqTitle"></h2></div>
+      <details><summary data-i18n="f1q"></summary><p data-i18n="f1a"></p></details>
+      <details><summary data-i18n="f2q"></summary><p data-i18n="f2a"></p></details>
+      <details><summary data-i18n="f3q"></summary><p data-i18n="f3a"></p></details>
+      <details><summary data-i18n="f5q"></summary><p data-i18n="f5a"></p></details>
+      <details><summary data-i18n="f4q"></summary><p data-i18n="f4a"></p></details>
+    </div>
+  </section>
+</main>
+
+<script src="js/i18n.js"></script>
+<script src="js/data.js"></script>
+<script src="js/utils.js"></script>
+<script src="js/layout.js"></script>
+<script src="js/auth.js"></script>
+<script src="js/timer.js"></script>
+<script src="js/main.js"></script>
+</body>
+</html>

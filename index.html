@@ -9,77 +9,8 @@
 <link href="https://fonts.googleapis.com/css2?family=Prompt:wght@400;500;600;700&display=swap" rel="stylesheet">
 <link rel="stylesheet" href="css/style.css">
 </head>
-<body>
-
-<header>
-  <div class="wrap nav">
-    <a href="#" class="logo"><span class="logo-mark">FS</span> FitStart AI</a>
-    <nav class="nav-links">
-      <a href="#how" data-i18n="navHow"></a>
-      <a href="#planner" data-i18n="navPlan"></a>
-      <a href="#tools" data-i18n="navTools"></a>
-      <a href="#tips" data-i18n="navTips"></a>
-    </nav>
-    <div class="nav-right">
-      <div class="lang" role="group" aria-label="Language">
-        <button type="button" data-lang="th">TH</button>
-        <button type="button" data-lang="en">EN</button>
-      </div>
-      <button type="button" class="btn sm" id="loginBtn" data-i18n="login"></button>
-      <div class="user-menu" id="userMenu" hidden>
-        <button type="button" class="user-btn" id="userBtn" aria-haspopup="true">
-          <span class="avatar" id="avatar"></span><span class="uname" id="uname"></span>
-        </button>
-        <div class="dropdown" id="dropdown" hidden>
-          <div class="who" id="whoEmail"></div>
-          <a href="#myplans" id="ddPlans" data-i18n="myPlans"></a>
-          <button type="button" id="logoutBtn" data-i18n="logout"></button>
-        </div>
-      </div>
-    </div>
-  </div>
-</header>
-
-<!-- Login / Sign-up modal -->
-<div class="modal-bg" id="authModal" hidden>
-  <div class="modal" role="dialog" aria-modal="true" aria-labelledby="authTitle">
-    <button type="button" class="close" id="authClose" aria-label="Close">✕</button>
-    <h2 id="authTitle" style="margin:0 0 4px;font-size:1.35rem"></h2>
-    <p id="authSub" style="margin:0;color:var(--muted);font-size:.92rem"></p>
-    <div class="tabs">
-      <button type="button" data-tab="login" data-i18n="login"></button>
-      <button type="button" data-tab="signup" data-i18n="signup"></button>
-    </div>
-    <form id="authForm" novalidate>
-      <div class="field" id="nameField">
-        <label for="aName" data-i18n="name"></label>
-        <input id="aName" type="text" autocomplete="name" maxlength="40">
-      </div>
-      <div class="field">
-        <label for="aEmail" data-i18n="email"></label>
-        <input id="aEmail" type="email" autocomplete="email" placeholder="you@example.com">
-      </div>
-      <div class="field">
-        <label for="aPw" data-i18n="password"></label>
-        <div class="pw-wrap">
-          <input id="aPw" type="password" autocomplete="current-password">
-          <button type="button" class="pw-toggle" data-for="aPw" data-i18n="show"></button>
-        </div>
-      </div>
-      <div class="field" id="pw2Field">
-        <label for="aPw2" data-i18n="confirmPw"></label>
-        <div class="pw-wrap">
-          <input id="aPw2" type="password" autocomplete="new-password">
-          <button type="button" class="pw-toggle" data-for="aPw2" data-i18n="show"></button>
-        </div>
-      </div>
-      <div class="form-err" id="authErr" role="alert"></div>
-      <button type="submit" class="btn" id="authSubmit"></button>
-    </form>
-    <div class="switch-line"><span id="switchText"></span> <button type="button" id="switchBtn"></button></div>
-    <div class="demo-note">🧪 <span data-i18n="demoNote"></span></div>
-  </div>
-</div>
+<body data-page="home">
+<!-- ส่วนหัว เมนู และส่วนท้าย ถูกเพิ่มอัตโนมัติจาก js/layout.js -->
 
 <main>
   <!-- Hero -->
@@ -89,8 +20,8 @@
       <h1 data-i18n-html="heroTitle"></h1>
       <p class="lead" data-i18n="heroLead"></p>
       <div class="btn-row">
-        <a href="#planner" class="btn" data-i18n="heroCta"></a>
-        <a href="#how" class="btn ghost" data-i18n="heroCta2"></a>
+        <a href="planner.html" class="btn" data-i18n="heroCta"></a>
+        <a href="#topics" class="btn ghost" data-i18n="heroCta2"></a>
       </div>
     </div>
     <div class="hero-card" aria-hidden="true">
@@ -107,6 +38,23 @@
     </div>
   </div>
 
+  <!-- Categories -->
+  <section id="topics">
+    <div class="wrap">
+      <div class="sec-head">
+        <h2 data-i18n="catTitle"></h2>
+        <p data-i18n="catSub"></p>
+      </div>
+      <div class="cats">
+        <a class="cat" href="muscle.html"><span class="ico">💪</span><h3 data-i18n="navMuscle"></h3><p data-i18n="cMuscleD"></p><span class="go" data-i18n="go"></span></a>
+        <a class="cat" href="weight-loss.html"><span class="ico">🔥</span><h3 data-i18n="navLose"></h3><p data-i18n="cLoseD"></p><span class="go" data-i18n="go"></span></a>
+        <a class="cat" href="planner.html"><span class="ico">📋</span><h3 data-i18n="navPlan"></h3><p data-i18n="cPlanD"></p><span class="go" data-i18n="go"></span></a>
+        <a class="cat" href="bmi.html"><span class="ico">⚖️</span><h3 data-i18n="navBmi"></h3><p data-i18n="cBmiD"></p><span class="go" data-i18n="go"></span></a>
+        <a class="cat" href="more.html"><span class="ico">🧰</span><h3 data-i18n="navMore"></h3><p data-i18n="cMoreD"></p><span class="go" data-i18n="go"></span></a>
+      </div>
+    </div>
+  </section>
+
   <!-- How it works -->
   <section id="how">
     <div class="wrap">
@@ -121,143 +69,12 @@
       </div>
     </div>
   </section>
-
-  <!-- Planner -->
-  <section id="planner">
-    <div class="wrap">
-      <div class="sec-head">
-        <h2 data-i18n="planTitle"></h2>
-        <p data-i18n="planSub"></p>
-      </div>
-      <div class="panel">
-        <form id="planForm">
-          <div class="form-grid">
-            <div class="q">
-              <div class="q-label" data-i18n="qGoal"></div>
-              <div class="chips" data-group="goal"></div>
-            </div>
-            <div class="q">
-              <div class="q-label" data-i18n="qLevel"></div>
-              <div class="chips" data-group="level"></div>
-            </div>
-            <div class="q">
-              <div class="q-label" data-i18n="qDays"></div>
-              <div class="chips" data-group="days"></div>
-            </div>
-            <div class="q">
-              <div class="q-label" data-i18n="qTime"></div>
-              <div class="chips" data-group="time"></div>
-            </div>
-            <div class="q">
-              <div class="q-label" data-i18n="qEquip"></div>
-              <div class="chips" data-group="equip"></div>
-            </div>
-            <div class="q">
-              <div class="q-label" data-i18n="qImpact"></div>
-              <div class="chips" data-group="impact"></div>
-            </div>
-          </div>
-          <button type="submit" class="btn" data-i18n="generate"></button>
-        </form>
-        <div id="plan" aria-live="polite"></div>
-      </div>
-    </div>
-  </section>
-
-  <!-- My plans (logged-in only) -->
-  <section id="myplans" hidden>
-    <div class="wrap">
-      <div class="sec-head">
-        <h2 data-i18n="myPlans"></h2>
-        <p data-i18n="myPlansSub"></p>
-      </div>
-      <div class="saved-list" id="savedList"></div>
-    </div>
-  </section>
-
-  <!-- Tools -->
-  <section id="tools">
-    <div class="wrap">
-      <div class="sec-head">
-        <h2 data-i18n="toolsTitle"></h2>
-        <p data-i18n="toolsSub"></p>
-      </div>
-      <div class="tools">
-        <div class="panel tool">
-          <h3 data-i18n="bmiTitle"></h3>
-          <p data-i18n="bmiSub"></p>
-          <div class="field-row">
-            <div class="field">
-              <label for="h" data-i18n="height"></label>
-              <input id="h" type="number" inputmode="decimal" min="100" max="230" placeholder="165">
-            </div>
-            <div class="field">
-              <label for="w" data-i18n="weight"></label>
-              <input id="w" type="number" inputmode="decimal" min="25" max="250" placeholder="60">
-            </div>
-          </div>
-          <div class="bmi-out" id="bmiOut"></div>
-        </div>
-
-        <div class="panel tool">
-          <h3 data-i18n="timerTitle"></h3>
-          <p data-i18n="timerSub"></p>
-          <div class="center" id="presets">
-            <button type="button" class="btn ghost" data-sec="30">30s</button>
-            <button type="button" class="btn ghost" data-sec="60">60s</button>
-            <button type="button" class="btn ghost" data-sec="90">90s</button>
-          </div>
-          <div class="timer-display" id="tDisplay">01:00</div>
-          <div class="timer-ring"><div id="tBar"></div></div>
-          <div class="center">
-            <button type="button" class="btn" id="tStart" data-i18n="start"></button>
-            <button type="button" class="btn ghost" id="tReset" data-i18n="reset"></button>
-          </div>
-        </div>
-      </div>
-    </div>
-  </section>
-
-  <!-- Tips -->
-  <section id="tips">
-    <div class="wrap">
-      <div class="sec-head">
-        <h2 data-i18n="tipsTitle"></h2>
-        <p data-i18n="tipsSub"></p>
-      </div>
-      <div class="tips">
-        <div class="tip"><div class="ico">🐢</div><h3 data-i18n="t1t"></h3><p data-i18n="t1d"></p></div>
-        <div class="tip"><div class="ico">💧</div><h3 data-i18n="t2t"></h3><p data-i18n="t2d"></p></div>
-        <div class="tip"><div class="ico">😴</div><h3 data-i18n="t3t"></h3><p data-i18n="t3d"></p></div>
-        <div class="tip"><div class="ico">📈</div><h3 data-i18n="t4t"></h3><p data-i18n="t4d"></p></div>
-      </div>
-    </div>
-  </section>
-
-  <!-- FAQ -->
-  <section id="faq">
-    <div class="wrap faq">
-      <div class="sec-head"><h2 data-i18n="faqTitle"></h2></div>
-      <details><summary data-i18n="f1q"></summary><p data-i18n="f1a"></p></details>
-      <details><summary data-i18n="f2q"></summary><p data-i18n="f2a"></p></details>
-      <details><summary data-i18n="f3q"></summary><p data-i18n="f3a"></p></details>
-      <details><summary data-i18n="f4q"></summary><p data-i18n="f4a"></p></details>
-    </div>
-  </section>
 </main>
-
-<footer>
-  <div class="wrap">
-    <p data-i18n="disclaimer"></p>
-    <p>© 2026 FitStart AI</p>
-  </div>
-</footer>
 
 <script src="js/i18n.js"></script>
 <script src="js/data.js"></script>
 <script src="js/utils.js"></script>
-<script src="js/planner.js"></script>
-<script src="js/tools.js"></script>
+<script src="js/layout.js"></script>
 <script src="js/auth.js"></script>
 <script src="js/main.js"></script>
 </body>
