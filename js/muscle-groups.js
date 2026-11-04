@@ -24,11 +24,8 @@ function renderGroups() {
 function renderDetail() {
   const tx = t(), g = mgSel;
   const all = exercisesFor(g);
-  const list = all.filter(e => mgEq === "all" || e.eq === mgEq);
-  const filters = ["all", "none", "db", "gym"].map(e =>
-    `<button type="button" data-eq="${e}" class="${e === mgEq ? "on" : ""}">${e === "all" ? tx.eqAll : tx[`equip_${e}`]}</button>`).join("");
 
-  const cards = list.map(e => {
+  const card = e => {
     const others = MUSCLES[e.id].filter(m => m !== g).map(m => `<span class="tag">${tx[`mg_${m}`]}</span>`).join("");
     const dose = (e.timed ? tx.mgDoseTimed : tx.mgDose) + (e.side ? ` · ${tx.perSide}` : "");
     return `
@@ -39,7 +36,7 @@ function renderDetail() {
         <div class="ex-dose" style="margin-bottom:8px">${dose}</div>
         <span class="tag acc">${tx[`equip_${e.eq}`]}</span>${others}
       </div>`;
-  }).join("");
+  };
 
   $("#mgDetail").innerHTML = `
     <div class="wrap">
@@ -53,8 +50,8 @@ function renderDetail() {
         <div class="bm-wrap big">${bodyMap(g)}</div>
       </div>
       <div class="sec-head" style="margin:28px 0 16px"><h2 style="font-size:1.3rem">${tx.mgExTitle(tx[`mg_${g}`], all.length)}</h2></div>
-      <div class="ex-filter">${filters}</div>
-      <div class="ex-grid">${cards || `<div class="empty" style="grid-column:1/-1">${tx.mgNone}</div>`}</div>
+      ${equipTabs(mgEq)}
+      ${equipSections(all, mgEq, card)}
     </div>`;
 }
 
@@ -68,8 +65,8 @@ $("#mgGrid").addEventListener("click", e => {
   $("#mgDetail").scrollIntoView({ behavior: "smooth", block: "start" });
 });
 $("#mgDetail").addEventListener("click", e => {
-  const eq = e.target.dataset.eq;
-  if (eq) { mgEq = eq; renderDetail(); }
+  const tab = e.target.closest("[data-eqmode]");
+  if (tab) { mgEq = tab.dataset.eqmode; renderDetail(); }
 });
 
 onRender(renderGroups);

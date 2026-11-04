@@ -54,6 +54,40 @@ const health = {
 };
 const round10 = x => Math.round(x / 10) * 10;
 
+/* ---------- Exercises grouped by equipment ----------
+   Tabs: all | none (no equipment) | with (dumbbells + gym machines).
+   equipSections(list, mode, card) returns the HTML; card(e) draws one exercise card. */
+const EQ_MODES = ["all", "none", "with"];
+
+function equipTabs(mode) {
+  const tx = t();
+  return `<div class="eq-tabs" role="tablist">${EQ_MODES.map(m =>
+    `<button type="button" role="tab" data-eqmode="${m}" aria-selected="${m === mode}" class="${m === mode ? "on" : ""}">${icon(m === "none" ? "user" : m === "with" ? "dumbbell" : "grid")}${tx[`eqTab_${m}`]}</button>`
+  ).join("")}</div>`;
+}
+
+function equipSections(list, mode, card) {
+  const tx = t();
+  const by = eq => list.filter(e => e.eq === eq);
+  const none = by("none"), db = by("db"), gym = by("gym");
+  const grid = items => `<div class="ex-grid">${items.map(card).join("")}</div>`;
+  const sub = (key, items) => items.length
+    ? `<div class="eq-sub"><h4>${tx[`sec_${key}`]} <small>${tx.mgCount(items.length)}</small></h4>${grid(items)}</div>` : "";
+  const block = (key, count, body) => `
+    <section class="eq-cat eq-${key}">
+      <div class="eq-cat-head">
+        <span class="eq-cat-ico">${icon(key === "none" ? "user" : "dumbbell")}</span>
+        <div><h3>${tx[`sec_${key}`]} <span class="eq-count">${tx.mgCount(count)}</span></h3><p>${tx[`secD_${key}`]}</p></div>
+      </div>
+      ${body}
+    </section>`;
+
+  let html = "";
+  if (mode !== "with" && none.length) html += block("none", none.length, grid(none));
+  if (mode !== "none" && db.length + gym.length) html += block("with", db.length + gym.length, sub("db", db) + sub("gym", gym));
+  return html || `<div class="empty">${tx.mgNone}</div>`;
+}
+
 /* ---------- Toast ---------- */
 let toastId;
 function toast(msg) {
