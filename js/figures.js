@@ -272,13 +272,16 @@ const FIGURES = (() => {
   }
   function mountAll(root = document) { root.querySelectorAll("[data-fig]").forEach(mount); }
 
-  let running = false;
+  let running = false, last = 0;
   function loop(now) {
+    requestAnimationFrame(loop);
+    // ~30 frames per second is smooth enough and halves the work
+    if (now - last < 32) return;
+    last = now;
     for (const inst of live) {
       if (!inst.el.isConnected) { live.delete(inst); if (io) io.unobserve(inst.el); continue; }
       if (visible.has(inst.el) && !motionOff()) draw(inst, now);
     }
-    requestAnimationFrame(loop);
   }
   function start() {
     mountAll();
