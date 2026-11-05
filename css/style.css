@@ -932,3 +932,58 @@ section.tight { padding-block: 32px; }
   .nav-right .btn.sm { white-space: nowrap; padding: 7px 10px; }
   .lang button { padding: 6px 9px; }
 }
+
+/* ---------- Phones: app-style bottom tab bar + quicker home page ---------- */
+.tabbar { display: none; }
+@media (max-width: 720px) {
+  .tabbar {
+    position: fixed; left: 0; right: 0; bottom: 0; z-index: 40; display: grid; grid-template-columns: repeat(5, 1fr);
+    padding: 6px 4px calc(6px + env(safe-area-inset-bottom, 0px));
+    background: color-mix(in srgb, var(--surface) 97%, transparent); border-top: 1px solid var(--line);
+    box-shadow: 0 -8px 24px -12px rgba(0, 0, 0, .25);
+  }
+  .tabbar a, .tabbar button {
+    display: flex; flex-direction: column; align-items: center; gap: 3px; padding: 6px 2px; border: 0; background: none;
+    color: var(--muted); text-decoration: none; font: inherit; font-size: .7rem; font-weight: 600; cursor: pointer; border-radius: 12px;
+    white-space: nowrap; overflow: hidden; text-overflow: ellipsis; min-width: 0;
+  }
+  .tabbar .ic { width: 22px; height: 22px; }
+  .tabbar .on { color: var(--accent); }
+  .tabbar .on .ic { background: var(--accent-soft); border-radius: 10px; padding: 3px 10px; width: 44px; height: 28px; }
+  body { padding-bottom: calc(70px + env(safe-area-inset-bottom, 0px)); }
+  .toast { bottom: calc(84px + env(safe-area-inset-bottom, 0px)); }
+
+  /* The header ☰ is replaced by the "Menu" tab; the full menu opens as a sheet above the tab bar */
+  .menu-btn { display: none !important; }
+  .nav-links {
+    position: fixed !important; top: auto !important; left: 10px !important; right: 10px !important;
+    bottom: calc(76px + env(safe-area-inset-bottom, 0px)) !important; z-index: 45;
+    border: 1px solid var(--line) !important; border-radius: 18px; background: var(--surface) !important;
+    box-shadow: 0 18px 40px -12px rgba(0, 0, 0, .35); padding: 10px !important;
+    display: none; grid-template-columns: 1fr 1fr; gap: 4px !important;
+  }
+  .nav-links.open { display: grid !important; }
+  .nav-links a { padding: 12px 14px !important; background: var(--surface-2); border-radius: 12px !important; font-size: .95rem !important; text-align: center; }
+
+  /* Home: skip the big showcase so the categories come right after the intro */
+  .hero-show { display: none; }
+  .hero2 { padding-block: 24px 4px; }
+  .hero-stats { margin-top: 20px; }
+  #topics { padding-top: 32px; }
+}
+
+/* Category tiles: compact 2-column grid on phones */
+@media (max-width: 560px) {
+  .tiles-sq, .tiles-wide { gap: 10px; }
+  .tiles-wide { grid-template-columns: 1fr 1fr; }
+  .tile.wide { aspect-ratio: auto; flex-direction: column; align-items: center; gap: 6px; padding: 14px 10px 12px; text-align: center; }
+  .tile.wide .tile-badge { width: 56%; }
+  .tile.wide .tile-text { align-items: center; text-align: center; }
+  .tile.wide .tile-l1 { font-size: .85rem; }
+  .tile.wide .tile-l2 { font-size: 1.25rem; white-space: normal; margin-bottom: 6px; }
+  .tile.wide .tile-pill { font-size: .66rem; padding: 2px 9px; white-space: normal; }
+  .tile.sq { padding: 10px 8px 12px; }
+  .tile-title { font-size: 1.15rem; margin: 8px 0 6px; }
+  .tile.sq .tile-pill { font-size: .66rem; padding: 2px 9px; }
+}
+@media print { .tabbar { display: none !important; } }

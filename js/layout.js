@@ -119,14 +119,34 @@ $("main").insertAdjacentHTML("afterend", `
   </div>
 </footer>`);
 
-/* ---------- Mobile menu ---------- */
-$("#menuBtn").onclick = e => {
+/* ---------- Bottom tab bar (phones only, shown by CSS) ---------- */
+const TABS = [
+  { page: "home",   href: "index.html",       key: "navHome",   ic: "home" },
+  { page: "muscle", href: "muscle.html",      key: "navMuscle", ic: "dumbbell" },
+  { page: "lose",   href: "weight-loss.html", key: "navLose",   ic: "flame" },
+  { page: "plan",   href: "planner.html",     key: "navPlan",   ic: "clipboard" }
+];
+document.body.insertAdjacentHTML("beforeend", `
+<nav class="tabbar" aria-label="Main">
+  ${TABS.map(n => `<a href="${n.href}"${n.page === PAGE ? ' class="on" aria-current="page"' : ""}><i data-icon="${n.ic}"></i><span data-i18n="${n.key}"></span></a>`).join("")}
+  <button type="button" id="tabMenu" aria-controls="navLinks" aria-expanded="false"${TABS.some(n => n.page === PAGE) ? "" : ' class="on"'}><i data-icon="menu"></i><span data-i18n="menu"></span></button>
+</nav>`);
+
+/* ---------- Mobile menu (header ☰ on tablets, "Menu" tab on phones) ---------- */
+function toggleMenu(e) {
   e.stopPropagation();
   const open = $("#navLinks").classList.toggle("open");
   $("#menuBtn").setAttribute("aria-expanded", open);
-};
+  $("#tabMenu").setAttribute("aria-expanded", open);
+}
+$("#menuBtn").onclick = toggleMenu;
+$("#tabMenu").onclick = toggleMenu;
 document.addEventListener("click", e => {
-  if (!e.target.closest("#navLinks")) { $("#navLinks").classList.remove("open"); $("#menuBtn").setAttribute("aria-expanded", "false"); }
+  if (!e.target.closest("#navLinks")) {
+    $("#navLinks").classList.remove("open");
+    $("#menuBtn").setAttribute("aria-expanded", "false");
+    $("#tabMenu").setAttribute("aria-expanded", "false");
+  }
 });
 
 /* ---------- Language switch ---------- */
