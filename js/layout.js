@@ -37,9 +37,10 @@ document.body.insertAdjacentHTML("afterbegin", `
         </button>
         <div class="dropdown" id="dropdown" hidden>
           <div class="who" id="whoEmail"></div>
-          <a href="profile.html" data-i18n="navProfile"></a>
-          <a href="for-you.html" data-i18n="navForYou"></a>
-          <a href="planner.html#myplans" id="ddPlans" data-i18n="myPlans"></a>
+          <a href="profile.html"><i data-icon="user"></i><span data-i18n="navProfile"></span></a>
+          <a href="for-you.html"><i data-icon="sparkle"></i><span data-i18n="navForYou"></span></a>
+          <a href="planner.html#myplans" id="ddPlans"><i data-icon="clipboard"></i><span data-i18n="myPlans"></span></a>
+          <a href="settings.html"${PAGE === "settings" ? ' aria-current="page"' : ""}><i data-icon="gear"></i><span data-i18n="navSettings"></span></a>
           <button type="button" id="logoutBtn" data-i18n="logout"></button>
         </div>
       </div>

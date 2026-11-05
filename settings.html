@@ -1,0 +1,153 @@
+<!DOCTYPE html>
+<html lang="th">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>ตั้งค่า · FitStart AI</title>
+<link rel="icon" href="img/logo.svg" type="image/svg+xml">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Sans+Thai:wght@300;400;500;600&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="css/style.css?v=202611051430">
+</head>
+<body data-page="settings">
+
+<main>
+  <div class="wrap page-hero has-fig">
+    <div>
+      <span class="pill"><span data-i18n="sPill"></span></span>
+      <h1 data-i18n="sTitle"></h1>
+      <p class="lead" data-i18n="sLead"></p>
+    </div>
+    <div class="fig hero-fig" data-fig="birddog"></div>
+  </div>
+
+  <!-- Display: for everyone, saved in this browser -->
+  <section class="tight">
+    <div class="wrap">
+      <div class="panel">
+        <h2 class="set-title"><i data-icon="palette"></i><span data-i18n="sLookTitle"></span></h2>
+        <p class="set-sub" data-i18n="sLookSub"></p>
+        <div class="set-row">
+          <div class="set-txt"><b data-i18n="sTheme"></b><small data-i18n="sThemeD"></small></div>
+          <div class="seg" id="themeSeg" role="group">
+            <button type="button" data-theme="auto" data-i18n="thAuto"></button>
+            <button type="button" data-theme="light" data-i18n="thLight"></button>
+            <button type="button" data-theme="dark" data-i18n="thDark"></button>
+          </div>
+        </div>
+        <div class="set-row">
+          <div class="set-txt"><b data-i18n="sLang"></b><small data-i18n="sLangD"></small></div>
+          <div class="seg" id="langSeg" role="group">
+            <button type="button" data-setlang="th">ไทย</button>
+            <button type="button" data-setlang="en">English</button>
+          </div>
+        </div>
+        <div class="set-row">
+          <div class="set-txt"><b id="motionLbl" data-i18n="sMotion"></b><small data-i18n="sMotionD"></small></div>
+          <label class="switch"><input type="checkbox" id="motionToggle" aria-labelledby="motionLbl"><span></span></label>
+        </div>
+        <div class="set-row">
+          <div class="set-txt"></div>
+          <button type="button" class="btn ghost sm" id="resetPrefs" data-i18n="sReset"></button>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Guest -->
+  <section class="tight" id="sGuest" hidden>
+    <div class="wrap">
+      <div class="empty">
+        <p style="margin:0 0 16px" data-i18n="sAccGuest"></p>
+        <div class="btn-row" style="justify-content:center">
+          <button type="button" class="btn" id="sLogin" data-i18n="login"></button>
+          <button type="button" class="btn ghost" id="sSignup" data-i18n="signup"></button>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Logged in -->
+  <div id="sAccount" hidden>
+    <section class="tight">
+      <div class="wrap">
+        <div class="panel">
+          <h2 class="set-title"><i data-icon="user"></i><span data-i18n="sAccTitle"></span></h2>
+          <p class="set-sub"><span data-i18n="sAccLoggedAs"></span> <b id="sEmail" style="color:var(--text)"></b></p>
+          <a class="btn ghost sm" href="profile.html" data-i18n="sEditProfile"></a>
+        </div>
+      </div>
+    </section>
+
+    <section class="tight">
+      <div class="wrap">
+        <div class="panel">
+          <h2 class="set-title"><i data-icon="key"></i><span data-i18n="sPwTitle"></span></h2>
+          <p class="set-sub" data-i18n="demoNote"></p>
+          <form id="pwForm" class="set-form" novalidate>
+            <div class="field">
+              <label for="sPwCur" data-i18n="sPwCur"></label>
+              <div class="pw-wrap"><input id="sPwCur" type="password" autocomplete="current-password"><button type="button" class="pw-toggle" data-for="sPwCur"></button></div>
+            </div>
+            <div class="field">
+              <label for="sPwNew" data-i18n="sPwNew"></label>
+              <div class="pw-wrap"><input id="sPwNew" type="password" autocomplete="new-password"><button type="button" class="pw-toggle" data-for="sPwNew"></button></div>
+            </div>
+            <div class="field">
+              <label for="sPwNew2" data-i18n="sPwNew2"></label>
+              <div class="pw-wrap"><input id="sPwNew2" type="password" autocomplete="new-password"><button type="button" class="pw-toggle" data-for="sPwNew2"></button></div>
+            </div>
+            <div class="form-err" id="pwErr" role="alert"></div>
+            <div><button type="submit" class="btn" data-i18n="sPwBtn"></button></div>
+          </form>
+        </div>
+      </div>
+    </section>
+
+    <section class="tight">
+      <div class="wrap">
+        <div class="panel">
+          <h2 class="set-title"><i data-icon="save"></i><span data-i18n="sDataTitle"></span></h2>
+          <div class="set-row">
+            <div class="set-txt"><b data-i18n="sExport"></b><small data-i18n="sExportD"></small></div>
+            <button type="button" class="btn ghost sm" id="exportBtn"><i data-icon="download"></i><span data-i18n="sExport"></span></button>
+          </div>
+          <div class="set-row">
+            <div class="set-txt"><b data-i18n="sClearPlans"></b><small id="sPlansInfo"></small></div>
+            <button type="button" class="btn ghost danger sm" id="clearPlansBtn"><i data-icon="trash"></i><span id="clearPlansTxt"></span></button>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section class="tight">
+      <div class="wrap">
+        <div class="panel danger-zone">
+          <h2 class="set-title"><i data-icon="alert"></i><span data-i18n="sDangerTitle"></span></h2>
+          <p class="set-sub" data-i18n="sDangerSub"></p>
+          <form id="delForm" class="set-form" novalidate>
+            <div class="field">
+              <label for="sDelPw" data-i18n="sDelPw"></label>
+              <div class="pw-wrap"><input id="sDelPw" type="password" autocomplete="current-password"><button type="button" class="pw-toggle" data-for="sDelPw"></button></div>
+            </div>
+            <div class="form-err" id="delErr" role="alert"></div>
+            <div><button type="submit" class="btn danger" data-i18n="sDelBtn"></button></div>
+          </form>
+        </div>
+      </div>
+    </section>
+  </div>
+</main>
+
+<script src="js/i18n.js?v=202611051430"></script>
+<script src="js/data.js?v=202611051430"></script>
+<script src="js/utils.js?v=202611051430"></script>
+<script src="js/icons.js?v=202611051430"></script>
+<script src="js/figures.js?v=202611051430"></script>
+<script src="js/layout.js?v=202611051430"></script>
+<script src="js/auth.js?v=202611051430"></script>
+<script src="js/settings.js?v=202611051430"></script>
+<script src="js/main.js?v=202611051430"></script>
+</body>
+</html>

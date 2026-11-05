@@ -257,6 +257,7 @@ const FIGURES = (() => {
   const live = new Set();
   const visible = new WeakSet();
   const reduce = window.matchMedia && matchMedia("(prefers-reduced-motion: reduce)").matches;
+  const motionOff = () => document.documentElement.dataset.motion === "reduce"; // set on the Settings page
   const io = "IntersectionObserver" in window
     ? new IntersectionObserver(es => es.forEach(en => (en.isIntersecting ? visible.add(en.target) : visible.delete(en.target))), { rootMargin: "100px" })
     : null;
@@ -275,7 +276,7 @@ const FIGURES = (() => {
   function loop(now) {
     for (const inst of live) {
       if (!inst.el.isConnected) { live.delete(inst); if (io) io.unobserve(inst.el); continue; }
-      if (visible.has(inst.el)) draw(inst, now);
+      if (visible.has(inst.el) && !motionOff()) draw(inst, now);
     }
     requestAnimationFrame(loop);
   }

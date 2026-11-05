@@ -190,6 +190,27 @@ const T = {
     notSet: "ยังไม่ได้กรอก", years: "ปี", cm: "ซม.", kg: "กก.",
     plansCount: n => `บันทึกแผนไว้ ${n} แผน`, seePlans: "ดูแผนของฉัน →", seeForYou: "ดูคำแนะนำสำหรับฉัน →",
 
+
+    /* ----- หน้าตั้งค่า ----- */
+    navSettings: "ตั้งค่า",
+    sPill: "ตั้งค่า", sTitle: "ตั้งค่า", sLead: "ปรับหน้าตาเว็บและจัดการบัญชีของคุณ",
+    sLookTitle: "การแสดงผล", sLookSub: "ใช้กับเบราว์เซอร์เครื่องนี้",
+    sTheme: "ธีม", sThemeD: "\"ตามระบบ\" จะเปลี่ยนตามการตั้งค่าของเครื่อง",
+    thAuto: "ตามระบบ", thLight: "สว่าง", thDark: "มืด",
+    sLang: "ภาษา", sLangD: "ภาษาที่ใช้แสดงทั้งเว็บ",
+    sMotion: "ลดภาพเคลื่อนไหว", sMotionD: "หยุดตัวละครและพื้นหลังที่เคลื่อนไหว",
+    sReset: "คืนค่าเริ่มต้น", sResetDone: "คืนค่าการแสดงผลเริ่มต้นแล้ว", sSaved: "บันทึกการตั้งค่าแล้ว",
+    sAccTitle: "บัญชี", sAccLoggedAs: "เข้าสู่ระบบด้วย",
+    sAccGuest: "เข้าสู่ระบบเพื่อจัดการบัญชี เปลี่ยนรหัสผ่าน และข้อมูลของคุณ",
+    sEditProfile: "แก้ไขข้อมูลส่วนตัว",
+    sPwTitle: "เปลี่ยนรหัสผ่าน", sPwCur: "รหัสผ่านปัจจุบัน", sPwNew: "รหัสผ่านใหม่ (อย่างน้อย 8 ตัว)", sPwNew2: "ยืนยันรหัสผ่านใหม่",
+    sPwBtn: "เปลี่ยนรหัสผ่าน", pwChanged: "เปลี่ยนรหัสผ่านแล้ว", errPwCur: "รหัสผ่านปัจจุบันไม่ถูกต้อง", errPwSame: "รหัสผ่านใหม่ต้องไม่ซ้ำกับรหัสเดิม",
+    sDataTitle: "ข้อมูลของฉัน",
+    sExport: "ดาวน์โหลดข้อมูล", sExportD: "บันทึกข้อมูลส่วนตัวและแผนทั้งหมดเป็นไฟล์ JSON", exported: "ดาวน์โหลดไฟล์แล้ว",
+    sClearPlans: "ลบแผนที่บันทึกทั้งหมด", sClearBtn: "ลบแผนทั้งหมด", plansCleared: "ลบแผนทั้งหมดแล้ว",
+    sDangerTitle: "ลบบัญชี", sDangerSub: "ลบบัญชี ข้อมูลส่วนตัว และแผนทั้งหมดออกจากเบราว์เซอร์นี้ ย้อนกลับไม่ได้",
+    sDelPw: "กรอกรหัสผ่านเพื่อยืนยัน", sDelBtn: "ลบบัญชีถาวร", accDeleted: "ลบบัญชีแล้ว",
+
     /* ----- หน้าแนะนำ ----- */
     rPill: "แนะนำสำหรับคุณ", rTitle: "คำแนะนำสำหรับคุณ",
     rLead: n => `คำนวณจากข้อมูลร่างกายของ ${n}`, rLeadGuest: "คำแนะนำเฉพาะคุณ จากน้ำหนัก ส่วนสูง และอายุ",
@@ -407,6 +428,26 @@ const T = {
     memberSince: "Member since", editTitle: "Edit details", saveBtn: "Save details", savedProfile: "Details saved",
     notSet: "Not set", years: "yrs", cm: "cm", kg: "kg",
     plansCount: n => `${n} saved plan${n === 1 ? "" : "s"}`, seePlans: "See my plans →", seeForYou: "See my recommendations →",
+
+    /* ----- Settings page ----- */
+    navSettings: "Settings",
+    sPill: "Settings", sTitle: "Settings", sLead: "Adjust how the site looks and manage your account.",
+    sLookTitle: "Display", sLookSub: "Applies to this browser.",
+    sTheme: "Theme", sThemeD: "\"System\" follows your device setting.",
+    thAuto: "System", thLight: "Light", thDark: "Dark",
+    sLang: "Language", sLangD: "Language used across the site.",
+    sMotion: "Reduce motion", sMotionD: "Stop the animated characters and background.",
+    sReset: "Reset to default", sResetDone: "Display settings reset", sSaved: "Settings saved",
+    sAccTitle: "Account", sAccLoggedAs: "Logged in as",
+    sAccGuest: "Log in to manage your account, password and data.",
+    sEditProfile: "Edit my profile",
+    sPwTitle: "Change password", sPwCur: "Current password", sPwNew: "New password (8+ characters)", sPwNew2: "Confirm new password",
+    sPwBtn: "Change password", pwChanged: "Password changed", errPwCur: "Current password is incorrect", errPwSame: "New password must differ from the current one",
+    sDataTitle: "My data",
+    sExport: "Download my data", sExportD: "Save your profile and all plans as a JSON file.", exported: "File downloaded",
+    sClearPlans: "Delete all saved plans", sClearBtn: "Delete all plans", plansCleared: "All plans deleted",
+    sDangerTitle: "Delete account", sDangerSub: "Removes your account, profile and all plans from this browser. This can't be undone.",
+    sDelPw: "Enter your password to confirm", sDelBtn: "Delete account permanently", accDeleted: "Account deleted",
 
     /* ----- For you ----- */
     rPill: "For you", rTitle: "Recommendations for you",

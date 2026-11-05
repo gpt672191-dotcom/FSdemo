@@ -1,5 +1,6 @@
 /* FitStart AI — styles */
 :root {
+  color-scheme: light dark;
   --bg: #f6f7f4;
   --surface: #ffffff;
   --surface-2: #eef1ea;
@@ -14,7 +15,7 @@
   --shadow: 0 1px 2px rgba(0,0,0,.04), 0 8px 24px rgba(0,0,0,.06);
 }
 @media (prefers-color-scheme: dark) {
-  :root {
+  :root:not([data-theme="light"]) {
     --bg: #0f1411;
     --surface: #171e19;
     --surface-2: #1e2721;
@@ -28,6 +29,21 @@
     --shadow: none;
   }
 }
+/* dark theme chosen in Settings */
+  :root[data-theme="dark"] {
+    --bg: #0f1411;
+    --surface: #171e19;
+    --surface-2: #1e2721;
+    --text: #e8efe9;
+    --muted: #9aa89f;
+    --line: #2a352e;
+    --accent: #3ccf7a;
+    --accent-ink: #08130c;
+    --accent-soft: #173523;
+    --warn: #f59e0b;
+    --shadow: none;
+  }
+
 * { box-sizing: border-box; }
 [hidden] { display: none !important; }
 html { scroll-behavior: smooth; }
@@ -411,13 +427,21 @@ section.tight { padding-block: 32px; }
 .cats > :nth-child(6n+5) .ico { --c: #0d9488; }
 .cats > :nth-child(6n+6) .ico { --c: #64748b; }
 @media (prefers-color-scheme: dark) {
-  .cats > :nth-child(6n+1) .ico, .cards > :nth-child(4n+1) .ico, .tips > :nth-child(4n+1) .ico { --c: #a78bfa; }
-  .cats > :nth-child(6n+2) .ico, .cards > :nth-child(4n+2) .ico, .tips > :nth-child(4n+2) .ico { --c: #4ade80; }
-  .cats > :nth-child(6n+3) .ico, .cards > :nth-child(4n+3) .ico, .tips > :nth-child(4n+3) .ico { --c: #fb923c; }
-  .cats > :nth-child(6n+4) .ico, .cards > :nth-child(4n+4) .ico, .tips > :nth-child(4n+4) .ico { --c: #60a5fa; }
-  .cats > :nth-child(6n+5) .ico { --c: #2dd4bf; }
-  .cats > :nth-child(6n+6) .ico { --c: #94a3b8; }
+  :root:not([data-theme="light"]) .cats > :nth-child(6n+1) .ico, :root:not([data-theme="light"]) .cards > :nth-child(4n+1) .ico, :root:not([data-theme="light"]) .tips > :nth-child(4n+1) .ico { --c: #a78bfa; }
+  :root:not([data-theme="light"]) .cats > :nth-child(6n+2) .ico, :root:not([data-theme="light"]) .cards > :nth-child(4n+2) .ico, :root:not([data-theme="light"]) .tips > :nth-child(4n+2) .ico { --c: #4ade80; }
+  :root:not([data-theme="light"]) .cats > :nth-child(6n+3) .ico, :root:not([data-theme="light"]) .cards > :nth-child(4n+3) .ico, :root:not([data-theme="light"]) .tips > :nth-child(4n+3) .ico { --c: #fb923c; }
+  :root:not([data-theme="light"]) .cats > :nth-child(6n+4) .ico, :root:not([data-theme="light"]) .cards > :nth-child(4n+4) .ico, :root:not([data-theme="light"]) .tips > :nth-child(4n+4) .ico { --c: #60a5fa; }
+  :root:not([data-theme="light"]) .cats > :nth-child(6n+5) .ico { --c: #2dd4bf; }
+  :root:not([data-theme="light"]) .cats > :nth-child(6n+6) .ico { --c: #94a3b8; }
 }
+/* dark theme chosen in Settings */
+  :root[data-theme="dark"] .cats > :nth-child(6n+1) .ico, :root[data-theme="dark"] .cards > :nth-child(4n+1) .ico, :root[data-theme="dark"] .tips > :nth-child(4n+1) .ico { --c: #a78bfa; }
+  :root[data-theme="dark"] .cats > :nth-child(6n+2) .ico, :root[data-theme="dark"] .cards > :nth-child(4n+2) .ico, :root[data-theme="dark"] .tips > :nth-child(4n+2) .ico { --c: #4ade80; }
+  :root[data-theme="dark"] .cats > :nth-child(6n+3) .ico, :root[data-theme="dark"] .cards > :nth-child(4n+3) .ico, :root[data-theme="dark"] .tips > :nth-child(4n+3) .ico { --c: #fb923c; }
+  :root[data-theme="dark"] .cats > :nth-child(6n+4) .ico, :root[data-theme="dark"] .cards > :nth-child(4n+4) .ico, :root[data-theme="dark"] .tips > :nth-child(4n+4) .ico { --c: #60a5fa; }
+  :root[data-theme="dark"] .cats > :nth-child(6n+5) .ico { --c: #2dd4bf; }
+  :root[data-theme="dark"] .cats > :nth-child(6n+6) .ico { --c: #94a3b8; }
+
 
 /* ---------- Animated characters (js/figures.js) ---------- */
 :root {
@@ -429,12 +453,19 @@ section.tight { padding-block: 32px; }
   --fig-bg1: #e3f5ea; --fig-bg2: #f3f7f1;
 }
 @media (prefers-color-scheme: dark) {
-  :root {
+  :root:not([data-theme="light"]) {
     --fig-shirt2: #24a65d; --fig-short: #4b5d80; --fig-short2: #3a4a68;
     --fig-shoe: #0b0f17; --fig-prop: #64748b; --fig-prop-fill: #2b3640; --fig-metal: #94a3b8;
     --fig-bg1: #1b3326; --fig-bg2: #18211b;
   }
 }
+/* dark theme chosen in Settings */
+  :root[data-theme="dark"] {
+    --fig-shirt2: #24a65d; --fig-short: #4b5d80; --fig-short2: #3a4a68;
+    --fig-shoe: #0b0f17; --fig-prop: #64748b; --fig-prop-fill: #2b3640; --fig-metal: #94a3b8;
+    --fig-bg1: #1b3326; --fig-bg2: #18211b;
+  }
+
 .fig { width: 100%; aspect-ratio: 6 / 5; border-radius: 14px; background: radial-gradient(circle at 50% 55%, var(--fig-bg1), var(--fig-bg2) 72%); overflow: hidden; }
 .fig svg { width: 100%; height: 100%; display: block; }
 .fig path, .fig ellipse, .fig rect, .fig circle { stroke-linecap: round; stroke-linejoin: round; }
@@ -508,8 +539,11 @@ section.tight { padding-block: 32px; }
   --bm-hl: #f9a3a3; --bm-hl-line: #ef7777;
 }
 @media (prefers-color-scheme: dark) {
-  :root { --bm-base: #26313a; --bm-m: #34414c; --bm-line: #4a5764; --bm-hair: #1c252c; --bm-hl: #f08a8a; --bm-hl-line: #f87171; }
+  :root:not([data-theme="light"]) { --bm-base: #26313a; --bm-m: #34414c; --bm-line: #4a5764; --bm-hair: #1c252c; --bm-hl: #f08a8a; --bm-hl-line: #f87171; }
 }
+/* dark theme chosen in Settings */
+  :root[data-theme="dark"] { --bm-base: #26313a; --bm-m: #34414c; --bm-line: #4a5764; --bm-hair: #1c252c; --bm-hl: #f08a8a; --bm-hl-line: #f87171; }
+
 .bm-wrap {
   aspect-ratio: 16 / 11; border-radius: 14px; display: grid; place-items: center; padding: 6px; margin-bottom: 6px;
   background: radial-gradient(circle at 50% 55%, var(--fig-bg1), var(--fig-bg2) 72%);
@@ -622,9 +656,13 @@ section.tight { padding-block: 32px; }
 .bg-fx .b2 { background: #06b6d4; bottom: -22vmax; right: -16vmax; animation-duration: 34s; animation-delay: -10s; }
 .bg-fx .b3 { background: #a3e635; top: 38%; left: 42%; width: 30vmax; height: 30vmax; opacity: .1; animation-duration: 40s; animation-delay: -18s; }
 @media (prefers-color-scheme: dark) {
-  .bg-fx .blob { opacity: .2; }
-  .bg-fx .b3 { opacity: .1; }
+  :root:not([data-theme="light"]) .bg-fx .blob { opacity: .2; }
+  :root:not([data-theme="light"]) .bg-fx .b3 { opacity: .1; }
 }
+/* dark theme chosen in Settings */
+  :root[data-theme="dark"] .bg-fx .blob { opacity: .2; }
+  :root[data-theme="dark"] .bg-fx .b3 { opacity: .1; }
+
 @keyframes bgDrift {
   0%   { transform: translate(0, 0) scale(1); }
   50%  { transform: translate(9vmax, 6vmax) scale(1.12); }
@@ -690,3 +728,43 @@ section.tight { padding-block: 32px; }
 .eq-sub h4 { margin: 0 0 10px; font-size: 1rem; display: flex; align-items: center; gap: 8px; }
 .eq-sub h4::before { content: ""; width: 4px; height: 16px; border-radius: 2px; background: #06b6d4; }
 .eq-sub h4 small { color: var(--muted); font-weight: 400; }
+
+/* Theme forced in Settings */
+:root[data-theme="light"] { color-scheme: light; }
+:root[data-theme="dark"] { color-scheme: dark; }
+
+/* ---------- Settings page (js/settings.js) ---------- */
+.set-row { display: flex; align-items: center; justify-content: space-between; gap: 12px 20px; flex-wrap: wrap; padding: 16px 0; border-top: 1px solid var(--line); }
+.set-row:first-of-type { border-top: 0; padding-top: 4px; }
+.set-row:last-child { padding-bottom: 0; }
+.set-txt { flex: 1 1 240px; min-width: 0; }
+.set-txt b { display: block; font-weight: 600; }
+.set-txt small { display: block; color: var(--muted); font-size: .88rem; }
+.seg { display: inline-flex; flex-wrap: wrap; background: var(--surface-2); border-radius: 12px; padding: 4px; gap: 2px; }
+.seg button { border: 0; background: none; padding: 7px 14px; border-radius: 9px; font: inherit; font-size: .9rem; font-weight: 600; color: var(--muted); cursor: pointer; }
+.seg button.on { background: var(--surface); color: var(--text); box-shadow: 0 1px 3px rgba(0,0,0,.12); }
+.seg button:focus-visible { outline: 2px solid var(--accent); outline-offset: 1px; }
+.switch { position: relative; display: inline-block; width: 48px; height: 28px; flex: none; }
+.switch input { position: absolute; inset: 0; opacity: 0; margin: 0; cursor: pointer; z-index: 1; }
+.switch span { position: absolute; inset: 0; border-radius: 999px; background: var(--line); transition: background .2s; }
+.switch span::after { content: ""; position: absolute; top: 3px; left: 3px; width: 22px; height: 22px; border-radius: 50%; background: #fff; box-shadow: 0 1px 3px rgba(0,0,0,.25); transition: transform .2s; }
+.switch input:checked + span { background: var(--accent); }
+.switch input:checked + span::after { transform: translateX(20px); }
+.switch input:focus-visible + span { outline: 2px solid var(--accent); outline-offset: 2px; }
+.set-form { display: grid; gap: 12px; max-width: 420px; }
+.set-form .form-err:empty { display: none; }
+.set-title { margin: 0 0 4px; font-size: 1.25rem; display: flex; align-items: center; gap: 8px; }
+.set-title .ic { width: 1.1em; height: 1.1em; color: var(--accent); }
+.set-sub { margin: 0 0 18px; color: var(--muted); font-size: .92rem; }
+.btn.danger { background: #dc2626; color: #fff; }
+.btn.ghost.danger { background: transparent; color: #dc2626; border-color: color-mix(in srgb, #dc2626 45%, var(--line)); }
+.panel.danger-zone { border-color: color-mix(in srgb, #dc2626 35%, var(--line)); }
+.panel.danger-zone .set-title .ic { color: #dc2626; }
+.btn[disabled] { opacity: .45; cursor: not-allowed; }
+.dropdown .ic { width: 1em; height: 1em; vertical-align: -2px; margin-right: 6px; color: var(--muted); }
+
+/* Reduce motion chosen in Settings */
+:root[data-motion="reduce"] { scroll-behavior: auto; }
+:root[data-motion="reduce"] *, :root[data-motion="reduce"] *::before, :root[data-motion="reduce"] *::after {
+  animation: none !important; transition: none !important;
+}

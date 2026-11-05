@@ -10,6 +10,15 @@ const store = {
 };
 
 let lang = store.get("fs-lang", "th");
+
+// Display preferences from the Settings page (this browser only): { theme: "auto"|"light"|"dark", motion: true|false }
+const prefs = () => store.get("fs-prefs", {});
+function applyPrefs() {
+  const p = prefs(), r = document.documentElement;
+  if (p.theme === "light" || p.theme === "dark") r.dataset.theme = p.theme; else delete r.dataset.theme;
+  if (p.motion) r.dataset.motion = "reduce"; else delete r.dataset.motion;
+}
+applyPrefs();
 const t = () => T[lang];
 
 // Each file registers a function that redraws its part of the page.
