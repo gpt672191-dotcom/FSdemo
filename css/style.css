@@ -762,3 +762,85 @@ section.tight { padding-block: 32px; }
 :root[data-motion="reduce"] *, :root[data-motion="reduce"] *::before, :root[data-motion="reduce"] *::after {
   animation: none !important; transition: none !important;
 }
+/* ---------- Home banner tiles (game-style category cards) ---------- */
+.tiles-sq { display: grid; grid-template-columns: repeat(4, 1fr); gap: 14px; margin-bottom: 14px; }
+.tiles-wide { display: grid; grid-template-columns: repeat(3, 1fr); gap: 14px; }
+@media (max-width: 900px) { .tiles-sq { grid-template-columns: repeat(2, 1fr); } .tiles-wide { grid-template-columns: repeat(2, 1fr); } }
+@media (max-width: 560px) { .tiles-wide { grid-template-columns: 1fr; } }
+
+.tile {
+  --t1: #053d2c; --t2: #0d9c62; --t3: #6ee7a8; --hl: #d9f99d;
+  position: relative; overflow: hidden; isolation: isolate; text-decoration: none; color: #fff;
+  border-radius: 20px; border: 2px solid rgba(255, 255, 255, .22);
+  background:
+    radial-gradient(120% 90% at 85% -10%, color-mix(in srgb, var(--t3) 70%, transparent) 0%, transparent 55%),
+    radial-gradient(90% 80% at 0% 110%, rgba(255, 255, 255, .18) 0%, transparent 50%),
+    linear-gradient(150deg, var(--t2) 0%, var(--t1) 85%);
+  box-shadow: inset 0 2px 0 rgba(255, 255, 255, .25), 0 10px 26px -12px rgba(5, 61, 44, .7);
+  font-family: "Kanit", "IBM Plex Sans Thai", system-ui, sans-serif;
+}
+/* Second and fourth tiles in each row get a cyan / lime twist */
+.tiles-sq .tile:nth-child(2), .tiles-wide .tile:nth-child(2), .tiles-wide .tile:nth-child(6) { --t1: #073b4c; --t2: #0891b2; --t3: #67e8f9; }
+.tiles-sq .tile:nth-child(4), .tiles-wide .tile:nth-child(4) { --t1: #1a3d06; --t2: #4d9b12; --t3: #bef264; --hl: #fef08a; }
+
+/* Bubbles and sparkle decoration */
+.tile::before, .tile::after {
+  content: ""; position: absolute; z-index: -1; border-radius: 50%; pointer-events: none;
+  background: radial-gradient(circle at 30% 30%, rgba(255, 255, 255, .55), rgba(255, 255, 255, .08) 45%, transparent 70%);
+  border: 1.5px solid rgba(255, 255, 255, .35);
+}
+.tile::before { width: 46%; aspect-ratio: 1; right: -12%; top: -14%; }
+.tile::after { width: 16%; aspect-ratio: 1; left: 8%; bottom: 14%; opacity: .7; }
+.tile.wide::after { left: auto; right: 6%; bottom: -20%; width: 22%; }
+.tile-logo { position: absolute; top: 8px; left: 10px; width: 20px; height: 20px; border-radius: 6px; opacity: .9; }
+
+/* Shine sweep on hover */
+.tile .tile-shine { display: none; }
+.tile:hover { animation: none; }
+@media (hover: hover) {
+  .tile { transition: transform .35s cubic-bezier(.2, .8, .2, 1), box-shadow .35s; }
+  .tile:hover { transform: translateY(-6px) scale(1.015); box-shadow: inset 0 2px 0 rgba(255, 255, 255, .3), 0 22px 36px -14px color-mix(in srgb, var(--t2) 80%, transparent); }
+  .tile:hover .tile-art .fig, .tile:hover .tile-badge .fig { transform: scale(1.08); }
+}
+.tile .fig { transition: transform .4s cubic-bezier(.2, .8, .2, 1); }
+
+/* Square tile */
+.tile.sq { aspect-ratio: 1; display: flex; flex-direction: column; align-items: center; justify-content: flex-end; padding: 12px 10px 14px; text-align: center; }
+.tile-art {
+  width: 58%; aspect-ratio: 1; margin-bottom: auto; margin-top: 6%; border-radius: 28%;
+  background: linear-gradient(160deg, #fff 0%, #e6fff1 100%);
+  box-shadow: 0 8px 0 rgba(0, 0, 0, .14), inset 0 -6px 0 rgba(13, 156, 98, .12);
+  display: grid; place-items: center; overflow: hidden;
+}
+.tile-art .fig, .tile-badge .fig { background: none; width: 100%; aspect-ratio: auto; height: 100%; border-radius: 0; }
+
+/* Chunky outlined title text */
+.tile-title, .tile-l1, .tile-l2 {
+  font-weight: 800; font-style: italic; line-height: 1.05; letter-spacing: -.01em;
+  text-shadow:
+    -2px -2px 0 var(--t1), 2px -2px 0 var(--t1), -2px 2px 0 var(--t1), 2px 2px 0 var(--t1),
+    0 -2px 0 var(--t1), 0 2px 0 var(--t1), -2px 0 0 var(--t1), 2px 0 0 var(--t1),
+    0 4px 0 rgba(0, 0, 0, .35);
+}
+.tile-title { font-size: clamp(1.25rem, 2.4vw, 1.9rem); margin: 10px 0 8px; }
+.tile-num { color: var(--hl); }
+.tile-pill {
+  display: inline-block; font-style: italic; font-weight: 700; font-size: clamp(.72rem, 1.1vw, .9rem);
+  padding: 3px 14px; border-radius: 999px; color: #fff; white-space: nowrap;
+  background: color-mix(in srgb, var(--t1) 82%, transparent); border: 1.5px solid rgba(255, 255, 255, .55);
+  box-shadow: 0 3px 0 rgba(0, 0, 0, .25);
+}
+
+/* Wide tile */
+.tile.wide { aspect-ratio: 2.4 / 1; display: flex; align-items: center; gap: 4%; padding: 12px 16px 12px 18px; }
+.tile-badge {
+  width: 34%; aspect-ratio: 1; flex: none; border-radius: 50%;
+  background: radial-gradient(circle at 35% 30%, #fff 0%, #e8fff2 70%, #c9f5dc 100%);
+  box-shadow: 0 0 0 4px rgba(255, 255, 255, .25), 0 6px 0 rgba(0, 0, 0, .18);
+  display: grid; place-items: center; overflow: hidden;
+}
+.tile-text { flex: 1; min-width: 0; text-align: right; display: flex; flex-direction: column; align-items: flex-end; }
+.tile-l1 { font-size: clamp(1rem, 1.7vw, 1.35rem); }
+.tile-l2 { font-size: clamp(1.4rem, 2.6vw, 2.1rem); color: var(--hl); margin: 2px 0 8px; white-space: nowrap; }
+@media (max-width: 560px) { .tile.wide { aspect-ratio: 2.6 / 1; } }
+.tile-art .fig svg, .tile-badge .fig svg { transform: scale(1.08); transform-origin: 50% 90%; }

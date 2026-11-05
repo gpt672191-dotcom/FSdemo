@@ -97,6 +97,9 @@ function equipSections(list, mode, card) {
   return html || `<div class="empty">${tx.mgNone}</div>`;
 }
 
+// Any element with data-ex-count shows how many exercises are in the library
+onRender(() => $$("[data-ex-count]").forEach(el => { el.textContent = EX.length; }));
+
 /* ---------- Toast ---------- */
 let toastId;
 function toast(msg) {
