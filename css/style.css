@@ -1124,3 +1124,52 @@ section.coach { padding: 0; }
   .coach { right: 8px; left: 8px; width: auto; bottom: calc(78px + env(safe-area-inset-bottom, 0px)); height: calc(100vh - 150px); }
 }
 @media print { .coach, .coach-fab { display: none !important; } }
+
+/* ---------- Category tiles: calmer colours that follow the site theme ---------- */
+.tile {
+  --c: var(--accent);
+  color: var(--text);
+  border: 1.5px solid color-mix(in srgb, var(--c) 28%, var(--line));
+  background:
+    radial-gradient(110% 85% at 100% 0%, color-mix(in srgb, var(--c) 26%, transparent) 0%, transparent 55%),
+    linear-gradient(165deg, color-mix(in srgb, var(--c) 12%, var(--surface)) 0%, var(--surface) 78%);
+  box-shadow: 0 12px 30px -20px color-mix(in srgb, var(--c) 80%, transparent);
+}
+.tiles-sq .tile:nth-child(2), .tiles-wide .tile:nth-child(2), .tiles-wide .tile:nth-child(6) { --c: #6366f1; }
+.tiles-sq .tile:nth-child(4), .tiles-wide .tile:nth-child(4) { --c: #c026d3; }
+@media (prefers-color-scheme: dark) {
+  :root:not([data-theme="light"]) .tiles-sq .tile:nth-child(2), :root:not([data-theme="light"]) .tiles-wide .tile:nth-child(2),
+  :root:not([data-theme="light"]) .tiles-wide .tile:nth-child(6) { --c: #818cf8; }
+  :root:not([data-theme="light"]) .tiles-sq .tile:nth-child(4), :root:not([data-theme="light"]) .tiles-wide .tile:nth-child(4) { --c: #e879f9; }
+}
+:root[data-theme="dark"] .tiles-sq .tile:nth-child(2), :root[data-theme="dark"] .tiles-wide .tile:nth-child(2),
+:root[data-theme="dark"] .tiles-wide .tile:nth-child(6) { --c: #818cf8; }
+:root[data-theme="dark"] .tiles-sq .tile:nth-child(4), :root[data-theme="dark"] .tiles-wide .tile:nth-child(4) { --c: #e879f9; }
+
+.tile::before, .tile::after {
+  background: radial-gradient(circle at 30% 30%, color-mix(in srgb, var(--c) 30%, transparent), transparent 70%);
+  border-color: color-mix(in srgb, var(--c) 22%, transparent); opacity: .7;
+}
+.tile-logo { display: none; }
+.tile-title, .tile-l1, .tile-l2 { text-shadow: none; }
+.tile-title { font-weight: 700; }
+.tile-l1 { color: var(--muted); font-weight: 700; font-size: clamp(.9rem, 1.4vw, 1.1rem); }
+.tile-l2, .tile-num {
+  background: linear-gradient(100deg, var(--c), #ec4899); -webkit-background-clip: text; background-clip: text; color: transparent;
+  padding-right: .08em;
+}
+.tile-pill {
+  font-style: normal; font-weight: 600; color: var(--text); box-shadow: none;
+  background: color-mix(in srgb, var(--c) 10%, var(--surface-2)); border: 1px solid color-mix(in srgb, var(--c) 25%, var(--line));
+}
+.tile-art, .tile-badge {
+  background: radial-gradient(circle at 50% 45%, var(--fig-bg1), var(--fig-bg2) 78%);
+  box-shadow: inset 0 0 0 1.5px color-mix(in srgb, var(--c) 22%, transparent);
+}
+.tile-badge { box-shadow: 0 0 0 4px color-mix(in srgb, var(--c) 14%, transparent), inset 0 0 0 1.5px color-mix(in srgb, var(--c) 22%, transparent); }
+@media (hover: hover) {
+  .tile:hover {
+    border-color: color-mix(in srgb, var(--c) 60%, var(--line));
+    box-shadow: 0 22px 40px -20px color-mix(in srgb, var(--c) 90%, transparent);
+  }
+}
