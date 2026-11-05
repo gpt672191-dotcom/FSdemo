@@ -8,7 +8,7 @@
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Sans+Thai:wght@300;400;500;600&family=Kanit:ital,wght@1,700;1,800&display=swap" rel="stylesheet">
-<link rel="stylesheet" href="css/style.css?v=202611052017">
+<link rel="stylesheet" href="css/style.css?v=202611052020">
 </head>
 <body data-page="home">
 <!-- ส่วนหัว เมนู และส่วนท้าย ถูกเพิ่มอัตโนมัติจาก js/layout.js -->
@@ -25,14 +25,18 @@
         <a href="#topics" class="btn ghost" data-i18n="heroCta2"></a>
       </div>
     </div>
-    <div class="ton-stage" aria-hidden="true">
-      <span class="ton-ring"></span>
-      <span class="ton-plate"></span>
-      <img class="ton-img" src="img/ton.png?v=202611052014" alt="">
-      <div class="ton-bubble"><b data-i18n="tonHi"></b><span data-i18n="tonHiSub"></span></div>
-      <div class="ton-chip c1"><b data-ex-count></b><small data-i18n="statEx"></small></div>
-      <div class="ton-chip c2"><b>0฿</b><small data-i18n="statFree"></small></div>
-      <div class="ton-chip c3"><b>AI</b><small data-i18n="tonChipAi"></small></div>
+    <div class="hero-card" aria-hidden="true">
+      <div class="hero-figs"><div class="fig" data-fig="run"></div><div class="fig" data-fig="dbpress"></div><div class="fig" data-fig="squat"></div></div>
+      <div class="mini-plan">
+        <div><span data-i18n="miniD1"></span><span data-i18n="mini20"></span></div>
+        <div><span data-i18n="miniD2"></span><span data-i18n="mini15"></span></div>
+        <div><span data-i18n="miniD3"></span><span data-i18n="mini25"></span></div>
+      </div>
+      <div class="stat-row">
+        <div class="stat"><b data-ex-count></b><span data-i18n="statEx"></span></div>
+        <div class="stat"><b>0฿</b><span data-i18n="statFree"></span></div>
+        <div class="stat"><b>1 min</b><span data-i18n="statFast"></span></div>
+      </div>
     </div>
   </div>
 
@@ -47,7 +51,7 @@
       <div class="tiles-sq">
         <a class="tile sq" href="for-you.html">
           <img class="tile-logo" src="img/logo.svg" alt="">
-          <div class="tile-art ton-art"><img src="img/ton.png?v=202611052014" alt=""></div>
+          <div class="tile-art"><div class="fig" data-fig="wave"></div></div>
           <div class="tile-title" data-i18n="tq1"></div>
           <span class="tile-pill" data-i18n="tq1s"></span>
         </a>
@@ -121,13 +125,13 @@
   </section>
 </main>
 
-<script src="js/i18n.js?v=202611052017"></script>
-<script src="js/data.js?v=202611052017"></script>
-<script src="js/utils.js?v=202611052017"></script>
-<script src="js/icons.js?v=202611052017"></script>
-<script src="js/figures.js?v=202611052017"></script>
-<script src="js/layout.js?v=202611052017"></script>
-<script src="js/auth.js?v=202611052017"></script>
-<script src="js/main.js?v=202611052017"></script>
+<script src="js/i18n.js?v=202611052020"></script>
+<script src="js/data.js?v=202611052020"></script>
+<script src="js/utils.js?v=202611052020"></script>
+<script src="js/icons.js?v=202611052020"></script>
+<script src="js/figures.js?v=202611052020"></script>
+<script src="js/layout.js?v=202611052020"></script>
+<script src="js/auth.js?v=202611052020"></script>
+<script src="js/main.js?v=202611052020"></script>
 </body>
 </html>
