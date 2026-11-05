@@ -100,6 +100,11 @@ function equipSections(list, mode, card) {
 // Any element with data-ex-count shows how many exercises are in the library
 onRender(() => $$("[data-ex-count]").forEach(el => { el.textContent = EX.length; }));
 
+// Week strip on the home hero: training days Mon, Wed, Fri are highlighted
+onRender(() => $$("[data-week]").forEach(el => {
+  el.innerHTML = t().week.map((d, i) => `<span class="${[0, 2, 4].includes(i) ? "on" : ""}">${d}</span>`).join("");
+}));
+
 /* ---------- Toast ---------- */
 let toastId;
 function toast(msg) {
