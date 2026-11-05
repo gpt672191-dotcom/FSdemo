@@ -1,45 +1,45 @@
 /* FitStart AI — styles */
 :root {
   color-scheme: light dark;
-  --bg: #f6f7f4;
+  --bg: #f7f5fb;
   --surface: #ffffff;
-  --surface-2: #eef1ea;
-  --text: #15201a;
-  --muted: #5d6b62;
-  --line: #dfe4dc;
-  --accent: #1f9d55;
+  --surface-2: #f0ecf7;
+  --text: #1c1527;
+  --muted: #645b73;
+  --line: #e4dfec;
+  --accent: #7c3aed;
   --accent-ink: #ffffff;
-  --accent-soft: #dcf3e5;
+  --accent-soft: #ede9fe;
   --warn: #b45309;
   --radius: 16px;
   --shadow: 0 1px 2px rgba(0,0,0,.04), 0 8px 24px rgba(0,0,0,.06);
 }
 @media (prefers-color-scheme: dark) {
   :root:not([data-theme="light"]) {
-    --bg: #0f1411;
-    --surface: #171e19;
-    --surface-2: #1e2721;
-    --text: #e8efe9;
-    --muted: #9aa89f;
-    --line: #2a352e;
-    --accent: #3ccf7a;
-    --accent-ink: #08130c;
-    --accent-soft: #173523;
+    --bg: #110e17;
+    --surface: #19151f;
+    --surface-2: #221d2b;
+    --text: #ece9f2;
+    --muted: #a59fb3;
+    --line: #2f2838;
+    --accent: #a78bfa;
+    --accent-ink: #1e0b3a;
+    --accent-soft: #2e1f4d;
     --warn: #f59e0b;
     --shadow: none;
   }
 }
 /* dark theme chosen in Settings */
   :root[data-theme="dark"] {
-    --bg: #0f1411;
-    --surface: #171e19;
-    --surface-2: #1e2721;
-    --text: #e8efe9;
-    --muted: #9aa89f;
-    --line: #2a352e;
-    --accent: #3ccf7a;
-    --accent-ink: #08130c;
-    --accent-soft: #173523;
+    --bg: #110e17;
+    --surface: #19151f;
+    --surface-2: #221d2b;
+    --text: #ece9f2;
+    --muted: #a59fb3;
+    --line: #2f2838;
+    --accent: #a78bfa;
+    --accent-ink: #1e0b3a;
+    --accent-soft: #2e1f4d;
     --warn: #f59e0b;
     --shadow: none;
   }
@@ -69,7 +69,7 @@ header {
 .logo { letter-spacing: -0.02em; }
 .logo-ai {
   font-size: .72rem; font-weight: 700; letter-spacing: .02em; padding: 2px 7px; border-radius: 7px; margin-left: -2px;
-  color: #0f172a; background: linear-gradient(135deg, #22c55e, #a3e635);
+  color: #2e1065; background: linear-gradient(135deg, #a855f7, #f0abfc);
 }
 .nav-links { display: flex; gap: 4px; align-items: center; }
 .nav-links a {
@@ -420,14 +420,14 @@ section.tight { padding-block: 32px; }
 
 /* A different colour per card so the grid doesn't look flat */
 .cats > :nth-child(6n+1) .ico, .cards > :nth-child(4n+1) .ico, .tips > :nth-child(4n+1) .ico { --c: #8b5cf6; }
-.cats > :nth-child(6n+2) .ico, .cards > :nth-child(4n+2) .ico, .tips > :nth-child(4n+2) .ico { --c: #16a34a; }
+.cats > :nth-child(6n+2) .ico, .cards > :nth-child(4n+2) .ico, .tips > :nth-child(4n+2) .ico { --c: #9333ea; }
 .cats > :nth-child(6n+3) .ico, .cards > :nth-child(4n+3) .ico, .tips > :nth-child(4n+3) .ico { --c: #ea580c; }
 .cats > :nth-child(6n+4) .ico, .cards > :nth-child(4n+4) .ico, .tips > :nth-child(4n+4) .ico { --c: #2563eb; }
 .cats > :nth-child(6n+5) .ico { --c: #0d9488; }
 .cats > :nth-child(6n+6) .ico { --c: #64748b; }
 @media (prefers-color-scheme: dark) {
   :root:not([data-theme="light"]) .cats > :nth-child(6n+1) .ico, :root:not([data-theme="light"]) .cards > :nth-child(4n+1) .ico, :root:not([data-theme="light"]) .tips > :nth-child(4n+1) .ico { --c: #a78bfa; }
-  :root:not([data-theme="light"]) .cats > :nth-child(6n+2) .ico, :root:not([data-theme="light"]) .cards > :nth-child(4n+2) .ico, :root:not([data-theme="light"]) .tips > :nth-child(4n+2) .ico { --c: #4ade80; }
+  :root:not([data-theme="light"]) .cats > :nth-child(6n+2) .ico, :root:not([data-theme="light"]) .cards > :nth-child(4n+2) .ico, :root:not([data-theme="light"]) .tips > :nth-child(4n+2) .ico { --c: #c084fc; }
   :root:not([data-theme="light"]) .cats > :nth-child(6n+3) .ico, :root:not([data-theme="light"]) .cards > :nth-child(4n+3) .ico, :root:not([data-theme="light"]) .tips > :nth-child(4n+3) .ico { --c: #fb923c; }
   :root:not([data-theme="light"]) .cats > :nth-child(6n+4) .ico, :root:not([data-theme="light"]) .cards > :nth-child(4n+4) .ico, :root:not([data-theme="light"]) .tips > :nth-child(4n+4) .ico { --c: #60a5fa; }
   :root:not([data-theme="light"]) .cats > :nth-child(6n+5) .ico { --c: #2dd4bf; }
@@ -435,7 +435,7 @@ section.tight { padding-block: 32px; }
 }
 /* dark theme chosen in Settings */
   :root[data-theme="dark"] .cats > :nth-child(6n+1) .ico, :root[data-theme="dark"] .cards > :nth-child(4n+1) .ico, :root[data-theme="dark"] .tips > :nth-child(4n+1) .ico { --c: #a78bfa; }
-  :root[data-theme="dark"] .cats > :nth-child(6n+2) .ico, :root[data-theme="dark"] .cards > :nth-child(4n+2) .ico, :root[data-theme="dark"] .tips > :nth-child(4n+2) .ico { --c: #4ade80; }
+  :root[data-theme="dark"] .cats > :nth-child(6n+2) .ico, :root[data-theme="dark"] .cards > :nth-child(4n+2) .ico, :root[data-theme="dark"] .tips > :nth-child(4n+2) .ico { --c: #c084fc; }
   :root[data-theme="dark"] .cats > :nth-child(6n+3) .ico, :root[data-theme="dark"] .cards > :nth-child(4n+3) .ico, :root[data-theme="dark"] .tips > :nth-child(4n+3) .ico { --c: #fb923c; }
   :root[data-theme="dark"] .cats > :nth-child(6n+4) .ico, :root[data-theme="dark"] .cards > :nth-child(4n+4) .ico, :root[data-theme="dark"] .tips > :nth-child(4n+4) .ico { --c: #60a5fa; }
   :root[data-theme="dark"] .cats > :nth-child(6n+5) .ico { --c: #2dd4bf; }
@@ -445,24 +445,24 @@ section.tight { padding-block: 32px; }
 /* ---------- Animated characters (js/figures.js) ---------- */
 :root {
   --fig-skin: #f2c4a0; --fig-skin2: #d9a27c;
-  --fig-shirt: var(--accent); --fig-shirt2: #177a43;
+  --fig-shirt: var(--accent); --fig-shirt2: #5b21b6;
   --fig-short: #2f3b52; --fig-short2: #1f2838;
   --fig-shoe: #111827; --fig-hair: #2b1d14;
   --fig-prop: #94a3b8; --fig-prop-fill: #e2e8f0; --fig-metal: #475569;
-  --fig-bg1: #e3f5ea; --fig-bg2: #f3f7f1;
+  --fig-bg1: #ece5fb; --fig-bg2: #f6f3fb;
 }
 @media (prefers-color-scheme: dark) {
   :root:not([data-theme="light"]) {
-    --fig-shirt2: #24a65d; --fig-short: #4b5d80; --fig-short2: #3a4a68;
+    --fig-shirt2: #8b5cf6; --fig-short: #4b5d80; --fig-short2: #3a4a68;
     --fig-shoe: #0b0f17; --fig-prop: #64748b; --fig-prop-fill: #2b3640; --fig-metal: #94a3b8;
-    --fig-bg1: #1b3326; --fig-bg2: #18211b;
+    --fig-bg1: #2a1f45; --fig-bg2: #1a1622;
   }
 }
 /* dark theme chosen in Settings */
   :root[data-theme="dark"] {
-    --fig-shirt2: #24a65d; --fig-short: #4b5d80; --fig-short2: #3a4a68;
+    --fig-shirt2: #8b5cf6; --fig-short: #4b5d80; --fig-short2: #3a4a68;
     --fig-shoe: #0b0f17; --fig-prop: #64748b; --fig-prop-fill: #2b3640; --fig-metal: #94a3b8;
-    --fig-bg1: #1b3326; --fig-bg2: #18211b;
+    --fig-bg1: #2a1f45; --fig-bg2: #1a1622;
   }
 
 .fig { width: 100%; aspect-ratio: 6 / 5; border-radius: 14px; background: radial-gradient(circle at 50% 55%, var(--fig-bg1), var(--fig-bg2) 72%); overflow: hidden; }
@@ -606,9 +606,9 @@ section.tight { padding-block: 32px; }
 @page { size: A4; margin: 12mm; }
 @media print {
   :root {
-    --bg: #fff; --surface: #fff; --surface-2: #f4f6f3; --text: #111; --muted: #555; --line: #d8ddd5;
-    --accent: #16884a; --accent-ink: #fff; --accent-soft: #e4f4ea;
-    --fig-bg1: #f3f7f1; --fig-bg2: #f3f7f1; --fig-shirt2: #177a43; --fig-short: #2f3b52; --fig-short2: #1f2838;
+    --bg: #fff; --surface: #fff; --surface-2: #f5f3f9; --text: #111; --muted: #555; --line: #ddd6e8;
+    --accent: #6d28d9; --accent-ink: #fff; --accent-soft: #ede9fe;
+    --fig-bg1: #f6f3fb; --fig-bg2: #f6f3fb; --fig-shirt2: #5b21b6; --fig-short: #2f3b52; --fig-short2: #1f2838;
   }
   * { -webkit-print-color-adjust: exact; print-color-adjust: exact; }
   body { background: #fff; font-size: 11pt; }
@@ -617,7 +617,7 @@ section.tight { padding-block: 32px; }
   .panel { border: 0 !important; box-shadow: none !important; padding: 0 !important; }
   #plan { margin: 0; }
   .print-only { display: block; }
-  .print-head { display: flex; align-items: center; gap: 12px; padding-bottom: 10px; margin-bottom: 12px; border-bottom: 2px solid #16884a; }
+  .print-head { display: flex; align-items: center; gap: 12px; padding-bottom: 10px; margin-bottom: 12px; border-bottom: 2px solid #6d28d9; }
   .print-head b { display: block; font-size: 17pt; }
   .print-head small { color: #555; }
   .summary { padding: 10px 14px; margin-bottom: 10px; }
@@ -646,9 +646,9 @@ section.tight { padding-block: 32px; }
 .bg-fx { position: fixed; inset: 0; z-index: -1; overflow: hidden; pointer-events: none; }
 /* Soft colour glows: plain gradients, no blur filter and no animation (blur + motion made the site lag) */
 .bg-fx .blob { position: absolute; width: 60vmax; height: 60vmax; border-radius: 50%; opacity: .16; }
-.bg-fx .b1 { background: radial-gradient(circle, #22c55e 0%, transparent 68%); top: -28vmax; left: -22vmax; }
-.bg-fx .b2 { background: radial-gradient(circle, #06b6d4 0%, transparent 68%); bottom: -30vmax; right: -24vmax; }
-.bg-fx .b3 { background: radial-gradient(circle, #a3e635 0%, transparent 68%); top: 34%; left: 38%; width: 40vmax; height: 40vmax; opacity: .1; }
+.bg-fx .b1 { background: radial-gradient(circle, #8b5cf6 0%, transparent 68%); top: -28vmax; left: -22vmax; }
+.bg-fx .b2 { background: radial-gradient(circle, #ec4899 0%, transparent 68%); bottom: -30vmax; right: -24vmax; }
+.bg-fx .b3 { background: radial-gradient(circle, #6366f1 0%, transparent 68%); top: 34%; left: 38%; width: 40vmax; height: 40vmax; opacity: .1; }
 @media (prefers-color-scheme: dark) {
   :root:not([data-theme="light"]) .bg-fx .blob { opacity: .2; }
   :root:not([data-theme="light"]) .bg-fx .b3 { opacity: .1; }
@@ -704,14 +704,14 @@ section.tight { padding-block: 32px; }
   width: 44px; height: 44px; flex: none; border-radius: 13px; display: grid; place-items: center;
   color: var(--accent); background: var(--accent-soft);
 }
-.eq-with .eq-cat-ico { color: #0891b2; background: color-mix(in srgb, #06b6d4 16%, transparent); }
+.eq-with .eq-cat-ico { color: #4f46e5; background: color-mix(in srgb, #4f46e5 16%, transparent); }
 .eq-cat-ico .ic { width: 22px; height: 22px; }
 .eq-cat-head h3 { margin: 0; font-size: 1.2rem; display: flex; align-items: center; gap: 10px; flex-wrap: wrap; }
 .eq-cat-head p { margin: 2px 0 0; color: var(--muted); font-size: .9rem; }
 .eq-count { font-size: .78rem; font-weight: 600; color: var(--muted); background: var(--surface-2); padding: 2px 10px; border-radius: 999px; }
 .eq-sub + .eq-sub { margin-top: 18px; }
 .eq-sub h4 { margin: 0 0 10px; font-size: 1rem; display: flex; align-items: center; gap: 8px; }
-.eq-sub h4::before { content: ""; width: 4px; height: 16px; border-radius: 2px; background: #06b6d4; }
+.eq-sub h4::before { content: ""; width: 4px; height: 16px; border-radius: 2px; background: #ec4899; }
 .eq-sub h4 small { color: var(--muted); font-weight: 400; }
 
 /* Theme forced in Settings */
@@ -760,19 +760,19 @@ section.tight { padding-block: 32px; }
 @media (max-width: 560px) { .tiles-wide { grid-template-columns: 1fr; } }
 
 .tile {
-  --t1: #053d2c; --t2: #0d9c62; --t3: #6ee7a8; --hl: #d9f99d;
+  --t1: #2e1065; --t2: #7c3aed; --t3: #c4b5fd; --hl: #fde68a;
   position: relative; overflow: hidden; isolation: isolate; text-decoration: none; color: #fff;
   border-radius: 20px; border: 2px solid rgba(255, 255, 255, .22);
   background:
     radial-gradient(120% 90% at 85% -10%, color-mix(in srgb, var(--t3) 70%, transparent) 0%, transparent 55%),
     radial-gradient(90% 80% at 0% 110%, rgba(255, 255, 255, .18) 0%, transparent 50%),
     linear-gradient(150deg, var(--t2) 0%, var(--t1) 85%);
-  box-shadow: inset 0 2px 0 rgba(255, 255, 255, .25), 0 10px 26px -12px rgba(5, 61, 44, .7);
+  box-shadow: inset 0 2px 0 rgba(255, 255, 255, .25), 0 10px 26px -12px rgba(46, 16, 101, .7);
   font-family: "Kanit", "IBM Plex Sans Thai", system-ui, sans-serif;
 }
 /* Second and fourth tiles in each row get a cyan / lime twist */
-.tiles-sq .tile:nth-child(2), .tiles-wide .tile:nth-child(2), .tiles-wide .tile:nth-child(6) { --t1: #073b4c; --t2: #0891b2; --t3: #67e8f9; }
-.tiles-sq .tile:nth-child(4), .tiles-wide .tile:nth-child(4) { --t1: #1a3d06; --t2: #4d9b12; --t3: #bef264; --hl: #fef08a; }
+.tiles-sq .tile:nth-child(2), .tiles-wide .tile:nth-child(2), .tiles-wide .tile:nth-child(6) { --t1: #1e1b4b; --t2: #4f46e5; --t3: #a5b4fc; }
+.tiles-sq .tile:nth-child(4), .tiles-wide .tile:nth-child(4) { --t1: #4a044e; --t2: #a21caf; --t3: #f0abfc; --hl: #fef08a; }
 
 /* Bubbles and sparkle decoration */
 .tile::before, .tile::after {
@@ -799,8 +799,8 @@ section.tight { padding-block: 32px; }
 .tile.sq { aspect-ratio: 1; display: flex; flex-direction: column; align-items: center; justify-content: flex-end; padding: 12px 10px 14px; text-align: center; }
 .tile-art {
   width: 58%; aspect-ratio: 1; margin-bottom: auto; margin-top: 6%; border-radius: 28%;
-  background: linear-gradient(160deg, #fff 0%, #e6fff1 100%);
-  box-shadow: 0 8px 0 rgba(0, 0, 0, .14), inset 0 -6px 0 rgba(13, 156, 98, .12);
+  background: linear-gradient(160deg, #fff 0%, #f3edff 100%);
+  box-shadow: 0 8px 0 rgba(0, 0, 0, .14), inset 0 -6px 0 rgba(124, 58, 237, .12);
   display: grid; place-items: center; overflow: hidden;
 }
 .tile-art .fig, .tile-badge .fig { background: none; width: 100%; aspect-ratio: auto; height: 100%; border-radius: 0; }
@@ -826,7 +826,7 @@ section.tight { padding-block: 32px; }
 .tile.wide { aspect-ratio: 2.4 / 1; display: flex; align-items: center; gap: 4%; padding: 12px 16px 12px 18px; }
 .tile-badge {
   width: 34%; aspect-ratio: 1; flex: none; border-radius: 50%;
-  background: radial-gradient(circle at 35% 30%, #fff 0%, #e8fff2 70%, #c9f5dc 100%);
+  background: radial-gradient(circle at 35% 30%, #fff 0%, #f1ebff 70%, #ddd0fb 100%);
   box-shadow: 0 0 0 4px rgba(255, 255, 255, .25), 0 6px 0 rgba(0, 0, 0, .18);
   display: grid; place-items: center; overflow: hidden;
 }
