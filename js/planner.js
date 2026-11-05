@@ -68,6 +68,20 @@ function buildPlan(a, seed) {
 
 function renderPlan() {
   const box = $("#plan");
+  // Plans are for members only: guests see a sign-up / log-in prompt instead
+  if (!currentUser()) {
+    const tx = T[lang]; // (not t(): this function declares its own `t` below)
+    box.innerHTML = `
+      <div class="gate">
+        <span class="gate-ico">${icon("lock")}</span>
+        <div class="gate-txt"><b>${tx.gateTitle}</b><span>${tx.gateSub}</span></div>
+        <div class="btn-row">
+          <button type="button" class="btn" data-gate="signup">${tx.signup}</button>
+          <button type="button" class="btn ghost" data-gate="login">${tx.login}</button>
+        </div>
+      </div>`;
+    return;
+  }
   if (!lastPlan) { box.innerHTML = ""; return; }
   const a = lastPlan.answers, t = T[lang];
   const days = buildPlan(a, lastPlan.seed);
@@ -162,7 +176,17 @@ function renderChips() {
 $("#planForm").addEventListener("change", e => {
   if (e.target.name) { answers[e.target.name] = e.target.value; store.set("fs-answers", answers); }
 });
-$("#planForm").addEventListener("submit", e => { e.preventDefault(); generate({ ...answers }); });
+$("#planForm").addEventListener("submit", e => {
+  e.preventDefault();
+  const go = () => generate({ ...answers });
+  // Must be logged in to build a plan; after logging in / signing up, the plan is built straight away
+  if (!currentUser()) { toast(t().gateToast); openAuth("signup", go); return; }
+  go();
+});
+$("#plan").addEventListener("click", e => {
+  const b = e.target.closest("[data-gate]");
+  if (b) openAuth(b.dataset.gate, () => generate({ ...answers }));
+});
 onRender(renderChips);
 onRender(renderPlan);
 

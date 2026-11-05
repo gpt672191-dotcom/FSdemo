@@ -987,3 +987,14 @@ section.tight { padding-block: 32px; }
   .tile.sq .tile-pill { font-size: .66rem; padding: 2px 9px; }
 }
 @media print { .tabbar { display: none !important; } }
+
+/* Members-only gate on the plan builder */
+.gate {
+  margin-top: 22px; display: flex; align-items: center; gap: 16px; flex-wrap: wrap; padding: 18px 20px; border-radius: 18px;
+  background: var(--accent-soft); border: 1.5px dashed color-mix(in srgb, var(--accent) 45%, transparent);
+}
+.gate-ico { width: 46px; height: 46px; flex: none; border-radius: 14px; display: grid; place-items: center; background: var(--accent); color: var(--accent-ink); }
+.gate-ico .ic { width: 22px; height: 22px; }
+.gate-txt { flex: 1 1 240px; min-width: 0; }
+.gate-txt b { display: block; font-size: 1.05rem; }
+.gate-txt span { color: var(--muted); font-size: .9rem; }
