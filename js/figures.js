@@ -256,8 +256,8 @@ const FIGURES = (() => {
   /* ---------------- Animation loop ---------------- */
   const live = new Set();
   const visible = new WeakSet();
-  const reduce = window.matchMedia && matchMedia("(prefers-reduced-motion: reduce)").matches;
-  const motionOff = () => document.documentElement.dataset.motion === "reduce"; // set on the Settings page
+  // Animations stop only when "Reduce motion" is turned on in Settings (checked every frame, so it applies instantly)
+  const motionOff = () => document.documentElement.dataset.motion === "reduce";
   const io = "IntersectionObserver" in window
     ? new IntersectionObserver(es => es.forEach(en => (en.isIntersecting ? visible.add(en.target) : visible.delete(en.target))), { rootMargin: "100px" })
     : null;
@@ -288,7 +288,7 @@ const FIGURES = (() => {
       if (n.dataset && n.dataset.fig) mount(n);
       mountAll(n);
     }))).observe(document.body, { childList: true, subtree: true });
-    if (!reduce && !running) { running = true; requestAnimationFrame(loop); }
+    if (!running) { running = true; requestAnimationFrame(loop); }
   }
 
   return { start, mount, mountAll, names: Object.keys(M), draw, create };
