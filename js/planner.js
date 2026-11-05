@@ -163,18 +163,39 @@ function generate(a, scroll = true) {
 }
 
 /* ---------- Form ---------- */
+// Icons for the card-style questions
+const OPT_ICON = {
+  goal: { lose: "flame", muscle: "dumbbell", endure: "heart", flex: "stretch" },
+  equip: { none: "home", db: "dumbbell", gym: "building" }
+};
+
 function renderChips() {
+  const tx = T[lang];
   for (const group of Object.keys(OPTIONS)) {
     const wrap = $(`[data-group="${group}"]`);
-    wrap.innerHTML = OPTIONS[group].map(v => `
-      <label class="chip">
-        <input type="radio" name="${group}" value="${v}" ${answers[group] === v ? "checked" : ""}>
-        <span>${T[lang][`${group}_${v}`]}</span>
-      </label>`).join("");
+    if (group === "impact") {
+      // On/off switch: on = sensitive knees/ankles (no jumping)
+      wrap.innerHTML = `
+        <span class="pf-switch-txt"><b>${tx.qImpact}</b><small>${tx.impact_low}</small></span>
+        <span class="switch"><input type="checkbox" name="impact" ${answers.impact === "low" ? "checked" : ""}><span></span></span>`;
+      continue;
+    }
+    const cards = wrap.classList.contains("opt-cards");
+    wrap.innerHTML = OPTIONS[group].map(v => {
+      const on = answers[group] === v ? "checked" : "";
+      const label = tx[`${group}_${v}`];
+      const inner = cards
+        ? `<span class="oc-ico">${icon(OPT_ICON[group][v])}</span><b>${label}</b><small>${tx[`${group}D_${v}`] || ""}</small>`
+        : `<span>${label}</span>`;
+      return `<label class="${cards ? "oc" : "sg"}"><input type="radio" name="${group}" value="${v}" ${on}>${inner}</label>`;
+    }).join("");
   }
 }
 $("#planForm").addEventListener("change", e => {
-  if (e.target.name) { answers[e.target.name] = e.target.value; store.set("fs-answers", answers); }
+  const el = e.target;
+  if (!el.name) return;
+  answers[el.name] = el.type === "checkbox" ? (el.checked ? "low" : "any") : el.value;
+  store.set("fs-answers", answers);
 });
 $("#planForm").addEventListener("submit", e => {
   e.preventDefault();

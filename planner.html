@@ -4,11 +4,11 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>สร้างแผน · FitStart AI</title>
-<link rel="icon" href="img/logo.svg?v=202611052041" type="image/svg+xml">
+<link rel="icon" href="img/logo.svg?v=202611052045" type="image/svg+xml">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Sans+Thai:wght@300;400;500;600&family=Kanit:ital,wght@1,700;1,800&display=swap" rel="stylesheet">
-<link rel="stylesheet" href="css/style.css?v=202611052041">
+<link rel="stylesheet" href="css/style.css?v=202611052045">
 </head>
 <body data-page="plan">
 
@@ -25,33 +25,32 @@
     <div class="wrap">
       <div class="panel">
         <form id="planForm">
-          <div class="form-grid">
-            <div class="q">
-              <div class="q-label" data-i18n="qGoal"></div>
-              <div class="chips" data-group="goal"></div>
+          <div class="pf">
+            <div class="pf-q pf-wide">
+              <div class="pf-label"><span class="pf-n">1</span><span data-i18n="qGoal"></span></div>
+              <div class="opt-cards c4" data-group="goal"></div>
             </div>
-            <div class="q">
-              <div class="q-label" data-i18n="qLevel"></div>
-              <div class="chips" data-group="level"></div>
+            <div class="pf-q">
+              <div class="pf-label"><span class="pf-n">2</span><span data-i18n="qLevel"></span></div>
+              <div class="segm" data-group="level"></div>
             </div>
-            <div class="q">
-              <div class="q-label" data-i18n="qDays"></div>
-              <div class="chips" data-group="days"></div>
+            <div class="pf-q">
+              <div class="pf-label"><span class="pf-n">3</span><span data-i18n="qDays"></span></div>
+              <div class="segm" data-group="days"></div>
             </div>
-            <div class="q">
-              <div class="q-label" data-i18n="qTime"></div>
-              <div class="chips" data-group="time"></div>
+            <div class="pf-q">
+              <div class="pf-label"><span class="pf-n">4</span><span data-i18n="qTime"></span></div>
+              <div class="segm" data-group="time"></div>
             </div>
-            <div class="q">
-              <div class="q-label" data-i18n="qEquip"></div>
-              <div class="chips" data-group="equip"></div>
+            <div class="pf-q">
+              <div class="pf-label"><span class="pf-n">5</span><span data-i18n="qEquip"></span></div>
+              <div class="opt-cards c3 small" data-group="equip"></div>
             </div>
-            <div class="q">
-              <div class="q-label" data-i18n="qImpact"></div>
-              <div class="chips" data-group="impact"></div>
+            <div class="pf-q pf-wide">
+              <label class="pf-switch" data-group="impact"></label>
             </div>
           </div>
-          <button type="submit" class="btn"><i data-icon="sparkle"></i><span data-i18n="generate"></span></button>
+          <button type="submit" class="btn big pf-go"><i data-icon="sparkle"></i><span data-i18n="generate"></span></button>
         </form>
         <div id="plan" aria-live="polite"></div>
       </div>
@@ -70,14 +69,14 @@
   </section>
 </main>
 
-<script src="js/i18n.js?v=202611052041"></script>
-<script src="js/data.js?v=202611052041"></script>
-<script src="js/utils.js?v=202611052041"></script>
-<script src="js/icons.js?v=202611052041"></script>
-<script src="js/figures.js?v=202611052041"></script>
-<script src="js/layout.js?v=202611052041"></script>
-<script src="js/auth.js?v=202611052041"></script>
-<script src="js/planner.js?v=202611052041"></script>
-<script src="js/main.js?v=202611052041"></script>
+<script src="js/i18n.js?v=202611052045"></script>
+<script src="js/data.js?v=202611052045"></script>
+<script src="js/utils.js?v=202611052045"></script>
+<script src="js/icons.js?v=202611052045"></script>
+<script src="js/figures.js?v=202611052045"></script>
+<script src="js/layout.js?v=202611052045"></script>
+<script src="js/auth.js?v=202611052045"></script>
+<script src="js/planner.js?v=202611052045"></script>
+<script src="js/main.js?v=202611052045"></script>
 </body>
 </html>
