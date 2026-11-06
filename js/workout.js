@@ -1,4 +1,4 @@
-// โหมดนำออกกำลังกาย: บอกท่าต่อไป → นับ 3-2-1 → ออกกำลังกาย → พักนับถอยหลัง (ข้าม / +15 วิ ได้) → ท่าต่อไป
+// โหมดนำออกกำลังกาย: บอกท่าต่อไป → นับ 5-4-3-2-1 → ออกกำลังกาย → พักนับถอยหลัง (ข้าม / +15 วิ ได้) → ท่าต่อไป
 // (Guided workout player — full-screen overlay)
 //
 // Workout.start({ title, rest: 60, items: [{ ex, sets: 3, target: "8–12", secs: null }] })
@@ -62,7 +62,7 @@ const Workout = (() => {
     const steps = [];
     items.forEach((it, i) => {
       for (let s = 1; s <= it.sets; s++) {
-        steps.push({ kind: "count", it, s, dur: 3 });
+        steps.push({ kind: "count", it, s, dur: 5 });
         steps.push({ kind: "work", it, s, dur: it.secs || 0 });
         const last = i === items.length - 1 && s === it.sets;
         if (!last) steps.push({ kind: "rest", dur: S.rest });
