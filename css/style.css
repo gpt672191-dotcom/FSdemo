@@ -1173,3 +1173,83 @@ section.coach { padding: 0; }
     box-shadow: 0 22px 40px -20px color-mix(in srgb, var(--c) 90%, transparent);
   }
 }
+
+/* ---------- Guided workout player (js/workout.js) ---------- */
+.wo-start { display: flex; align-items: center; justify-content: center; gap: 14px; flex-wrap: wrap; margin: -6px 0 26px; }
+.wo-start .btn.big { background: linear-gradient(135deg, #8b5cf6, #c026d3); color: #fff; box-shadow: 0 10px 24px -10px rgba(139, 92, 246, .8); }
+.wo-start-sub { color: var(--muted); font-size: .88rem; }
+.wo-day { margin-left: 6px; background: linear-gradient(135deg, #8b5cf6, #c026d3); color: #fff; }
+.wo-day .ic { width: 14px; height: 14px; }
+
+body.wo-open { overflow: hidden; }
+.wo {
+  position: fixed; inset: 0; z-index: 60; display: flex; flex-direction: column; color: #fff;
+  background:
+    radial-gradient(70% 50% at 50% 35%, rgba(167, 139, 250, .35), transparent 70%),
+    linear-gradient(170deg, #2e1065 0%, #170734 60%, #0f0620 100%);
+  padding: env(safe-area-inset-top, 0px) 0 env(safe-area-inset-bottom, 0px);
+}
+.wo-top { display: flex; align-items: center; gap: 12px; padding: 14px 16px 10px; max-width: 720px; width: 100%; margin: 0 auto; }
+.wo-title { flex: 1; text-align: center; min-width: 0; }
+.wo-title b { display: block; font-weight: 600; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+.wo-title small { opacity: .7; font-size: .8rem; }
+.wo-ic { width: 42px; height: 42px; flex: none; border-radius: 12px; border: 0; cursor: pointer; display: grid; place-items: center; color: #fff; background: rgba(255, 255, 255, .12); }
+.wo-ic .ic { width: 20px; height: 20px; }
+.wo-ic.off { opacity: .55; }
+.wo-prog { height: 5px; margin: 0 16px; max-width: 688px; width: calc(100% - 32px); align-self: center; border-radius: 99px; background: rgba(255, 255, 255, .15); overflow: hidden; }
+.wo-prog i { display: block; height: 100%; width: 0; border-radius: inherit; background: linear-gradient(90deg, #fde68a, #f0abfc); transition: width .4s; }
+
+.wo-body {
+  flex: 1; overflow-y: auto; display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 10px;
+  padding: 18px 20px 26px; text-align: center; max-width: 720px; width: 100%; margin: 0 auto;
+}
+.wo-tag { font-size: .8rem; font-weight: 700; letter-spacing: .06em; text-transform: uppercase; padding: 5px 14px; border-radius: 999px; background: rgba(255, 255, 255, .14); }
+.wo-tag.work { background: #fde68a; color: #3b0764; }
+.wo-tag.rest { background: rgba(110, 231, 183, .2); color: #a7f3d0; }
+.wo-name { margin: 2px 0 0; font-family: "Kanit", inherit; font-style: italic; font-weight: 800; font-size: clamp(1.7rem, 6vw, 2.6rem); line-height: 1.15; }
+.wo-sub { margin: 0; opacity: .8; font-size: .98rem; max-width: 30em; }
+.wo-fig { width: min(260px, 60vw); border-radius: 24px; overflow: hidden; background: rgba(255, 255, 255, .95); margin: 6px 0; }
+.wo-fig.big { width: min(340px, 72vw); }
+.wo-fig .fig { background: radial-gradient(circle at 50% 55%, #f3edff, #fff 75%); }
+
+.wo-ring { position: relative; width: 150px; aspect-ratio: 1; margin: 4px 0; }
+.wo-ring.big { width: min(230px, 56vw); }
+.wo-ring svg { width: 100%; height: 100%; transform: rotate(-90deg); }
+.wo-track { fill: none; stroke: rgba(255, 255, 255, .14); stroke-width: 9; }
+.wo-arc { fill: none; stroke: #fde68a; stroke-width: 9; stroke-linecap: round; stroke-dasharray: 339.3; transition: stroke-dashoffset .1s linear; }
+.is-rest .wo-arc { stroke: #6ee7b7; }
+.wo-num { position: absolute; inset: 0; display: grid; place-items: center; font-family: "Kanit", inherit; font-style: italic; font-weight: 800; font-size: 2.6rem; font-variant-numeric: tabular-nums; }
+.wo-ring.big .wo-num { font-size: clamp(3rem, 14vw, 4.6rem); }
+.is-count .wo-num { color: #fde68a; }
+
+.wo-reps { display: flex; flex-direction: column; align-items: center; }
+.wo-reps b { font-family: "Kanit", inherit; font-style: italic; font-weight: 800; font-size: 3.4rem; line-height: 1; color: #fde68a; }
+.wo-reps span { font-weight: 600; opacity: .9; }
+.wo-reps small { opacity: .65; margin-top: 4px; }
+
+.wo-ctrl { display: flex; gap: 10px; flex-wrap: wrap; justify-content: center; margin-top: 8px; }
+.wo-btn {
+  display: inline-flex; align-items: center; gap: 8px; border: 0; cursor: pointer; font: inherit; font-weight: 600; font-size: 1rem;
+  padding: 14px 22px; border-radius: 16px; color: #2e1065; background: #fff; min-width: 120px; justify-content: center;
+}
+.wo-btn .ic { width: 18px; height: 18px; }
+.wo-btn.main { background: linear-gradient(135deg, #fde68a, #f0abfc); color: #2e1065; box-shadow: 0 10px 24px -10px rgba(253, 230, 138, .7); }
+.wo-btn.ghost { background: rgba(255, 255, 255, .12); color: #fff; }
+
+.wo-next {
+  display: flex; align-items: center; gap: 14px; text-align: left; margin-top: 14px; padding: 10px 16px 10px 10px;
+  border-radius: 18px; background: rgba(255, 255, 255, .1); border: 1px solid rgba(255, 255, 255, .18); max-width: 420px; width: 100%;
+}
+.wo-next .fig { width: 84px; flex: none; border-radius: 12px; background: #f3edff; }
+.wo-next small { display: block; opacity: .7; font-size: .75rem; text-transform: uppercase; letter-spacing: .05em; }
+.wo-next b { display: block; font-size: 1.05rem; }
+.wo-next span { opacity: .8; font-size: .88rem; }
+
+.wo-trophy { width: 96px; height: 96px; border-radius: 30px; display: grid; place-items: center; background: linear-gradient(135deg, #fde68a, #f0abfc); color: #3b0764; margin-bottom: 6px; }
+.wo-trophy .ic { width: 52px; height: 52px; }
+.wo-stats { display: grid; grid-template-columns: repeat(3, 1fr); gap: 10px; width: min(420px, 100%); margin: 10px 0; }
+.wo-stats div { padding: 12px; border-radius: 16px; background: rgba(255, 255, 255, .1); }
+.wo-stats b { display: block; font-family: "Kanit", inherit; font-style: italic; font-weight: 800; font-size: 1.8rem; color: #fde68a; }
+.wo-stats span { opacity: .8; font-size: .85rem; }
+@media (max-height: 700px) { .wo-fig { width: min(200px, 50vw); } .wo-fig.big { width: min(240px, 60vw); } .wo-ring.big { width: 170px; } }
+@media print { .wo { display: none !important; } }

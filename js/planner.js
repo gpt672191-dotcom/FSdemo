@@ -109,6 +109,7 @@ function renderPlan() {
         <span class="pday-num">${n + 1}</span>
         <div class="pday-title"><h3>${t.weekFull[d.weekday]}</h3><span>${t.dayType[d.type]}</span></div>
         <span class="pday-meta">~${total} ${t.min}</span>
+        <button type="button" class="btn sm wo-day" data-wo-day="${n}">${icon("play")}<span>${t.woStartDay}</span></button>
       </div>
       <div class="phase-row"><span class="phase-tag">${t.warm}</span><span>${t.warmTxt}</span></div>
       <ol class="pex-list">
@@ -207,7 +208,30 @@ $("#planForm").addEventListener("submit", e => {
 $("#plan").addEventListener("click", e => {
   const b = e.target.closest("[data-gate]");
   if (b) openAuth(b.dataset.gate, () => generate({ ...answers }));
+  const d = e.target.closest("[data-wo-day]");
+  if (d) startDayWorkout(+d.dataset.woDay);
 });
+
+/* ---------- Guided workout for one plan day (js/workout.js) ---------- */
+// Same sets / reps / seconds as the plan card shows (see dose())
+function woItem(ex, a) {
+  const beg = a.level === "beg";
+  if (ex.machine) return { ex, sets: 1, secs: (beg ? 8 : 12) * 60 };
+  if (ex.cat === "mobility") return { ex, sets: 2, secs: beg ? 30 : 45 };
+  if (ex.cat === "cardio") {
+    const lose = a.goal === "lose" || a.goal === "endure";
+    return beg ? { ex, sets: lose ? 4 : 3, secs: 30 } : { ex, sets: lose ? 5 : 4, secs: 40 };
+  }
+  const sets = beg ? 2 : 3;
+  if (ex.timed) return { ex, sets, secs: beg ? 20 : 40 };
+  return { ex, sets, target: a.goal === "muscle" ? (beg ? "8–10" : "10–12") : (beg ? "10" : "12–15"), secs: null };
+}
+function startDayWorkout(i) {
+  if (!lastPlan) return;
+  const a = lastPlan.answers, tx = T[lang];
+  const d = buildPlan(a, lastPlan.seed)[i];
+  Workout.start({ title: `${tx.weekFull[d.weekday]} · ${tx.dayType[d.type]}`, rest: restSec(a), items: d.list.map(ex => woItem(ex, a)) });
+}
 onRender(renderChips);
 onRender(renderPlan);
 

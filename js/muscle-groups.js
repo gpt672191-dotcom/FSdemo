@@ -51,8 +51,28 @@ function renderDetail() {
       </div>
       <div class="sec-head" style="margin:28px 0 16px"><h2 style="font-size:1.3rem">${tx.mgExTitle(tx[`mg_${g}`], all.length)}</h2></div>
       ${equipTabs(mgEq)}
+      ${workoutList().length ? `
+      <div class="wo-start">
+        <button type="button" class="btn big" data-wo-go>${icon("play")}<span>${tx.woStart}</span></button>
+        <span class="wo-start-sub">${tx.woStartSub(workoutList().length)}</span>
+      </div>` : ""}
       ${equipSections(all, mgEq, card)}
     </div>`;
+}
+
+// The guided workout uses up to 5 moves from the chosen group and equipment tab, 3 sets each
+function workoutList() {
+  return exercisesFor(mgSel)
+    .filter(e => mgEq === "all" || (mgEq === "none" ? e.eq === "none" : e.eq !== "none"))
+    .slice(0, 5);
+}
+function startGroupWorkout() {
+  const tx = t();
+  Workout.start({
+    title: tx[`mg_${mgSel}`],
+    rest: 60,
+    items: workoutList().map(e => ({ ex: e, sets: 3, target: "8–12", secs: e.timed ? 30 : null }))
+  });
 }
 
 $("#mgGrid").addEventListener("click", e => {
@@ -67,6 +87,7 @@ $("#mgGrid").addEventListener("click", e => {
 $("#mgDetail").addEventListener("click", e => {
   const tab = e.target.closest("[data-eqmode]");
   if (tab) { mgEq = tab.dataset.eqmode; renderDetail(); }
+  if (e.target.closest("[data-wo-go]")) startGroupWorkout();
 });
 
 onRender(renderGroups);
