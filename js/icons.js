@@ -25,6 +25,7 @@ const ICONS = {
   flask:     '<path d="M9 3h6M10 3v6L4.5 19a1.5 1.5 0 0 0 1.3 2h12.4a1.5 1.5 0 0 0 1.3-2L14 9V3"/><path d="M7 15h10"/>',
   alert:     '<path d="M10.29 3.86L1.82 18a2 2 0 0 0 1.71 3h16.94a2 2 0 0 0 1.71-3L13.71 3.86a2 2 0 0 0-3.42 0z"/><path d="M12 9v4M12 17h.01"/>',
   menu:      '<path d="M4 6h16M4 12h16M4 18h16"/>',
+  chevron:   '<path d="M6 9l6 6 6-6"/>',
   plus:      '<path d="M12 5v14M5 12h14"/>',
   arrowLeft: '<path d="M19 12H5M11 6l-6 6 6 6"/>',
   eye:       '<path d="M2 12s3.6-7 10-7 10 7 10 7-3.6 7-10 7S2 12 2 12z"/><circle cx="12" cy="12" r="3"/>',

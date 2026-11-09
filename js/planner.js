@@ -66,6 +66,9 @@ function buildPlan(a, seed) {
   });
 }
 
+// Which plan days are expanded (only the first day open by default, to keep the page tidy)
+let openDays = new Set([0]);
+
 function renderPlan() {
   const box = $("#plan");
   // Plans are for members only: guests see a sign-up / log-in prompt instead
@@ -104,13 +107,15 @@ function renderPlan() {
   const ticks = `<span class="ticks print-only" aria-hidden="true"><i></i><i></i><i></i><i></i></span>`;
 
   const cards = days.map((d, n) => `
-    <article class="pday">
-      <div class="pday-head">
+    <article class="pday${openDays.has(n) ? " open" : ""}" data-day="${n}">
+      <div class="pday-head" data-toggle-day="${n}" role="button" tabindex="0" aria-expanded="${openDays.has(n)}">
         <span class="pday-num">${n + 1}</span>
         <div class="pday-title"><h3>${t.weekFull[d.weekday]}</h3><span>${t.dayType[d.type]}</span></div>
-        <span class="pday-meta">~${total} ${t.min}</span>
+        <span class="pday-meta">${t.nMoves(d.list.length)} · ~${total} ${t.min}</span>
         <button type="button" class="btn sm wo-day" data-wo-day="${n}">${icon("play")}<span>${t.woStartDay}</span></button>
+        <span class="pday-chev" aria-hidden="true">${icon("chevron")}</span>
       </div>
+      <div class="pday-body"><div class="pday-inner">
       <div class="phase-row"><span class="phase-tag">${t.warm}</span><span>${t.warmTxt}</span></div>
       <ol class="pex-list">
         ${d.list.map((ex, k) => `
@@ -125,6 +130,7 @@ function renderPlan() {
           </li>`).join("")}
       </ol>
       <div class="phase-row"><span class="phase-tag">${t.cool}</span><span>${t.coolTxt}</span></div>
+      </div></div>
     </article>`).join("");
 
   const u = typeof currentUser === "function" ? currentUser() : null;
@@ -139,6 +145,7 @@ function renderPlan() {
     <div class="pstats">${stats}</div>
     <div class="week2">${week}</div>
     <p class="tick-note print-only">${t.tickNote}</p>
+    <div class="pdays-bar"><button type="button" class="pdays-all${openDays.size === days.length ? " all-open" : ""}" data-all-days>${icon("chevron")}<span>${openDays.size === days.length ? t.collapseAll : t.expandAll}</span></button></div>
     <div class="pdays">${cards}</div>
     <p class="note">${icon("alert")} ${t.planNote}</p>
     <p class="print-foot print-only">${t.printFoot}</p>
@@ -158,6 +165,7 @@ function generate(a, scroll = true) {
   if (scroll) box.scrollIntoView({ behavior: "smooth", block: "start" });
   setTimeout(() => {
     lastPlan = { answers: a, seed: Math.floor(Math.random() * 1e9) };
+    openDays = new Set([0]);
     store.set("fs-plan", lastPlan);
     renderPlan();
   }, 900);
@@ -209,8 +217,32 @@ $("#plan").addEventListener("click", e => {
   const b = e.target.closest("[data-gate]");
   if (b) openAuth(b.dataset.gate, () => generate({ ...answers }));
   const d = e.target.closest("[data-wo-day]");
-  if (d) startDayWorkout(+d.dataset.woDay);
+  if (d) { startDayWorkout(+d.dataset.woDay); return; }
+  if (e.target.closest("[data-all-days]")) {
+    const n = $$("#plan .pday").length;
+    openDays = openDays.size === n ? new Set() : new Set([...Array(n).keys()]);
+    renderPlan(); return;
+  }
+  const h = e.target.closest("[data-toggle-day]");
+  if (h) toggleDay(+h.dataset.toggleDay);
 });
+$("#plan").addEventListener("keydown", e => {
+  const h = e.target.closest("[data-toggle-day]");
+  if (h && e.target === h && (e.key === "Enter" || e.key === " ")) { e.preventDefault(); toggleDay(+h.dataset.toggleDay); }
+});
+
+// Open/close one day without redrawing the whole plan
+function toggleDay(i) {
+  const card = $(`#plan .pday[data-day="${i}"]`);
+  if (!card) return;
+  const open = !card.classList.contains("open");
+  card.classList.toggle("open", open);
+  card.querySelector(".pday-head").setAttribute("aria-expanded", open);
+  if (open) openDays.add(i); else openDays.delete(i);
+  const n = $$("#plan .pday").length, all = $("[data-all-days]");
+  all.classList.toggle("all-open", openDays.size === n);
+  all.querySelector("span").textContent = openDays.size === n ? T[lang].collapseAll : T[lang].expandAll;
+}
 
 /* ---------- Guided workout for one plan day (js/workout.js) ---------- */
 // Same sets / reps / seconds as the plan card shows (see dose())
