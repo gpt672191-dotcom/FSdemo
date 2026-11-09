@@ -155,6 +155,13 @@ const Workout = (() => {
     clearInterval(S.timer);
     const tx = wt(), mins = Math.max(1, Math.round((Date.now() - S.started) / 60000));
     const sets = S.items.reduce((a, it) => a + it.sets, 0);
+    // Save to progress (progress.js), if the page has it and the user is logged in
+    let saved = "";
+    if (typeof Progress !== "undefined") {
+      saved = Progress.logWorkout({ t: S.title, sets, mins })
+        ? `<p class="wo-saved">${icon("check")}${pt().logged}</p>`
+        : `<p class="wo-saved off">${pt().loginToLog}</p>`;
+    }
     $("#woProg").style.width = "100%";
     $("#woStep").textContent = "";
     $("#woBody").className = "wo-body is-done";
@@ -162,6 +169,7 @@ const Workout = (() => {
       <div class="wo-trophy">${icon("trophy")}</div>
       <h2 class="wo-name">${tx.finTitle}</h2>
       <p class="wo-sub">${tx.finSub}</p>
+      ${saved}
       <div class="wo-stats">
         <div><b>${S.items.length}</b><span>${tx.finEx}</span></div>
         <div><b>${sets}</b><span>${tx.finSets}</span></div>

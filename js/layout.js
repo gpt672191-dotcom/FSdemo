@@ -81,9 +81,25 @@ document.body.insertAdjacentHTML("afterbegin", `
 $("main").insertAdjacentHTML("afterend", `
 <footer>
   <div class="wrap">
-    <nav class="foot-links">${NAV.map(n => `<a href="${n.href}" data-i18n="${n.key}"></a>`).join("")}</nav>
-    <p data-i18n="disclaimer"></p>
-    <p>© 2026 FitStart AI</p>
+    <div class="foot-grid">
+      <div class="foot-brand">
+        <a href="index.html" class="logo"><img class="logo-mark" src="img/logo.svg" alt="" width="34" height="34"><span>FitStart</span><span class="logo-ai">AI</span></a>
+        <p data-i18n="footAbout"></p>
+      </div>
+      <div class="foot-col"><b data-i18n="footTrain"></b>
+        <a href="muscle.html" data-i18n="navMuscle"></a><a href="weight-loss.html" data-i18n="navLose"></a><a href="planner.html" data-i18n="navPlan"></a><a href="for-you.html" data-i18n="navForYou"></a>
+      </div>
+      <div class="foot-col"><b data-i18n="footTools"></b>
+        <a href="bmi.html" data-i18n="navBmi"></a><a href="more.html#timer" data-i18n="timerTitle"></a><a href="more.html#library" data-i18n="footLearn"></a><a href="more.html#faq" data-i18n="faqTitle"></a>
+      </div>
+      <div class="foot-col"><b data-i18n="footAccount"></b>
+        <a href="profile.html" data-i18n="navProfile"></a><a href="profile.html#progress" data-i18n="footProgress"></a><a href="settings.html" data-i18n="navSettings"></a>
+      </div>
+    </div>
+    <div class="foot-bottom">
+      <p data-i18n="disclaimer"></p>
+      <p>© 2026 FitStart AI</p>
+    </div>
   </div>
 </footer>`);
 

@@ -26,6 +26,7 @@ const T = {
     cBmiD: "เช็กค่าดัชนีมวลกาย และน้ำหนักที่เหมาะสม",
     cMoreD: "ตัวจับเวลาพัก เคล็ดลับ และคำถามที่พบบ่อย",
     go: "ไปที่หน้านี้ →",
+    footAbout: "เว็บช่วยเริ่มออกกำลังกายสำหรับมือใหม่ จัดแผน นำออกกำลังกาย และติดตามความคืบหน้า ฟรี", footTrain: "ออกกำลังกาย", footTools: "เครื่องมือและความรู้", footAccount: "บัญชี", footLearn: "คลังความรู้", footProgress: "ความคืบหน้า",
     heroToday: "วันนี้", heroWeek: "แผนสัปดาห์นี้", heroDone: "AI จัดแผนให้แล้ว",
     tq1: "แนะนำ", tq1s: "เฉพาะคุณ", tq2: "สร้างแผน", tq2s: "AI จัดให้ฟรี!", tq3: "คำนวณ BMI", tq3s: "รู้ผลทันที", tq4: "คลังท่า", tq4s: "ครบทุกกล้ามเนื้อ",
     tw1a: "หมวด", tw1b: "สร้างกล้าม", tw1s: "อก หลัง ไหล่ แขน ขา",
@@ -159,7 +160,7 @@ const T = {
 
     /* ----- หน้าอื่นๆ ----- */
     morePill: "อื่นๆ",
-    moreTitle: "เครื่องมือและความรู้เพิ่มเติม", moreLead: "ตัวจับเวลาพัก เคล็ดลับสำหรับมือใหม่ และคำถามที่พบบ่อย",
+    moreTitle: "ความรู้และเครื่องมือ", moreLead: "ตัวจับเวลาพัก คลังบทความ ความเชื่อผิดๆ และคำถามที่พบบ่อย",
     timerTitle: "จับเวลาพัก", timerSub: "เลือกเวลา แล้วกดเริ่ม จะมีเสียงเตือนเมื่อหมดเวลา",
     start: "เริ่ม", pause: "หยุดชั่วคราว", reset: "รีเซ็ต",
     tipsTitle: "เคล็ดลับสำหรับมือใหม่", tipsSub: "สิ่งเล็กๆ ที่ช่วยให้ทำได้ต่อเนื่อง",
@@ -278,6 +279,7 @@ const T = {
     cBmiD: "Check your body mass index and healthy weight range",
     cMoreD: "Rest timer, beginner tips, and FAQ",
     go: "Open →",
+    footAbout: "A free starter fitness site for beginners: plans, guided workouts and progress tracking.", footTrain: "Train", footTools: "Tools & learning", footAccount: "Account", footLearn: "Knowledge library", footProgress: "Progress",
     heroToday: "Today", heroWeek: "This week", heroDone: "Plan ready by AI",
     tq1: "For you", tq1s: "Made for you", tq2: "Plan builder", tq2s: "Free AI plan!", tq3: "BMI check", tq3s: "Instant result", tq4: "Moves", tq4s: "Every muscle",
     tw1a: "Topic", tw1b: "Build muscle", tw1s: "Chest, back, arms, legs",
@@ -411,7 +413,7 @@ const T = {
 
     /* ----- More ----- */
     morePill: "More",
-    moreTitle: "Tools and extra know-how", moreLead: "Rest timer, beginner tips, and frequently asked questions",
+    moreTitle: "Learn & tools", moreLead: "Rest timer, article library, fitness myths and FAQ",
     timerTitle: "Rest timer", timerSub: "Pick a time and press start. It beeps when time is up.",
     start: "Start", pause: "Pause", reset: "Reset",
     tipsTitle: "Beginner tips", tipsSub: "Small habits that keep you going",
