@@ -74,6 +74,8 @@ const bodyMap = (() => {
 
   // zoom = true: close-up on the highlighted area (used on the small cards)
   return (group, zoom) => {
+    // 3D available: a rotating 3D body with the muscles in red (js/fig3d.js)
+    if (window.FIG3D_OK) return `<div class="fig bm3d" data-fig="mannequin" data-hl="${group}" data-zoom="${zoom ? 1 : 0}"></div>`;
     const hl = HL[group] || {};
     const vb = zoom && ZOOM[group] ? ZOOM[group].join(" ") : "0 0 130 120";
     return `<svg class="bodymap" viewBox="${vb}" aria-hidden="true">${view(FRONT, hl.f || [], 3, false)}${view(BACK, hl.b || [], 67, true)}</svg>`;

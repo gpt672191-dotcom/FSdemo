@@ -1520,3 +1520,10 @@ footer { text-align: left; padding-block: 44px 24px; background: color-mix(in sr
 .foot-col a:hover { color: var(--accent); }
 .foot-bottom { border-top: 1px solid var(--line); padding-top: 18px; display: flex; justify-content: space-between; gap: 10px 24px; flex-wrap: wrap; font-size: .82rem; }
 .foot-bottom p { margin: 0; }
+
+/* ---------- 3D figures (js/fig3d.js) ---------- */
+.fig.is3d { position: relative; }
+.fig .fig3d { position: absolute; inset: 0; width: 100%; height: 100%; display: block; }
+.fig.is3d svg { display: none; }
+.bm-wrap { position: relative; }
+.bm-wrap .bm3d { position: absolute; inset: 0; width: auto; height: auto; aspect-ratio: auto; border-radius: inherit; background: none; }

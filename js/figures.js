@@ -264,12 +264,15 @@ const FIGURES = (() => {
 
   function mount(el) {
     if (el._fig) return;
-    const inst = create(el, el.dataset.fig);
+    // A 3D backend (js/fig3d.js) takes over when WebGL is available; otherwise the 2D SVG is used
+    const be = api.backend;
+    const inst = be ? be.create(el, el.dataset.fig) : create(el, el.dataset.fig);
     el._fig = inst;
     live.add(inst);
     if (io) io.observe(el); else visible.add(el);
-    draw(inst, inst.total * 0.35);
+    render(inst, inst.total * 0.35);
   }
+  function render(inst, time) { inst.dirty = false; if (inst.is3d) api.backend.draw(inst, time); else draw(inst, time); }
   function mountAll(root = document) { root.querySelectorAll("[data-fig]").forEach(mount); }
 
   let running = false, last = 0;
@@ -280,7 +283,7 @@ const FIGURES = (() => {
     last = now;
     for (const inst of live) {
       if (!inst.el.isConnected) { live.delete(inst); if (io) io.unobserve(inst.el); continue; }
-      if (visible.has(inst.el) && !motionOff()) draw(inst, now);
+      if (visible.has(inst.el) && (!motionOff() || inst.dirty)) render(inst, now);
     }
   }
   function start() {
@@ -294,7 +297,9 @@ const FIGURES = (() => {
     if (!running) { running = true; requestAnimationFrame(loop); }
   }
 
-  return { start, mount, mountAll, names: Object.keys(M), draw, create };
+  // Internals are shared with the 3D backend (js/fig3d.js)
+  const api = { start, mount, mountAll, names: Object.keys(M), draw, create, render, M, ALIAS, mix, solve, dir, add, motionOff, backend: null };
+  return api;
 })();
 
 onRender(() => FIGURES.mountAll());
