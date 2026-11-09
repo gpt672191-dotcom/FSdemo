@@ -42,17 +42,39 @@ function renderAuth() {
   $("#authSub").textContent = up ? tx.signupSub : tx.loginSub;
   $("#authSubmit").textContent = up ? tx.signup : tx.login;
   $("#switchText").textContent = up ? tx.haveAcc : tx.noAcc;
-  $("#switchBtn").textContent = up ? tx.login : tx.signup;
+  // Round button: "+" opens sign-up, "←" goes back to log-in
+  $("#switchBtn").innerHTML = icon(up ? "arrowLeft" : "plus");
+  $("#switchBtn").setAttribute("aria-label", up ? tx.login : tx.signup);
+  $("#switchBtn").title = up ? tx.login : tx.signup;
+  $("#authIco").innerHTML = icon(up ? "user" : "lock");
   $("#nameField").hidden = !up;
   $("#pw2Field").hidden = !up;
   $("#bodyFields").hidden = !up;
   $("#aPw").autocomplete = up ? "new-password" : "current-password";
   $$(".tabs button").forEach(b => b.classList.toggle("on", b.dataset.tab === authMode));
-  $$(".pw-toggle").forEach(b => { b.textContent = $("#" + b.dataset.for).type === "password" ? tx.show : tx.hide; });
+  $$(".pw-toggle").forEach(b => {
+    const hidden = $("#" + b.dataset.for).type === "password";
+    b.innerHTML = icon(hidden ? "eye" : "eyeOff");
+    b.setAttribute("aria-label", hidden ? tx.show : tx.hide);
+  });
 }
 onRender(renderAuth);
 
-function switchMode(m) { authMode = m; $("#authErr").textContent = ""; renderAuth(); }
+// Switch log-in <-> sign-up with a card flip (instant when motion is reduced)
+function switchMode(m) {
+  const card = $("#authCard");
+  const swap = () => { authMode = m; $("#authErr").textContent = ""; renderAuth(); };
+  if (document.documentElement.dataset.motion === "reduce" || card.classList.contains("flip-out")) { swap(); return; }
+  card.classList.remove("flip-in");
+  card.classList.add("flip-out");
+  setTimeout(() => {
+    swap();
+    card.classList.remove("flip-out");
+    card.classList.add("flip-in");
+    setTimeout(() => card.classList.remove("flip-in"), 260);
+    (m === "signup" ? $("#aName") : $("#aEmail")).focus({ preventScroll: true });
+  }, 200);
+}
 $$(".tabs button").forEach(b => b.onclick = () => switchMode(b.dataset.tab));
 $("#switchBtn").onclick = () => switchMode(authMode === "login" ? "signup" : "login");
 $$(".pw-toggle").forEach(b => b.onclick = () => {

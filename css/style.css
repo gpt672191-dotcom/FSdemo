@@ -1253,3 +1253,113 @@ body.wo-open { overflow: hidden; }
 .wo-stats span { opacity: .8; font-size: .85rem; }
 @media (max-height: 700px) { .wo-fig { width: min(200px, 50vw); } .wo-fig.big { width: min(240px, 60vw); } .wo-ring.big { width: 170px; } }
 @media print { .wo { display: none !important; } }
+
+/* ---------- Login / sign-up window: soft UI (neumorphism) ---------- */
+:root { --nm-bg: #ece8f4; --nm-d: rgba(150, 135, 185, .5); --nm-l: #ffffff; --nm-txt: #2a2238; --nm-mut: #8a819b; }
+@media (prefers-color-scheme: dark) {
+  :root:not([data-theme="light"]) { --nm-bg: #1f1a28; --nm-d: rgba(0, 0, 0, .6); --nm-l: rgba(255, 255, 255, .055); --nm-txt: #ece9f2; --nm-mut: #9a91ab; }
+}
+:root[data-theme="dark"] { --nm-bg: #1f1a28; --nm-d: rgba(0, 0, 0, .6); --nm-l: rgba(255, 255, 255, .055); --nm-txt: #ece9f2; --nm-mut: #9a91ab; }
+
+.modal-bg.nm { background: color-mix(in srgb, var(--nm-bg) 98%, transparent); overflow: hidden; perspective: 1200px; }
+.nm-bub {
+  position: absolute; border-radius: 50%; background: var(--nm-bg); pointer-events: none;
+  box-shadow: 14px 14px 30px var(--nm-d), -14px -14px 30px var(--nm-l); animation: nmFloat 9s ease-in-out infinite;
+}
+.nm-bub.b1 { width: 170px; height: 170px; left: 7%; top: 9%; }
+.nm-bub.b2 { width: 70px; height: 70px; right: 17%; top: 20%; animation-delay: -3s; }
+.nm-bub.b3 { width: 120px; height: 120px; right: 8%; bottom: 10%; animation-delay: -5s; }
+.nm-bub.b4 { width: 54px; height: 54px; left: 22%; bottom: 16%; animation-delay: -7s; }
+@keyframes nmFloat { 0%, 100% { transform: translateY(0); } 50% { transform: translateY(-16px); } }
+
+.modal.nm-card {
+  position: relative; width: 100%; max-width: 380px; padding: 30px 28px 22px; border-radius: 30px; text-align: center;
+  background: var(--nm-bg); color: var(--nm-txt);
+  box-shadow: 18px 18px 40px var(--nm-d), -18px -18px 40px var(--nm-l);
+  transform-style: preserve-3d; max-height: 94vh; overflow-y: auto; scrollbar-width: none;
+}
+.modal.nm-card::-webkit-scrollbar { display: none; }
+.nm-card.flip-out { animation: nmFlipOut .2s ease-in forwards; }
+.nm-card.flip-in { animation: nmFlipIn .26s ease-out; }
+@keyframes nmFlipOut { to { transform: rotateY(90deg) scale(.96); opacity: .4; } }
+@keyframes nmFlipIn { from { transform: rotateY(-90deg) scale(.96); opacity: .4; } to { transform: none; opacity: 1; } }
+
+.nm-close {
+  position: absolute; top: 14px; right: 14px; width: 36px; height: 36px; border-radius: 50%; border: 0; cursor: pointer;
+  display: grid; place-items: center; color: var(--nm-mut); background: var(--nm-bg);
+  box-shadow: 4px 4px 9px var(--nm-d), -4px -4px 9px var(--nm-l);
+}
+.nm-close:active { box-shadow: inset 3px 3px 7px var(--nm-d), inset -3px -3px 7px var(--nm-l); }
+.nm-close .ic { width: 16px; height: 16px; }
+.nm-ico {
+  width: 74px; height: 74px; margin: 2px auto 14px; border-radius: 50%; display: grid; place-items: center; color: var(--accent);
+  background: var(--nm-bg); box-shadow: 8px 8px 16px var(--nm-d), -8px -8px 16px var(--nm-l);
+}
+.nm-ico .ic { width: 30px; height: 30px; }
+.nm-title { margin: 0; font-size: 1.6rem; font-weight: 700; }
+.nm-sub { margin: 4px 0 20px; color: var(--nm-mut); font-size: .88rem; }
+
+/* Pressed-in input with a floating label and a sliding underline on focus */
+.nm-f { position: relative; margin-bottom: 14px; text-align: left; }
+.nm-f input, .nm-f select {
+  width: 100%; height: 52px; padding: 20px 46px 6px 18px; border: 0; border-radius: 16px; font: inherit; font-size: .95rem;
+  color: var(--nm-txt); background: var(--nm-bg); outline: none; -webkit-appearance: none; appearance: none;
+  box-shadow: inset 5px 5px 10px var(--nm-d), inset -5px -5px 10px var(--nm-l); transition: box-shadow .2s;
+}
+.nm-f select { padding-right: 18px; cursor: pointer; }
+.nm-f label {
+  position: absolute; left: 18px; top: 16px; font-size: .92rem; color: var(--nm-mut); pointer-events: none;
+  transition: top .18s, font-size .18s, color .18s;
+}
+.nm-f input:focus + label, .nm-f input:not(:placeholder-shown) + label, .nm-f.sel label { top: 6px; font-size: .7rem; }
+.nm-f input:focus + label, .nm-f select:focus + label { color: var(--accent); }
+.nm-f input:focus, .nm-f select:focus {
+  box-shadow: inset 5px 5px 10px var(--nm-d), inset -5px -5px 10px var(--nm-l), 0 0 0 2px color-mix(in srgb, var(--accent) 45%, transparent);
+}
+.nm-line {
+  position: absolute; left: 14px; right: 14px; bottom: 0; height: 2.5px; border-radius: 2px; pointer-events: none;
+  background: linear-gradient(90deg, var(--accent), #ec4899); transform: scaleX(0); transform-origin: left; transition: transform .3s ease;
+}
+.nm-f input:focus ~ .nm-line, .nm-f select:focus ~ .nm-line { transform: scaleX(1); }
+.nm-f .pw-toggle {
+  position: absolute; right: 10px; top: 50%; transform: translateY(-50%); width: 32px; height: 32px; padding: 0;
+  display: grid; place-items: center; border: 0; background: none; color: var(--nm-mut); cursor: pointer; border-radius: 50%;
+}
+.nm-f .pw-toggle .ic { width: 18px; height: 18px; }
+.nm-f .pw-toggle:hover { color: var(--accent); }
+.nm-sec { font-size: .78rem; font-weight: 600; color: var(--nm-mut); text-align: left; margin: 4px 4px 10px; }
+.nm-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 0 12px; }
+.nm-grid input { padding-right: 12px; }
+
+/* Raised button that presses in, with a gradient bar on hover */
+.nm-btn {
+  position: relative; width: 100%; height: 52px; margin-top: 4px; border: 0; border-radius: 16px; cursor: pointer; overflow: hidden;
+  font: inherit; font-weight: 700; letter-spacing: .04em; text-transform: uppercase; color: var(--accent); background: var(--nm-bg);
+  box-shadow: 7px 7px 14px var(--nm-d), -7px -7px 14px var(--nm-l); transition: box-shadow .15s, color .2s;
+}
+.nm-btn::after {
+  content: ""; position: absolute; left: 0; right: 0; bottom: 0; height: 3px; background: linear-gradient(90deg, var(--accent), #ec4899);
+  transform: scaleX(0); transition: transform .3s;
+}
+.nm-btn:hover::after { transform: scaleX(1); }
+.nm-btn:active { box-shadow: inset 5px 5px 10px var(--nm-d), inset -5px -5px 10px var(--nm-l); }
+.nm-card .form-err { text-align: left; margin: 0 4px 8px; }
+.nm-card .form-err:empty { display: none; }
+
+.nm-switch { display: flex; align-items: center; justify-content: center; gap: 12px; margin-top: 20px; color: var(--nm-mut); font-size: .86rem; }
+.nm-round {
+  width: 42px; height: 42px; border-radius: 50%; border: 0; cursor: pointer; display: grid; place-items: center; color: var(--accent);
+  background: var(--nm-bg); box-shadow: 5px 5px 11px var(--nm-d), -5px -5px 11px var(--nm-l); transition: box-shadow .15s, transform .2s;
+}
+.nm-round:hover { transform: scale(1.08); }
+.nm-round .ic { width: 20px; height: 20px; }
+.nm-round:active { box-shadow: inset 4px 4px 8px var(--nm-d), inset -4px -4px 8px var(--nm-l); }
+.nm-demo { margin-top: 16px; font-size: .74rem; color: var(--nm-mut); line-height: 1.45; }
+.nm-demo .ic { width: 1em; height: 1em; vertical-align: -2px; }
+@media (max-width: 480px) {
+  .modal.nm-card { padding: 26px 20px 18px; border-radius: 26px; }
+  .nm-bub.b1 { width: 110px; height: 110px; }
+}
+:root[data-motion="reduce"] .nm-bub, :root[data-motion="reduce"] .nm-card { animation: none !important; }
+.nm-f input[type=number] { -moz-appearance: textfield; }
+.nm-f input::-webkit-outer-spin-button, .nm-f input::-webkit-inner-spin-button { -webkit-appearance: none; margin: 0; }

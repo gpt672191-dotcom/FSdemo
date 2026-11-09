@@ -49,64 +49,32 @@ document.body.insertAdjacentHTML("afterbegin", `
   </div>
 </header>
 
-<div class="modal-bg" id="authModal" hidden>
-  <div class="modal" role="dialog" aria-modal="true" aria-labelledby="authTitle">
-    <button type="button" class="close" id="authClose" aria-label="Close">✕</button>
-    <h2 id="authTitle" style="margin:0 0 4px;font-size:1.35rem"></h2>
-    <p id="authSub" style="margin:0;color:var(--muted);font-size:.92rem"></p>
-    <div class="tabs">
-      <button type="button" data-tab="login" data-i18n="login"></button>
-      <button type="button" data-tab="signup" data-i18n="signup"></button>
-    </div>
+<div class="modal-bg nm" id="authModal" hidden>
+  <span class="nm-bub b1"></span><span class="nm-bub b2"></span><span class="nm-bub b3"></span><span class="nm-bub b4"></span>
+  <div class="modal nm-card" id="authCard" role="dialog" aria-modal="true" aria-labelledby="authTitle">
+    <button type="button" class="nm-close" id="authClose" aria-label="Close"><i data-icon="close"></i></button>
+    <div class="nm-ico" id="authIco"></div>
+    <h2 id="authTitle" class="nm-title"></h2>
+    <p id="authSub" class="nm-sub"></p>
     <form id="authForm" novalidate>
-      <div class="field" id="nameField">
-        <label for="aName" data-i18n="name"></label>
-        <input id="aName" type="text" autocomplete="name" maxlength="40">
-      </div>
-      <div class="field">
-        <label for="aEmail" data-i18n="email"></label>
-        <input id="aEmail" type="email" autocomplete="email" placeholder="you@example.com">
-      </div>
-      <div class="field">
-        <label for="aPw" data-i18n="password"></label>
-        <div class="pw-wrap">
-          <input id="aPw" type="password" autocomplete="current-password">
-          <button type="button" class="pw-toggle" data-for="aPw"></button>
-        </div>
-      </div>
-      <div class="field" id="pw2Field">
-        <label for="aPw2" data-i18n="confirmPw"></label>
-        <div class="pw-wrap">
-          <input id="aPw2" type="password" autocomplete="new-password">
-          <button type="button" class="pw-toggle" data-for="aPw2"></button>
-        </div>
-      </div>
+      <div id="nameField"><div class="nm-f"><input id="aName" type="text" placeholder=" " autocomplete="name" maxlength="40"><label for="aName" data-i18n="name"></label><i class="nm-line"></i></div></div>
+      <div class="nm-f"><input id="aEmail" type="email" placeholder=" " autocomplete="email"><label for="aEmail" data-i18n="email"></label><i class="nm-line"></i></div>
+      <div class="nm-f"><input id="aPw" type="password" placeholder=" " autocomplete="current-password"><label for="aPw" data-i18n="password"></label><button type="button" class="pw-toggle" data-for="aPw"></button><i class="nm-line"></i></div>
+      <div id="pw2Field"><div class="nm-f"><input id="aPw2" type="password" placeholder=" " autocomplete="new-password"><label for="aPw2" data-i18n="confirmPw"></label><button type="button" class="pw-toggle" data-for="aPw2"></button><i class="nm-line"></i></div></div>
       <div id="bodyFields">
-        <div class="body-title" data-i18n="bodyInfo"></div>
-        <div class="field-row">
-          <div class="field">
-            <label for="aSex" data-i18n="sex"></label>
-            <select id="aSex"><option value="m"></option><option value="f"></option></select>
-          </div>
-          <div class="field">
-            <label for="aAge" data-i18n="age"></label>
-            <input id="aAge" type="number" inputmode="numeric" min="13" max="90" placeholder="25">
-          </div>
-          <div class="field">
-            <label for="aH" data-i18n="height"></label>
-            <input id="aH" type="number" inputmode="decimal" min="100" max="230" placeholder="165">
-          </div>
-          <div class="field">
-            <label for="aW" data-i18n="weight"></label>
-            <input id="aW" type="number" inputmode="decimal" min="25" max="250" placeholder="60">
-          </div>
+        <div class="nm-sec" data-i18n="bodyInfo"></div>
+        <div class="nm-grid">
+          <div class="nm-f sel"><select id="aSex"><option value="m"></option><option value="f"></option></select><label for="aSex" data-i18n="sex"></label><i class="nm-line"></i></div>
+          <div class="nm-f"><input id="aAge" type="number" placeholder=" " inputmode="numeric" min="13" max="90"><label for="aAge" data-i18n="age"></label><i class="nm-line"></i></div>
+          <div class="nm-f"><input id="aH" type="number" placeholder=" " inputmode="decimal" min="100" max="230"><label for="aH" data-i18n="height"></label><i class="nm-line"></i></div>
+          <div class="nm-f"><input id="aW" type="number" placeholder=" " inputmode="decimal" min="25" max="250"><label for="aW" data-i18n="weight"></label><i class="nm-line"></i></div>
         </div>
       </div>
       <div class="form-err" id="authErr" role="alert"></div>
-      <button type="submit" class="btn" id="authSubmit"></button>
+      <button type="submit" class="nm-btn" id="authSubmit"></button>
     </form>
-    <div class="switch-line"><span id="switchText"></span> <button type="button" id="switchBtn"></button></div>
-    <div class="demo-note"><i data-icon="flask"></i> <span data-i18n="demoNote"></span></div>
+    <div class="nm-switch"><span id="switchText"></span><button type="button" class="nm-round" id="switchBtn"></button></div>
+    <div class="nm-demo"><i data-icon="flask"></i> <span data-i18n="demoNote"></span></div>
   </div>
 </div>`);
 
