@@ -1527,3 +1527,95 @@ footer { text-align: left; padding-block: 44px 24px; background: color-mix(in sr
 .fig.is3d svg { display: none; }
 .bm-wrap { position: relative; }
 .bm-wrap .bm3d { position: absolute; inset: 0; width: auto; height: auto; aspect-ratio: auto; border-radius: inherit; background: none; }
+
+/* ---------- Home hero: neon 3D stage (js/hero.js) ---------- */
+.h3 {
+  position: relative; height: clamp(440px, 42vw, 520px); border-radius: 30px; overflow: hidden; isolation: isolate; color: #fff;
+  background:
+    radial-gradient(60% 45% at 50% 40%, rgba(139, 92, 246, .45), transparent 70%),
+    radial-gradient(50% 40% at 100% 0%, rgba(236, 72, 153, .35), transparent 70%),
+    radial-gradient(45% 35% at 0% 100%, rgba(56, 189, 248, .22), transparent 70%),
+    linear-gradient(170deg, #1c0f3a 0%, #0e0820 55%, #08050f 100%);
+  box-shadow: 0 0 0 1px rgba(167, 139, 250, .35), 0 0 40px -6px rgba(139, 92, 246, .55), 0 30px 60px -30px rgba(0, 0, 0, .8);
+}
+.h3::after { /* thin gradient frame */
+  content: ""; position: absolute; inset: 0; border-radius: inherit; padding: 1.5px; pointer-events: none; z-index: 5;
+  background: linear-gradient(140deg, rgba(196, 181, 253, .9), rgba(236, 72, 153, .6) 45%, rgba(56, 189, 248, .5));
+  -webkit-mask: linear-gradient(#000 0 0) content-box, linear-gradient(#000 0 0); -webkit-mask-composite: xor; mask-composite: exclude;
+}
+/* receding neon grid floor */
+.h3-floor {
+  position: absolute; left: -40%; right: -40%; bottom: -8%; height: 62%; z-index: -1;
+  background-image: linear-gradient(rgba(167, 139, 250, .5) 1px, transparent 1px), linear-gradient(90deg, rgba(167, 139, 250, .5) 1px, transparent 1px);
+  background-size: 44px 44px; transform: perspective(380px) rotateX(64deg); transform-origin: 50% 100%;
+  -webkit-mask-image: linear-gradient(to top, #000 10%, transparent 85%); mask-image: linear-gradient(to top, #000 10%, transparent 85%);
+  animation: h3Grid 3.5s linear infinite;
+}
+@keyframes h3Grid { to { background-position: 0 44px, 0 0; } }
+.h3-glow { position: absolute; left: 50%; top: 46%; width: 62%; aspect-ratio: 1; translate: -50% -50%; border-radius: 50%; z-index: -1;
+  background: radial-gradient(circle, rgba(196, 181, 253, .55), rgba(139, 92, 246, .2) 45%, transparent 70%); filter: blur(6px); }
+.h3-orbit { position: absolute; left: 50%; top: 50%; border-radius: 50%; translate: -50% -50%; border: 1.5px solid rgba(196, 181, 253, .28); }
+.h3-orbit.o1 { width: 70%; aspect-ratio: 1; animation: h3Spin 14s linear infinite; }
+.h3-orbit.o2 { width: 88%; aspect-ratio: 1; border-style: dashed; border-color: rgba(240, 171, 252, .2); animation: h3Spin 26s linear infinite reverse; }
+.h3-orbit i { position: absolute; top: -5px; left: 50%; width: 10px; height: 10px; border-radius: 50%; background: #f0abfc; box-shadow: 0 0 12px 3px rgba(240, 171, 252, .8); }
+.h3-orbit.o2 i { background: #7dd3fc; box-shadow: 0 0 12px 3px rgba(125, 211, 252, .8); }
+@keyframes h3Spin { to { rotate: 360deg; } }
+.h3-podium {
+  position: absolute; left: 50%; bottom: 23.5%; width: 50%; height: 10%; translate: -50% 0; border-radius: 50%;
+  background: radial-gradient(closest-side, rgba(233, 213, 255, .9), rgba(167, 139, 250, .45) 55%, transparent);
+  box-shadow: 0 0 50px 14px rgba(139, 92, 246, .45);
+}
+.h3-stage { position: absolute; left: 14%; right: 14%; top: 7%; bottom: 27%; transition: opacity .26s, transform .26s; }
+.h3-stage.swap { opacity: 0; transform: scale(.94); }
+.h3-stage .fig { width: 100%; height: 100%; aspect-ratio: auto; background: none; border-radius: 0; }
+
+/* holographic chips */
+@keyframes h3Float { 0%, 100% { transform: translateY(0); } 50% { transform: translateY(-8px); } }
+.h3-chip {
+  position: absolute; z-index: 3; display: flex; align-items: center; gap: 10px; padding: 9px 14px 9px 9px; border-radius: 16px;
+  background: rgba(20, 10, 45, .62); border: 1px solid rgba(196, 181, 253, .35);
+  box-shadow: 0 10px 26px -10px rgba(0, 0, 0, .7), inset 0 1px 0 rgba(255, 255, 255, .12); animation: h3Float 5s ease-in-out infinite;
+}
+.h3-chip b { display: block; font-family: "Kanit", inherit; font-style: italic; font-weight: 800; font-size: 1.3rem; line-height: 1.1; font-variant-numeric: tabular-nums; }
+.h3-chip b small { font-family: "IBM Plex Sans Thai", inherit; font-style: normal; font-weight: 600; font-size: .7rem; opacity: .75; }
+.h3-sub { font-size: .72rem; opacity: .7; }
+.h3-ico { width: 38px; height: 38px; flex: none; border-radius: 12px; display: grid; place-items: center; }
+.h3-ico .ic { width: 20px; height: 20px; }
+.h3-ico.pink { background: rgba(236, 72, 153, .22); color: #f9a8d4; }
+.h3-ico.pink .ic { animation: h3Beat 1s ease-in-out infinite; }
+.h3-ico.orange { background: rgba(249, 115, 22, .2); color: #fdba74; }
+@keyframes h3Beat { 0%, 100% { transform: scale(1); } 20% { transform: scale(1.22); } 40% { transform: scale(.95); } }
+.h3-ecg { width: 92px; height: 20px; display: block; }
+.h3-ecg path { fill: none; stroke: #f9a8d4; stroke-width: 2; stroke-linejoin: round; stroke-dasharray: 130; stroke-dashoffset: 130; animation: h3Ecg 1.6s linear infinite; }
+@keyframes h3Ecg { 60% { stroke-dashoffset: 0; } 100% { stroke-dashoffset: -130; } }
+.h3-hr { left: 5%; top: 8%; }
+.h3-kcal { right: 5%; top: 24%; animation-delay: -1.6s; }
+.h3-ai { left: 6%; top: 52%; padding: 8px 14px; gap: 6px; font-size: .82rem; font-weight: 600; background: #fff; color: #5b21b6; border: 0; animation-delay: -3s; }
+.h3-ai .ic { width: 15px; height: 15px; color: #c026d3; }
+.h3-reps {
+  position: absolute; right: 7%; top: 50%; z-index: 3; width: 74px; height: 74px; display: grid; place-items: center; text-align: center;
+  border-radius: 50%; background: rgba(20, 10, 45, .62); border: 1px solid rgba(196, 181, 253, .35); animation: h3Float 4.4s ease-in-out infinite -2s;
+}
+.h3-reps svg { position: absolute; inset: 5px; width: calc(100% - 10px); height: calc(100% - 10px); transform: rotate(-90deg); }
+.h3-reps .t { fill: none; stroke: rgba(255, 255, 255, .14); stroke-width: 4; }
+.h3-reps .a { fill: none; stroke: #fde68a; stroke-width: 4; stroke-linecap: round; stroke-dasharray: 113.1; stroke-dashoffset: 113.1; transition: stroke-dashoffset .35s; }
+.h3-reps b { font-family: "Kanit", inherit; font-style: italic; font-weight: 800; font-size: 1.35rem; line-height: 1; margin-top: 6px; }
+.h3-reps small { font-size: .62rem; opacity: .75; margin-top: -14px; }
+
+/* "now playing" bar */
+.h3-now {
+  position: absolute; left: 50%; bottom: 4.5%; translate: -50% 0; z-index: 3; width: min(78%, 360px); text-align: center;
+  padding: 10px 16px 12px; border-radius: 18px; background: rgba(20, 10, 45, .7); border: 1px solid rgba(196, 181, 253, .35);
+}
+.h3-live { display: inline-flex; align-items: center; gap: 6px; font-size: .68rem; font-weight: 700; letter-spacing: .08em; text-transform: uppercase; color: #fca5a5; }
+.h3-live i { width: 7px; height: 7px; border-radius: 50%; background: #ef4444; box-shadow: 0 0 0 0 rgba(239, 68, 68, .6); animation: h3Live 1.4s infinite; }
+@keyframes h3Live { 70% { box-shadow: 0 0 0 7px rgba(239, 68, 68, 0); } 100% { box-shadow: 0 0 0 0 rgba(239, 68, 68, 0); } }
+.h3-now b { display: block; font-family: "Kanit", inherit; font-style: italic; font-weight: 800; font-size: 1.35rem; line-height: 1.25;
+  background: linear-gradient(100deg, #fff, #f0abfc); -webkit-background-clip: text; background-clip: text; color: transparent; }
+.h3-now > span:not(.h3-live) { display: block; font-size: .8rem; opacity: .75; }
+.h3-dots { display: flex; justify-content: center; gap: 5px; margin-top: 8px; }
+.h3-dots i { width: 6px; height: 6px; border-radius: 99px; background: rgba(255, 255, 255, .25); cursor: pointer; transition: width .25s, background .25s; }
+.h3-dots i.on { width: 20px; background: linear-gradient(90deg, #fde68a, #f0abfc); }
+@media (max-width: 720px) { .h3 { display: none; } }
+@media (max-width: 1000px) and (min-width: 721px) { .h3-kcal, .h3-reps { display: none; } }
+:root[data-motion="reduce"] .h3 *, :root[data-motion="reduce"] .h3 *::before { animation: none !important; }

@@ -291,6 +291,8 @@
     const e = 0.5 - 0.5 * Math.cos(Math.PI * (t / durs[i]));
     const pose = F.mix(m.f[i], m.f[(i + 1) % m.f.length], e);
     poseRig(F.solve(pose, m.front), !!m.front, m, inst.mann, inst.hl);
+    // Figures on the home stage stand on their own glowing podium, so skip the floor disc
+    if (inst.el.closest(".h3-stage")) floor.visible = false;
 
     if (shown !== inst.props) { if (shown) shown.visible = false; shown = inst.props; }
     if (shown) shown.visible = true;
