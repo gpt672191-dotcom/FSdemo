@@ -1654,3 +1654,13 @@ footer { text-align: left; padding-block: 44px 24px; background: color-mix(in sr
 }
 .h3-now b { font-size: 1.25rem; }
 .h3-dots { margin-top: 6px; }
+
+/* Home hero without the stage: centred text */
+.hero2.solo { grid-template-columns: 1fr; text-align: center; justify-items: center; padding-block: 88px 56px; }
+.hero2.solo .hero-copy { max-width: 760px; display: flex; flex-direction: column; align-items: center; }
+.hero2.solo h1 { font-size: clamp(2.5rem, 6.5vw, 4.4rem); }
+.hero2.solo .lead { margin-inline: auto; }
+.hero2.solo .btn-row { justify-content: center; }
+.hero2.solo .hero-stats { margin-inline: auto; width: 100%; max-width: 520px; }
+.hero2.solo .hero-stats > div { align-items: center; }
+@media (max-width: 720px) { .hero2.solo { padding-block: 32px 8px; } }
