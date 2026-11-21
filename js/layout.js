@@ -41,6 +41,7 @@ document.body.insertAdjacentHTML("afterbegin", `
           <a href="for-you.html"><i data-icon="sparkle"></i><span data-i18n="navForYou"></span></a>
           <a href="planner.html#myplans" id="ddPlans"><i data-icon="clipboard"></i><span data-i18n="myPlans"></span></a>
           <a href="settings.html"${PAGE === "settings" ? ' aria-current="page"' : ""}><i data-icon="gear"></i><span data-i18n="navSettings"></span></a>
+          <a href="admin.html" id="ddAdmin" hidden${PAGE === "admin" ? ' aria-current="page"' : ""}><i data-icon="shield"></i><span data-i18n="navAdmin"></span></a>
           <button type="button" id="logoutBtn" data-i18n="logout"></button>
         </div>
       </div>
@@ -48,6 +49,7 @@ document.body.insertAdjacentHTML("afterbegin", `
     </div>
   </div>
 </header>
+<div class="announce" id="announce" hidden role="status"><div class="wrap"><i data-icon="bell"></i><span id="announceTxt"></span><button type="button" id="announceX" aria-label="Close"><i data-icon="close"></i></button></div></div>
 
 <div class="modal-bg nm" id="authModal" hidden>
   <span class="nm-bub b1"></span><span class="nm-bub b2"></span><span class="nm-bub b3"></span><span class="nm-bub b4"></span>
@@ -141,3 +143,19 @@ onRender(() => {
   // Male/female labels in every sex <select> on the page
   $$("select#aSex, select#cSex, select#fSex").forEach(s => { s.options[0].textContent = t().male; s.options[1].textContent = t().female; });
 });
+
+/* ---------- Announcement bar (set by an admin on admin.html, shown on every page) ---------- */
+// fs-announce = { on, text, kind: "info"|"warn", id }; closing it hides that one announcement in this tab
+onRender(() => {
+  const a = store.get("fs-announce", null), bar = $("#announce");
+  let closed = null; try { closed = sessionStorage.getItem("fs-announce-x"); } catch {}
+  bar.hidden = !(a && a.on && a.text && closed !== String(a.id));
+  if (bar.hidden) return;
+  bar.classList.toggle("warn", a.kind === "warn");
+  $("#announceTxt").textContent = a.text;
+});
+$("#announceX").onclick = () => {
+  const a = store.get("fs-announce", null);
+  try { sessionStorage.setItem("fs-announce-x", String(a && a.id)); } catch {}
+  $("#announce").hidden = true;
+};

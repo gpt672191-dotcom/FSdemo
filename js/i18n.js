@@ -4,7 +4,7 @@
 const T = {
   th: {
     /* ----- ส่วนกลาง (header / footer) ----- */
-    navHome: "หน้าแรก", navMuscle: "สร้างกล้าม", navLose: "ลดน้ำหนัก", navPlan: "สร้างแผน", navBmi: "คำนวณ BMI", navMore: "อื่นๆ",
+    navHome: "หน้าแรก", navMuscle: "สร้างกล้าม", navLose: "ลดน้ำหนัก", navPlan: "สร้างแผน", navBmi: "คำนวณ BMI", navMore: "อื่นๆ", navAdmin: "ผู้ดูแลระบบ", errBanned: "บัญชีนี้ถูกระงับการใช้งาน กรุณาติดต่อผู้ดูแลระบบ",
     menu: "เมนู",
     disclaimer: "ข้อมูลในเว็บนี้ใช้เพื่อเป็นแนวทางเท่านั้น ไม่ใช่คำแนะนำทางการแพทย์",
     min: "นาที", sec: " วินาที", kcal: "kcal",
@@ -258,7 +258,7 @@ const T = {
 
   en: {
     /* ----- Shared (header / footer) ----- */
-    navHome: "Home", navMuscle: "Build muscle", navLose: "Lose weight", navPlan: "Plan builder", navBmi: "BMI", navMore: "More",
+    navHome: "Home", navMuscle: "Build muscle", navLose: "Lose weight", navPlan: "Plan builder", navBmi: "BMI", navMore: "More", navAdmin: "Admin", errBanned: "This account has been suspended. Please contact an admin.",
     menu: "Menu",
     disclaimer: "This site offers general guidance only and is not medical advice.",
     min: "min", sec: " s", kcal: "kcal",

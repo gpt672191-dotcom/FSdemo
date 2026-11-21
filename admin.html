@@ -1,0 +1,165 @@
+<!DOCTYPE html>
+<html lang="th">
+<head>
+<meta charset="UTF-8">
+<meta name="robots" content="noindex">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>ผู้ดูแลระบบ · FitStart AI</title>
+<meta name="description" content="จัดการผู้ใช้ สถิติ และประกาศของเว็บไซต์">
+<meta name="theme-color" content="#7c3aed">
+<meta property="og:title" content="FitStart AI">
+<meta property="og:description" content="จัดการผู้ใช้ สถิติ และประกาศของเว็บไซต์">
+<meta property="og:image" content="img/logo.svg">
+<link rel="icon" href="img/logo.svg?v=202611102104" type="image/svg+xml">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Sans+Thai:wght@300;400;500;600&family=Kanit:ital,wght@1,700;1,800&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="css/style.css?v=202611102104">
+</head>
+<body data-page="admin">
+
+<main>
+  <div class="wrap page-hero">
+    <div>
+      <span class="pill"><span data-ad="pill"></span></span>
+      <h1 data-ad="title"></h1>
+      <p class="lead" data-ad="lead"></p>
+    </div>
+  </div>
+
+  <!-- Not an admin -->
+  <section class="tight" id="adGuard" hidden>
+    <div class="wrap">
+      <div class="empty ad-guard">
+        <span class="ad-guard-ic"><i data-icon="shield"></i></span>
+        <p class="ad-guard-t" data-ad="guardT"></p>
+        <p data-ad="guardS"></p>
+        <p class="ad-demo"><span data-ad="demoAcc"></span> <code>admin@fitstart.ai</code> / <code>admin1234</code></p>
+        <button type="button" class="btn" id="adLogin" data-i18n="login"></button>
+      </div>
+    </div>
+  </section>
+
+  <div id="adMain" hidden>
+    <!-- Overview -->
+    <section class="tight">
+      <div class="wrap">
+        <div class="ad-stats" id="adStats"></div>
+        <div class="ad-charts">
+          <div class="panel">
+            <h2 class="set-title"><i data-icon="trending"></i><span data-ad="chSign"></span></h2>
+            <div class="ad-bars" id="adSignChart"></div>
+          </div>
+          <div class="panel">
+            <h2 class="set-title"><i data-icon="trophy"></i><span data-ad="chGoal"></span></h2>
+            <div class="ad-hbars" id="adGoalChart"></div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- Users -->
+    <section class="tight">
+      <div class="wrap">
+        <div class="panel">
+          <div class="ad-head">
+            <h2 class="set-title"><i data-icon="users"></i><span data-ad="uTitle"></span></h2>
+            <div class="ad-tools">
+              <label class="ad-search"><i data-icon="search"></i><input id="adQ" type="search" autocomplete="off"></label>
+              <div class="seg" id="adFilter" role="group">
+                <button type="button" data-f="all" data-ad="fAll"></button>
+                <button type="button" data-f="admin" data-ad="fAdmin"></button>
+                <button type="button" data-f="banned" data-ad="fBanned"></button>
+              </div>
+            </div>
+          </div>
+          <div class="ad-table-wrap">
+            <table class="ad-table">
+              <thead><tr>
+                <th data-ad="cUser"></th><th data-ad="cJoined"></th><th data-ad="cPlans"></th><th data-ad="cWorkouts"></th><th data-ad="cBmi"></th><th data-ad="cStatus"></th><th></th>
+              </tr></thead>
+              <tbody id="adRows"></tbody>
+            </table>
+          </div>
+          <p class="ad-none" id="adNone" hidden data-ad="none"></p>
+        </div>
+      </div>
+    </section>
+
+    <!-- Announcement -->
+    <section class="tight">
+      <div class="wrap">
+        <div class="panel">
+          <h2 class="set-title"><i data-icon="bell"></i><span data-ad="aTitle"></span></h2>
+          <p class="set-sub" data-ad="aSub"></p>
+          <form id="annForm" class="ad-ann" novalidate>
+            <div class="field">
+              <label for="annText" data-ad="aText"></label>
+              <textarea id="annText" rows="2" maxlength="160"></textarea>
+            </div>
+            <div class="set-row">
+              <div class="set-txt"><b data-ad="aKind"></b></div>
+              <div class="seg" id="annKind" role="group">
+                <button type="button" data-k="info" data-ad="aInfo"></button>
+                <button type="button" data-k="warn" data-ad="aWarn"></button>
+              </div>
+            </div>
+            <div class="set-row">
+              <div class="set-txt"><b id="annOnLbl" data-ad="aOn"></b><small data-ad="aOnD"></small></div>
+              <label class="switch"><input type="checkbox" id="annOn" aria-labelledby="annOnLbl"><span></span></label>
+            </div>
+            <div class="btn-row"><button type="submit" class="btn" data-ad="aSave"></button></div>
+          </form>
+        </div>
+      </div>
+    </section>
+
+    <!-- Data -->
+    <section class="tight">
+      <div class="wrap">
+        <div class="panel">
+          <h2 class="set-title"><i data-icon="save"></i><span data-ad="dTitle"></span></h2>
+          <div class="set-row">
+            <div class="set-txt"><b data-ad="dSample"></b><small data-ad="dSampleD"></small></div>
+            <div class="btn-row">
+              <button type="button" class="btn ghost sm" id="adSampleAdd"><i data-icon="plus"></i><span data-ad="dSampleAdd"></span></button>
+              <button type="button" class="btn ghost danger sm" id="adSampleDel"><i data-icon="trash"></i><span id="adSampleDelTxt"></span></button>
+            </div>
+          </div>
+          <div class="set-row">
+            <div class="set-txt"><b data-ad="dExport"></b><small data-ad="dExportD"></small></div>
+            <button type="button" class="btn ghost sm" id="adExport"><i data-icon="download"></i><span data-ad="dExport"></span></button>
+          </div>
+        </div>
+      </div>
+    </section>
+  </div>
+
+  <!-- One user: details and actions -->
+  <dialog class="ad-dlg" id="adDlg" aria-labelledby="adDlgName">
+    <button type="button" class="ad-x" id="adDlgX" aria-label="Close"><i data-icon="close"></i></button>
+    <div class="ad-dlg-head">
+      <span class="avatar big" id="adDlgAv"></span>
+      <div><h2 id="adDlgName"></h2><div id="adDlgEmail"></div><div id="adDlgTags"></div></div>
+    </div>
+    <div class="ad-info" id="adDlgInfo"></div>
+    <div class="ad-recent" id="adDlgLog"></div>
+    <p class="ad-pw" id="adDlgPw" hidden></p>
+    <div class="ad-acts" id="adDlgActs"></div>
+  </dialog>
+</main>
+
+<script src="js/i18n.js?v=202611102104"></script>
+<script src="js/data.js?v=202611102104"></script>
+<script src="js/utils.js?v=202611102104"></script>
+<script src="js/icons.js?v=202611102104"></script>
+<script src="js/figures.js?v=202611102104"></script>
+<script src="js/vendor/three.min.js"></script>
+<script src="js/fig3d.js?v=202611102104"></script>
+<script src="js/layout.js?v=202611102104"></script>
+<script src="js/auth.js?v=202611102104"></script>
+<script src="js/admin.js?v=202611102104"></script>
+<script src="js/coach.js?v=202611102104"></script>
+<script src="js/main.js?v=202611102104"></script>
+</body>
+</html>

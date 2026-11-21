@@ -5,8 +5,9 @@
 const getUsers = () => store.get("fs-users", {});
 const setUsers = u => store.set("fs-users", u);
 let session = store.get("fs-session", null);
-if (session && !getUsers()[session]) session = null;
+if (session && (!getUsers()[session] || getUsers()[session].banned)) session = null;
 const currentUser = () => (session ? getUsers()[session] : null);
+const isAdmin = () => currentUser()?.role === "admin";
 
 async function hashPw(pw, salt) {
   const data = new TextEncoder().encode(salt + ":" + pw);
@@ -20,6 +21,17 @@ async function hashPw(pw, salt) {
   return "f" + h.toString(16);
 }
 const newSalt = () => Math.random().toString(36).slice(2) + Date.now().toString(36);
+
+// บัญชีผู้ดูแลระบบตัวอย่าง (Demo admin account) — สร้างให้อัตโนมัติถ้ายังไม่มีแอดมิน
+const ADMIN_EMAIL = "admin@fitstart.ai", ADMIN_PW = "admin1234";
+const adminReady = (async () => {
+  const users = getUsers();
+  if (Object.values(users).some(u => u.role === "admin")) return;
+  const salt = newSalt();
+  users[ADMIN_EMAIL] = { ...(users[ADMIN_EMAIL] || { name: "ผู้ดูแลระบบ", email: ADMIN_EMAIL, created: Date.now(), plans: [] }),
+    role: "admin", banned: false, salt, hash: await hashPw(ADMIN_PW, salt) };
+  setUsers(users);
+})();
 
 /* ---------- Login window ---------- */
 let authMode = "login";
@@ -88,6 +100,7 @@ document.addEventListener("keydown", e => { if (e.key === "Escape" && !$("#authM
 
 $("#authForm").addEventListener("submit", async e => {
   e.preventDefault();
+  await adminReady;
   const tx = t(), err = $("#authErr");
   const name = $("#aName").value.trim();
   const email = $("#aEmail").value.trim().toLowerCase();
@@ -105,13 +118,15 @@ $("#authForm").addEventListener("submit", async e => {
     if (profile.error) return fail(tx[profile.error]);
     if (users[email]) return fail(tx.errTaken);
     const salt = newSalt();
-    users[email] = { name, email, salt, hash: await hashPw(pw, salt), created: Date.now(), plans: [], profile: profile.data };
+    users[email] = { name, email, salt, hash: await hashPw(pw, salt), created: Date.now(), lastLogin: Date.now(), plans: [], profile: profile.data };
     setUsers(users);
     loginAs(email);
     toast(tx.welcomeNew(name));
   } else {
     const u = users[email];
     if (!u || (await hashPw(pw, u.salt)) !== u.hash) return fail(tx.errLogin);
+    if (u.banned) return fail(tx.errBanned);
+    { const all = getUsers(); all[email].lastLogin = Date.now(); setUsers(all); }
     loginAs(email);
     toast(tx.welcomeBack(u.name));
   }
@@ -157,6 +172,7 @@ onRender(() => {
     $("#uname").textContent = u.name;
     $("#whoEmail").textContent = u.email;
   }
+  $("#ddAdmin").hidden = !(u && u.role === "admin");
 });
 
 $("#loginBtn").onclick = () => openAuth("login");
