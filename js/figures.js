@@ -298,7 +298,9 @@ const FIGURES = (() => {
   }
 
   // Internals are shared with the 3D backend (js/fig3d.js)
-  const api = { start, mount, mountAll, names: Object.keys(M), draw, create, render, M, ALIAS, mix, solve, dir, add, motionOff, backend: null };
+  // Redraw every figure once (used when the 3D body model finishes loading, even if motion is reduced)
+  const refresh = () => live.forEach(inst => { inst.dirty = true; });
+  const api = { start, mount, mountAll, refresh, names: Object.keys(M), draw, create, render, M, ALIAS, mix, solve, dir, add, motionOff, backend: null };
   return api;
 })();
 

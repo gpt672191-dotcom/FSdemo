@@ -242,6 +242,204 @@
     shadow.visible = !m.noFloor; floor.visible = !m.noFloor;
   }
 
+  /* ---------- Realistic body: a skinned human model (models/body.glb) posed with the same key poses ---------- */
+  // The model is the "X Bot" mannequin from the three.js examples (Mixamo rig). Each frame its bones are
+  // turned so every limb points the same way as the simple rig above; until it loads (or if it fails,
+  // e.g. when the page is opened straight from disk) the simple rig is drawn instead.
+  const BOT = { ready: false };
+  const BMAT = {
+    body: new THREE.MeshStandardMaterial({ color: "#ffffff", roughness: 0.62, metalness: 0, vertexColors: true }),
+    joint: new THREE.MeshStandardMaterial({ color: "#6d5f94", roughness: 0.35, metalness: 0.15, vertexColors: true })
+  };
+  const BODY_TINT = new THREE.Color("#e7e3ef"), JOINT_TINT = new THREE.Color("#7b6aa6"), HL_TINT = new THREE.Color("#e11d48"), MANN_TINT = new THREE.Color("#dcd7e8");
+  const qa = new THREE.Quaternion(), qb = new THREE.Quaternion(), va = new THREE.Vector3(), vb = new THREE.Vector3();
+
+  function loadBot() {
+    if (!THREE.GLTFLoader) return;
+    new THREE.GLTFLoader().load("models/body.glb", gltf => {
+      const root = new THREE.Group(), model = gltf.scene;
+      root.add(model); scene.add(root);
+      const bone = n => model.getObjectByName("mixamorig" + n);
+      const B = {};
+      ["Hips", "Spine", "Spine1", "Spine2", "Neck", "Head", "HeadTop_End"].forEach(n => (B[n] = bone(n)));
+      for (const s of ["Left", "Right"]) ["Shoulder", "Arm", "ForeArm", "Hand", "HandMiddle1", "UpLeg", "Leg", "Foot", "ToeBase", "Toe_End"].forEach(n => (B[s + n] = bone(s + n)));
+      if (Object.values(B).some(b => !b)) return;
+
+      // Scale so the leg is as long as the simple rig's leg, and stand it on the floor
+      root.updateMatrixWorld(true);
+      const wp = o => o.getWorldPosition(new THREE.Vector3());
+      const legLen = wp(B.LeftUpLeg).distanceTo(wp(B.LeftLeg)) + wp(B.LeftLeg).distanceTo(wp(B.LeftFoot));
+      const k = (36 * S) / legLen; // simple-rig thigh + shin
+      root.scale.setScalar(k); root.updateMatrixWorld(true);
+      const meshes = [];
+      model.traverse(o => { if (o.isSkinnedMesh) { meshes.push(o); o.frustumCulled = false; } });
+      const box = new THREE.Box3().setFromObject(model, true);
+      model.position.y -= box.min.y / k; root.updateMatrixWorld(true);
+
+      // Rest pose: local rotations, and which way each bone points (toward its child joint)
+      const rest = new Map();
+      model.traverse(o => { if (o.isBone) rest.set(o, o.quaternion.clone()); });
+      const axisTo = (b, c) => c.position.clone().normalize();
+      const AX = new Map();
+      const chain = [["Hips", "Spine"], ["Spine", "Spine1"], ["Spine1", "Spine2"], ["Spine2", "Neck"], ["Neck", "Head"], ["Head", "HeadTop_End"]];
+      for (const s of ["Left", "Right"]) chain.push([s + "Arm", s + "ForeArm"], [s + "ForeArm", s + "Hand"], [s + "UpLeg", s + "Leg"], [s + "Leg", s + "Foot"], [s + "Foot", s + "ToeBase"]);
+      chain.forEach(([a, c]) => AX.set(B[a], axisTo(B[a], B[c])));
+      // How far the foot bone points below horizontal when standing, and ankle/toe heights
+      const fdir = wp(B.LeftToeBase).sub(wp(B.LeftFoot)).normalize();
+      const footPitch = Math.asin(Math.max(-1, Math.min(1, -fdir.y)));
+      const ankleH = wp(B.LeftFoot).y, toeH = wp(B.LeftToeBase).y;
+
+      // Muscle-group masks for the body map, from skin weights and the rest shape (model faces +Z)
+      const J = n => wp(B[n]);
+      const sh = J("LeftArm"), shR = J("RightArm"), hip = J("Hips"), sp2 = J("Spine2"), neck = J("Neck");
+      const shW = Math.abs(sh.x - shR.x) / 2, unit = legLen * k; // unit ≈ leg length
+      const sstep = (a, b, x) => { const t = Math.max(0, Math.min(1, (x - a) / (b - a))); return t * t * (3 - 2 * t); };
+      const GROUPS = ["chest", "back", "core", "glutes", "shoulders", "arms", "legs"];
+      meshes.forEach(mesh => {
+        mesh.skeleton.update(); // bone matrices for getVertexPosition (normally done at first render)
+        const g = mesh.geometry, n = g.attributes.position.count;
+        const names = mesh.skeleton.bones.map(b => b.name.replace("mixamorig", "").replace(/^(Left|Right)/, ""));
+        const ji = g.attributes.skinIndex, wi = g.attributes.skinWeight;
+        // Rest-pose world positions, and normals rebuilt from the triangles (the file's normals are in quantized space)
+        const pw = new Float32Array(n * 3), nw = new Float32Array(n * 3);
+        const p = new THREE.Vector3(), nv = new THREE.Vector3(), e1 = new THREE.Vector3(), e2 = new THREE.Vector3();
+        for (let i = 0; i < n; i++) { mesh.getVertexPosition(i, p); p.applyMatrix4(mesh.matrixWorld); p.toArray(pw, i * 3); }
+        const idx = g.index.array;
+        for (let t = 0; t < idx.length; t += 3) {
+          const a = idx[t] * 3, b = idx[t + 1] * 3, c = idx[t + 2] * 3;
+          e1.set(pw[b] - pw[a], pw[b + 1] - pw[a + 1], pw[b + 2] - pw[a + 2]);
+          e2.set(pw[c] - pw[a], pw[c + 1] - pw[a + 1], pw[c + 2] - pw[a + 2]);
+          e1.cross(e2);
+          for (const v of [a, b, c]) { nw[v] += e1.x; nw[v + 1] += e1.y; nw[v + 2] += e1.z; }
+        }
+        const cols = {};
+        GROUPS.forEach(k2 => (cols[k2] = new Float32Array(n * 3)));
+        const plain = new Float32Array(n * 3).fill(1);
+        const nm = new THREE.Matrix3().getNormalMatrix(mesh.matrixWorld), fileN = new THREE.Vector3();
+        for (let i = 0; i < n; i++) {
+          p.fromArray(pw, i * 3);
+          nv.fromArray(nw, i * 3).normalize();
+          // some triangles are wound the other way (mirrored half): trust the file's normal for the side it faces
+          fileN.fromBufferAttribute(g.attributes.normal, i).applyMatrix3(nm);
+          if (nv.dot(fileN) < 0) nv.negate();
+          const w = {};
+          const jv = [ji.getX(i), ji.getY(i), ji.getZ(i), ji.getW(i)], wv = [wi.getX(i), wi.getY(i), wi.getZ(i), wi.getW(i)];
+          for (let c = 0; c < 4; c++) { const nmB = names[jv[c]]; w[nmB] = (w[nmB] || 0) + wv[c]; }
+          const W = (...ns) => ns.reduce((a, b) => a + (w[b] || 0), 0);
+          const front = sstep(0.05, 0.35, nv.z), backF = sstep(0.0, -0.3, nv.z), inside = sstep(shW * 1.3, shW * 1.0, Math.abs(p.x - hip.x));
+          const dSh = Math.min(p.distanceTo(sh), p.distanceTo(shR));
+          const shoulder = sstep(unit * 0.2, unit * 0.12, dSh) * Math.min(1, W("Arm", "Shoulder", "Spine2") * 1.4);
+          const glute = W("Hips", "UpLeg") * backF * sstep(hip.y - unit * 0.36, hip.y - unit * 0.22, p.y) * sstep(hip.y + unit * 0.12, hip.y - unit * 0.02, p.y);
+          const m = {
+            chest: W("Spine2", "Shoulder", "Spine1") * front * inside * sstep(sp2.y - unit * 0.2, sp2.y - unit * 0.1, p.y) * sstep(neck.y, neck.y - unit * 0.07, p.y) * (1 - shoulder),
+            back: W("Spine1", "Spine2", "Shoulder", "Spine") * backF * inside * sstep(hip.y + unit * 0.06, hip.y + unit * 0.16, p.y) * (1 - shoulder),
+            core: W("Spine", "Spine1", "Hips") * front * sstep(hip.y - unit * 0.06, hip.y + unit * 0.02, p.y) * sstep(sp2.y, sp2.y - unit * 0.1, p.y),
+            glutes: glute,
+            shoulders: shoulder,
+            arms: W("Arm", "ForeArm") * (1 - shoulder),
+            legs: Math.max(0, W("UpLeg", "Leg") - glute) * sstep(hip.y - unit * 0.05, hip.y - unit * 0.2, p.y)
+          };
+          GROUPS.forEach(k2 => {
+            const t = Math.min(1, m[k2] * 1.3), c = MANN_TINT.clone().lerp(HL_TINT, t);
+            cols[k2].set([c.r, c.g, c.b], i * 3);
+          });
+        }
+        const attrs = { plain: new THREE.BufferAttribute(plain, 3), mann: new THREE.BufferAttribute(new Float32Array(n * 3).map((_, j) => [MANN_TINT.r, MANN_TINT.g, MANN_TINT.b][j % 3]), 3) };
+        GROUPS.forEach(k2 => (attrs[k2] = new THREE.BufferAttribute(cols[k2], 3)));
+        mesh.userData.cols = attrs;
+        g.setAttribute("color", attrs.plain);
+        mesh.material = /joint/i.test(mesh.name) ? BMAT.joint : BMAT.body;
+        mesh.userData.joint = /joint/i.test(mesh.name);
+      });
+
+      Object.assign(BOT, { ready: true, root, model, B, rest, AX, meshes, footPitch, ankleH, toeH, unit });
+      // hide the simple rig for good
+      [R.torso, R.chest, R.waist, R.hip, R.neck, R.head, R.hair, ...R.eyes, ...R.side.flatMap(s => Object.values(s)), ...R.pec, R.abs, R.lats, ...R.glute].forEach(o => { o.visible = false; o.layers.set(1); });
+      syncColors();
+      F.refresh();
+    }, undefined, e => console.warn("3D body model not loaded; using the simple figure", e));
+  }
+
+  // Turn a bone (swing only, no twist) so it points along world direction d
+  function aim(b, d) {
+    if (!d || d.lengthSq() < 1e-8) return;
+    b.parent.getWorldQuaternion(qa);
+    qb.copy(qa).multiply(b.quaternion);                    // current world rotation
+    va.copy(BOT.AX.get(b)).applyQuaternion(qb);            // where it points now
+    const delta = new THREE.Quaternion().setFromUnitVectors(va.normalize(), vb.copy(d).normalize());
+    qb.premultiply(delta);
+    b.quaternion.copy(qa.invert().multiply(qb));
+    b.updateMatrixWorld(true);
+  }
+
+  function poseBot(J, front, m, mann, hlGroup) {
+    const { root, B, rest } = BOT;
+    const P = (p, z = 0) => new THREE.Vector3((p[0] - 60) * S, (90.5 - p[1]) * S, z);
+    root.position.set(0, 0, 0);
+    root.quaternion.setFromAxisAngle(Y, front ? 0 : Math.PI / 2); // side view: the body faces +X
+    rest.forEach((q, b) => b.quaternion.copy(q));
+    root.updateMatrixWorld(true);
+
+    const H = P(J.H), Sh = P(J.S), C = P(J.C);
+    const up = new THREE.Vector3().subVectors(Sh, H).normalize();
+    const d2 = J.na !== undefined ? F.dir(J.na) : [0, -1];
+    const headUp = new THREE.Vector3(d2[0], -d2[1], 0).normalize();
+    ["Hips", "Spine", "Spine1", "Spine2"].forEach(n => aim(B[n], up));
+    aim(B.Neck, headUp); aim(B.Head, headUp);
+
+    // Simple-rig limb index -> model side. Side view faces +X so index 0 (near the camera) is the right side;
+    // front view faces the camera so index 0 (screen right) is the left side.
+    const sides = front ? ["Left", "Right"] : ["Right", "Left"];
+    const lows = [H.y - 0.1, Sh.y - 0.1, C.y - 0.1];
+    [0, 1].forEach(i => {
+      const s = sides[i], a = J.arms[i], l = J.legs[i];
+      const A0 = P(a.r), A1 = P(a.m), A2 = P(a.e), L0 = P(l.r), L1 = P(l.m), L2 = P(l.e), T = P(l.toe);
+      aim(B[s + "Arm"], vb.subVectors(A1, A0).clone());
+      aim(B[s + "ForeArm"], vb.subVectors(A2, A1).clone());
+      aim(B[s + "UpLeg"], vb.subVectors(L1, L0).clone());
+      const shin = new THREE.Vector3().subVectors(L2, L1).normalize();
+      aim(B[s + "Leg"], shin);
+      // foot: toes toward the rig's toe, sole facing away from the shin
+      const toe = front ? new THREE.Vector3(i ? -0.12 : 0.12, 0, 1).normalize() : new THREE.Vector3().subVectors(T, L2).normalize();
+      const down = shin.clone().addScaledVector(toe, -shin.dot(toe));
+      if (down.lengthSq() < 1e-4) down.set(0, -1, 0); else down.normalize();
+      aim(B[s + "Foot"], toe.multiplyScalar(Math.cos(BOT.footPitch)).addScaledVector(down, Math.sin(BOT.footPitch)));
+      lows.push(A2.y - 0.02, L2.y - 0.009, T.y - 0.009);
+    });
+
+    // Place the body: hips over the rig's hips, lowest point at the rig's lowest point (feet/hands/back on the floor)
+    const wp = (o, v = new THREE.Vector3()) => o.getWorldPosition(v);
+    const hipW = wp(B.Hips);
+    const bodyLow = Math.min(
+      hipW.y - BOT.unit * 0.15, wp(B.Spine2).y - BOT.unit * 0.15, wp(B.Head).y - BOT.unit * 0.12,
+      ...["Left", "Right"].flatMap(s => [wp(B[s + "Hand"]).y - BOT.unit * 0.04, wp(B[s + "Foot"]).y - BOT.ankleH, wp(B[s + "ToeBase"]).y - BOT.toeH]));
+    const target = Math.max(0, Math.min(...lows));
+    root.position.set(H.x - hipW.x, target - bodyLow, front ? 0 : -hipW.z);
+    root.updateMatrixWorld(true);
+
+    // Colours: plain outfit, or the light body-map mannequin with one muscle group in red
+    BOT.meshes.forEach(ms => {
+      const a = ms.userData.cols[mann ? (hlGroup in ms.userData.cols ? hlGroup : "mann") : "plain"];
+      if (ms.geometry.attributes.color !== a) ms.geometry.setAttribute("color", a);
+    });
+    BMAT.body.color.copy(mann ? new THREE.Color(1, 1, 1) : BODY_TINT);
+    BMAT.joint.color.set(mann ? "#ffffff" : JOINT_TINT);
+
+    // Hand-held props sit in the palm
+    const palm = i => { const s = sides[i]; return wp(B[s + "Hand"]).lerp(wp(B[s + "HandMiddle1"]), 0.6); };
+    HP.db.forEach((g, i) => { g.visible = !mann && !!(m.db && m.db[i]); if (g.visible) g.position.copy(palm(i)); });
+    HP.grip.visible = !mann && !!m.grip; if (m.grip) { HP.grip.position.copy(palm(0)); HP.grip.scale.set(0.014, 0.16, 0.014); HP.grip.rotation.set(Math.PI / 2, 0, 0); }
+    HP.bar.visible = !mann && !!m.bar; if (m.bar) { const a = palm(0), b = palm(1); HP.bar.position.copy(a).add(b).multiplyScalar(0.5); HP.bar.scale.set(0.012, 0.8, 0.012); HP.bar.rotation.set(Math.PI / 2, 0, 0); }
+    HP.bottle.visible = !mann && !!m.bottle; if (m.bottle) { HP.bottle.position.copy(palm(0)).add(new THREE.Vector3(0, 0.035, 0)); HP.bottle.scale.set(0.024, 0.13, 0.024); HP.bottle.rotation.set(0, 0, 0); }
+    HP.cable.visible = !mann && !!m.cable; if (m.cable) seg(HP.cable, P(m.cable, 0), palm(0), 0.005);
+
+    const xs = [wp(B.Hips).x, ...["Left", "Right"].map(s => wp(B[s + "Foot"]).x)], minX = Math.min(...xs), maxX = Math.max(...xs);
+    shadow.position.set((minX + maxX) / 2, 0.001, 0);
+    shadow.scale.set(Math.max(0.7, (maxX - minX) + 0.6), 0.55, 1);
+    shadow.visible = !m.noFloor; floor.visible = !m.noFloor;
+  }
+  loadBot();
+
   /* ---------- Backend used by figures.js ---------- */
   function create(el, name) {
     const mann = name === "mannequin";
@@ -290,7 +488,7 @@
     while (t > durs[i]) { t -= durs[i]; i++; }
     const e = 0.5 - 0.5 * Math.cos(Math.PI * (t / durs[i]));
     const pose = F.mix(m.f[i], m.f[(i + 1) % m.f.length], e);
-    poseRig(F.solve(pose, m.front), !!m.front, m, inst.mann, inst.hl);
+    (BOT.ready ? poseBot : poseRig)(F.solve(pose, m.front), !!m.front, m, inst.mann, inst.hl);
     // Figures on the home stage stand on their own glowing podium, so skip the floor disc
     if (inst.el.closest(".h3-stage")) floor.visible = false;
 
@@ -305,7 +503,7 @@
       tx = f.cx; ty = f.cy;
       // in a three-quarter view the width shrinks a little and depth shows instead
       halfW = Math.max(0.42, f.hw * Math.cos(ang) + 0.3 * Math.sin(ang) + 0.16);
-      halfH = Math.max(0.5, f.hh + 0.14);
+      halfH = Math.max(0.5, f.hh + 0.09);
     }
     if (inst.mann) {
       const z = inst.zoom && ZOOM[inst.hl] ? ZOOM[inst.hl] : [0.78, 0.86, 0.3];
