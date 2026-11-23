@@ -243,8 +243,8 @@
   }
 
   /* ---------- Realistic bodies: skinned human models posed with the same key poses ---------- */
-  // Two models from the three.js examples, both on the Mixamo skeleton:
-  //   models/person.glb  "Michelle", a person in sports clothes, for every exercise figure
+  // Two models, both on the Mixamo skeleton:
+  //   models/person.glb  a realistic young man (shirtless, shorts, sneakers) made with Ara 3D Gen from CC0 MakeHuman data, for every exercise figure
   //   models/body.glb    "X Bot", a smooth mannequin, for the muscle map (muscles are tinted red on it)
   // Each frame the bones are turned so every limb points the same way as the simple rig above. A model is
   // loaded the first time a figure needs it; until then (or if loading fails, e.g. when the page is opened
@@ -264,7 +264,7 @@
     new THREE.GLTFLoader().load(BOT.url, gltf => {
       const root = new THREE.Group(), model = gltf.scene;
       root.add(model); scene.add(root); root.visible = false;
-      const bone = n => model.getObjectByName("mixamorig" + n);
+      const bone = n => model.getObjectByName("mixamorig" + n) || model.getObjectByName(n);
       const B = {};
       ["Hips", "Spine", "Spine1", "Spine2", "Neck", "Head", "HeadTop_End"].forEach(n => (B[n] = bone(n)));
       for (const s of ["Left", "Right"]) ["Shoulder", "Arm", "ForeArm", "Hand", "HandMiddle1", "UpLeg", "Leg", "Foot", "ToeBase", "Toe_End"].forEach(n => (B[s + n] = bone(s + n)));
@@ -363,34 +363,13 @@
     }, undefined, e => console.warn("3D body model not loaded; using the simple figure", e));
   }
 
-  // Person model: brighter on dark cards, and yellow track pants recoloured to the site's purple
+  // Person model: a touch of self-light so skin reads well on the dark cards
   function dressPerson(mt) {
-    const tex = mt.map;
-    if (!tex || !tex.image) return;
-    try {
-      const img = tex.image, c = document.createElement("canvas");
-      c.width = img.width; c.height = img.height;
-      const g = c.getContext("2d", { willReadFrequently: true });
-      g.drawImage(img, 0, 0);
-      const d = g.getImageData(0, 0, c.width, c.height), px = d.data;
-      for (let i = 0; i < px.length; i += 4) {
-        const r = px[i] / 255, gg = px[i + 1] / 255, b = px[i + 2] / 255;
-        const mx = Math.max(r, gg, b), mn = Math.min(r, gg, b), l = mx, sat = mx ? (mx - mn) / mx : 0;
-        if (sat < 0.35 || mx < 0.15) continue;
-        let h = mx === r ? ((gg - b) / (mx - mn)) % 6 : mx === gg ? (b - r) / (mx - mn) + 2 : (r - gg) / (mx - mn) + 4;
-        h *= 60; if (h < 0) h += 360;
-        if (h < 38 || h > 75) continue;                     // yellow only
-        // purple of the same brightness (HSV h = 262°)
-        const v = l * 0.82, s2 = Math.min(1, sat * 0.85), C = v * s2, X = C * (1 - Math.abs(((262 / 60) % 2) - 1)), m = v - C;
-        px[i] = (X + m) * 255; px[i + 1] = m * 255; px[i + 2] = (C + m) * 255;
-      }
-      g.putImageData(d, 0, 0);
-      const t2 = new THREE.CanvasTexture(c);
-      t2.flipY = tex.flipY; t2.colorSpace = tex.colorSpace; t2.wrapS = tex.wrapS; t2.wrapT = tex.wrapT;
-      mt.map = t2;
-    } catch {}
-    mt.emissiveMap = mt.map; mt.emissive = new THREE.Color(0xffffff); mt.emissiveIntensity = 0.32;
-    mt.needsUpdate = true;
+    for (const m of Array.isArray(mt) ? mt : [mt]) {
+      if (!m || !m.map || m.transparent) continue;
+      m.emissiveMap = m.map; m.emissive = new THREE.Color(0xffffff); m.emissiveIntensity = 0.16;
+      m.needsUpdate = true;
+    }
   }
 
   // Turn a bone (swing only, no twist) so it points along world direction d
