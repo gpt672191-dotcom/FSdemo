@@ -242,11 +242,14 @@
     shadow.visible = !m.noFloor; floor.visible = !m.noFloor;
   }
 
-  /* ---------- Realistic body: a skinned human model (models/body.glb) posed with the same key poses ---------- */
-  // The model is the "X Bot" mannequin from the three.js examples (Mixamo rig). Each frame its bones are
-  // turned so every limb points the same way as the simple rig above; until it loads (or if it fails,
-  // e.g. when the page is opened straight from disk) the simple rig is drawn instead.
-  const BOT = { ready: false };
+  /* ---------- Realistic bodies: skinned human models posed with the same key poses ---------- */
+  // Two models from the three.js examples, both on the Mixamo skeleton:
+  //   models/person.glb  "Michelle", a person in sports clothes, for every exercise figure
+  //   models/body.glb    "X Bot", a smooth mannequin, for the muscle map (muscles are tinted red on it)
+  // Each frame the bones are turned so every limb points the same way as the simple rig above. A model is
+  // loaded the first time a figure needs it; until then (or if loading fails, e.g. when the page is opened
+  // straight from disk) the simple rig is drawn instead.
+  const BOTS = { fig: { url: "models/person.glb", masks: false }, mann: { url: "models/body.glb", masks: true } };
   const BMAT = {
     body: new THREE.MeshStandardMaterial({ color: "#ffffff", roughness: 0.62, metalness: 0, vertexColors: true }),
     joint: new THREE.MeshStandardMaterial({ color: "#6d5f94", roughness: 0.35, metalness: 0.15, vertexColors: true })
@@ -254,11 +257,13 @@
   const BODY_TINT = new THREE.Color("#e7e3ef"), JOINT_TINT = new THREE.Color("#7b6aa6"), HL_TINT = new THREE.Color("#e11d48"), MANN_TINT = new THREE.Color("#dcd7e8");
   const qa = new THREE.Quaternion(), qb = new THREE.Quaternion(), va = new THREE.Vector3(), vb = new THREE.Vector3();
 
-  function loadBot() {
-    if (!THREE.GLTFLoader) return;
-    new THREE.GLTFLoader().load("models/body.glb", gltf => {
+  const RIG_PARTS = () => [R.torso, R.chest, R.waist, R.hip, R.neck, R.head, R.hair, ...R.eyes, ...R.side.flatMap(s => Object.values(s)), ...R.pec, R.abs, R.lats, ...R.glute];
+  function loadBot(BOT) {
+    if (!THREE.GLTFLoader || BOT.loading) return;
+    BOT.loading = true;
+    new THREE.GLTFLoader().load(BOT.url, gltf => {
       const root = new THREE.Group(), model = gltf.scene;
-      root.add(model); scene.add(root);
+      root.add(model); scene.add(root); root.visible = false;
       const bone = n => model.getObjectByName("mixamorig" + n);
       const B = {};
       ["Hips", "Spine", "Spine1", "Spine2", "Neck", "Head", "HeadTop_End"].forEach(n => (B[n] = bone(n)));
@@ -295,7 +300,7 @@
       const shW = Math.abs(sh.x - shR.x) / 2, unit = legLen * k; // unit ≈ leg length
       const sstep = (a, b, x) => { const t = Math.max(0, Math.min(1, (x - a) / (b - a))); return t * t * (3 - 2 * t); };
       const GROUPS = ["chest", "back", "core", "glutes", "shoulders", "arms", "legs"];
-      meshes.forEach(mesh => {
+      if (BOT.masks) meshes.forEach(mesh => {
         mesh.skeleton.update(); // bone matrices for getVertexPosition (normally done at first render)
         const g = mesh.geometry, n = g.attributes.position.count;
         const names = mesh.skeleton.bones.map(b => b.name.replace("mixamorig", "").replace(/^(Left|Right)/, ""));
@@ -352,16 +357,44 @@
         mesh.userData.joint = /joint/i.test(mesh.name);
       });
 
+      if (!BOT.masks) meshes.forEach(ms => dressPerson(ms.material));
       Object.assign(BOT, { ready: true, root, model, B, rest, AX, meshes, footPitch, ankleH, toeH, unit });
-      // hide the simple rig for good
-      [R.torso, R.chest, R.waist, R.hip, R.neck, R.head, R.hair, ...R.eyes, ...R.side.flatMap(s => Object.values(s)), ...R.pec, R.abs, R.lats, ...R.glute].forEach(o => { o.visible = false; o.layers.set(1); });
-      syncColors();
       F.refresh();
     }, undefined, e => console.warn("3D body model not loaded; using the simple figure", e));
   }
 
+  // Person model: brighter on dark cards, and yellow track pants recoloured to the site's purple
+  function dressPerson(mt) {
+    const tex = mt.map;
+    if (!tex || !tex.image) return;
+    try {
+      const img = tex.image, c = document.createElement("canvas");
+      c.width = img.width; c.height = img.height;
+      const g = c.getContext("2d", { willReadFrequently: true });
+      g.drawImage(img, 0, 0);
+      const d = g.getImageData(0, 0, c.width, c.height), px = d.data;
+      for (let i = 0; i < px.length; i += 4) {
+        const r = px[i] / 255, gg = px[i + 1] / 255, b = px[i + 2] / 255;
+        const mx = Math.max(r, gg, b), mn = Math.min(r, gg, b), l = mx, sat = mx ? (mx - mn) / mx : 0;
+        if (sat < 0.35 || mx < 0.15) continue;
+        let h = mx === r ? ((gg - b) / (mx - mn)) % 6 : mx === gg ? (b - r) / (mx - mn) + 2 : (r - gg) / (mx - mn) + 4;
+        h *= 60; if (h < 0) h += 360;
+        if (h < 38 || h > 75) continue;                     // yellow only
+        // purple of the same brightness (HSV h = 262°)
+        const v = l * 0.82, s2 = Math.min(1, sat * 0.85), C = v * s2, X = C * (1 - Math.abs(((262 / 60) % 2) - 1)), m = v - C;
+        px[i] = (X + m) * 255; px[i + 1] = m * 255; px[i + 2] = (C + m) * 255;
+      }
+      g.putImageData(d, 0, 0);
+      const t2 = new THREE.CanvasTexture(c);
+      t2.flipY = tex.flipY; t2.colorSpace = tex.colorSpace; t2.wrapS = tex.wrapS; t2.wrapT = tex.wrapT;
+      mt.map = t2;
+    } catch {}
+    mt.emissiveMap = mt.map; mt.emissive = new THREE.Color(0xffffff); mt.emissiveIntensity = 0.32;
+    mt.needsUpdate = true;
+  }
+
   // Turn a bone (swing only, no twist) so it points along world direction d
-  function aim(b, d) {
+  function aim(BOT, b, d) {
     if (!d || d.lengthSq() < 1e-8) return;
     b.parent.getWorldQuaternion(qa);
     qb.copy(qa).multiply(b.quaternion);                    // current world rotation
@@ -372,7 +405,7 @@
     b.updateMatrixWorld(true);
   }
 
-  function poseBot(J, front, m, mann, hlGroup) {
+  function poseBot(BOT, J, front, m, mann, hlGroup) {
     const { root, B, rest } = BOT;
     const P = (p, z = 0) => new THREE.Vector3((p[0] - 60) * S, (90.5 - p[1]) * S, z);
     root.position.set(0, 0, 0);
@@ -384,8 +417,8 @@
     const up = new THREE.Vector3().subVectors(Sh, H).normalize();
     const d2 = J.na !== undefined ? F.dir(J.na) : [0, -1];
     const headUp = new THREE.Vector3(d2[0], -d2[1], 0).normalize();
-    ["Hips", "Spine", "Spine1", "Spine2"].forEach(n => aim(B[n], up));
-    aim(B.Neck, headUp); aim(B.Head, headUp);
+    ["Hips", "Spine", "Spine1", "Spine2"].forEach(n => aim(BOT, B[n], up));
+    aim(BOT, B.Neck, headUp); aim(BOT, B.Head, headUp);
 
     // Simple-rig limb index -> model side. Side view faces +X so index 0 (near the camera) is the right side;
     // front view faces the camera so index 0 (screen right) is the left side.
@@ -394,16 +427,16 @@
     [0, 1].forEach(i => {
       const s = sides[i], a = J.arms[i], l = J.legs[i];
       const A0 = P(a.r), A1 = P(a.m), A2 = P(a.e), L0 = P(l.r), L1 = P(l.m), L2 = P(l.e), T = P(l.toe);
-      aim(B[s + "Arm"], vb.subVectors(A1, A0).clone());
-      aim(B[s + "ForeArm"], vb.subVectors(A2, A1).clone());
-      aim(B[s + "UpLeg"], vb.subVectors(L1, L0).clone());
+      aim(BOT, B[s + "Arm"], vb.subVectors(A1, A0).clone());
+      aim(BOT, B[s + "ForeArm"], vb.subVectors(A2, A1).clone());
+      aim(BOT, B[s + "UpLeg"], vb.subVectors(L1, L0).clone());
       const shin = new THREE.Vector3().subVectors(L2, L1).normalize();
-      aim(B[s + "Leg"], shin);
+      aim(BOT, B[s + "Leg"], shin);
       // foot: toes toward the rig's toe, sole facing away from the shin
       const toe = front ? new THREE.Vector3(i ? -0.12 : 0.12, 0, 1).normalize() : new THREE.Vector3().subVectors(T, L2).normalize();
       const down = shin.clone().addScaledVector(toe, -shin.dot(toe));
       if (down.lengthSq() < 1e-4) down.set(0, -1, 0); else down.normalize();
-      aim(B[s + "Foot"], toe.multiplyScalar(Math.cos(BOT.footPitch)).addScaledVector(down, Math.sin(BOT.footPitch)));
+      aim(BOT, B[s + "Foot"], toe.multiplyScalar(Math.cos(BOT.footPitch)).addScaledVector(down, Math.sin(BOT.footPitch)));
       lows.push(A2.y - 0.02, L2.y - 0.009, T.y - 0.009);
     });
 
@@ -417,9 +450,9 @@
     root.position.set(H.x - hipW.x, target - bodyLow, front ? 0 : -hipW.z);
     root.updateMatrixWorld(true);
 
-    // Colours: plain outfit, or the light body-map mannequin with one muscle group in red
-    BOT.meshes.forEach(ms => {
-      const a = ms.userData.cols[mann ? (hlGroup in ms.userData.cols ? hlGroup : "mann") : "plain"];
+    // Muscle map: light mannequin with one muscle group in red
+    if (BOT.masks) BOT.meshes.forEach(ms => {
+      const a = ms.userData.cols[hlGroup in ms.userData.cols ? hlGroup : "mann"];
       if (ms.geometry.attributes.color !== a) ms.geometry.setAttribute("color", a);
     });
     BMAT.body.color.copy(mann ? new THREE.Color(1, 1, 1) : BODY_TINT);
@@ -438,11 +471,11 @@
     shadow.scale.set(Math.max(0.7, (maxX - minX) + 0.6), 0.55, 1);
     shadow.visible = !m.noFloor; floor.visible = !m.noFloor;
   }
-  loadBot();
 
   /* ---------- Backend used by figures.js ---------- */
   function create(el, name) {
     const mann = name === "mannequin";
+    loadBot(BOTS[mann ? "mann" : "fig"]);
     const m = mann ? { f: [MANN_POSE], d: 1000, front: 1 } : (F.M[F.ALIAS[name] || name] || F.M.idle);
     el.textContent = "";
     const canvas = document.createElement("canvas");
@@ -488,7 +521,10 @@
     while (t > durs[i]) { t -= durs[i]; i++; }
     const e = 0.5 - 0.5 * Math.cos(Math.PI * (t / durs[i]));
     const pose = F.mix(m.f[i], m.f[(i + 1) % m.f.length], e);
-    (BOT.ready ? poseBot : poseRig)(F.solve(pose, m.front), !!m.front, m, inst.mann, inst.hl);
+    const bot = BOTS[inst.mann ? "mann" : "fig"], J = F.solve(pose, m.front);
+    for (const k in BOTS) if (BOTS[k].root) BOTS[k].root.visible = BOTS[k] === bot;
+    if (bot.ready) { RIG_PARTS().forEach(o => (o.visible = false)); poseBot(bot, J, !!m.front, m, inst.mann, inst.hl); }
+    else { RIG_PARTS().forEach(o => (o.visible = true)); poseRig(J, !!m.front, m, inst.mann, inst.hl); }
     // Figures on the home stage stand on their own glowing podium, so skip the floor disc
     if (inst.el.closest(".h3-stage")) floor.visible = false;
 
