@@ -16,6 +16,7 @@ const WO_T = {
     finEx: "ท่า", finSets: "เซ็ต", finMin: "นาที", again: "เล่นอีกครั้ง",
     sayNext: (n, s, all) => `ท่าต่อไป ${n} เซ็ตที่ ${s} จาก ${all}`, sayRest: "พักก่อน", sayGo: "เริ่ม", sayDone: "เยี่ยมมาก ออกกำลังกายเสร็จแล้ว",
     tapDone: "ทำครบแล้วกด \"เสร็จแล้ว\"",
+    keys: "คีย์ลัด: Space = หยุด/เล่นต่อ หรือเสร็จแล้ว · → = ข้าม · Esc = ปิด",
     feelQ: "วันนี้รู้สึกยังไง", feelEasy: "ง่ายไป", feelOk: "พอดี", feelHard: "หนักไป", feelThanks: "บันทึกความรู้สึกแล้ว ระบบจะช่วยแนะนำระดับให้",
     warm: "วอร์มอัพ", cool: "คูลดาวน์", skipWarm: "ข้ามวอร์มอัพ", skipCool: "ข้ามคูลดาวน์", warmNote: "อุ่นเครื่องเบาๆ ลดโอกาสบาดเจ็บ", coolNote: "ยืดกล้ามเนื้อช้าๆ หายใจลึกๆ"
   },
@@ -27,6 +28,7 @@ const WO_T = {
     finEx: "exercises", finSets: "sets", finMin: "min", again: "Do it again",
     sayNext: (n, s, all) => `Next, ${n}. Set ${s} of ${all}`, sayRest: "Rest", sayGo: "Go", sayDone: "Great job, workout complete",
     tapDone: "Press \"Done\" when you finish the set",
+    keys: "Shortcuts: Space = pause/resume or Done · → = skip · Esc = close",
     feelQ: "How did it feel?", feelEasy: "Too easy", feelOk: "Just right", feelHard: "Too hard", feelThanks: "Saved. We'll use it to suggest your level.",
     warm: "Warm-up", cool: "Cool-down", skipWarm: "Skip warm-up", skipCool: "Skip cool-down", warmNote: "Ease in gently to lower the risk of injury", coolNote: "Stretch slowly and breathe deeply"
   }
@@ -94,9 +96,12 @@ const Workout = (() => {
         </div>
         <div class="wo-prog"><i id="woProg"></i></div>
         <div class="wo-body" id="woBody"></div>
+        <p class="wo-keys" aria-hidden="true">${wt().keys}</p>
       </div>`);
     document.body.classList.add("wo-open");
     $("#wo").addEventListener("click", onClick);
+    // move keyboard focus into the overlay, so Space does not press the button behind it
+    $("#wo").tabIndex = -1; $("#wo").focus({ preventScroll: true });
     drawSound();
   }
   function drawSound() {
@@ -255,9 +260,19 @@ const Workout = (() => {
       render();
     }
   }
+  // Keyboard: Esc = close, Space/Enter = pause-resume (or "Done" on rep sets), → = skip
   function onKey(e) {
     if (!S) return;
-    if (e.key === "Escape") stop();
+    if (e.key === "Escape") return stop();
+    if (e.target.closest && e.target.closest("button,a,input,textarea,select") && e.key !== "ArrowRight") return; // let focused buttons work normally
+    const st = S.steps[S.i];
+    if (e.key === "ArrowRight") { e.preventDefault(); return enter(S.i + 1); }
+    if (e.key === " " || e.key === "Enter") {
+      e.preventDefault();
+      if (!st) return;
+      if (st.kind === "work" && !st.dur) return enter(S.i + 1);
+      const p = $('[data-wo="pause"]'); if (p) p.click();
+    }
   }
 
   /* ---------- public ---------- */
