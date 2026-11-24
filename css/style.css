@@ -2198,3 +2198,9 @@ body:not(:has(> header)) { padding-top: 65px; }
 .hello-bits em { margin-left: auto; font-style: normal; color: var(--muted); display: inline-flex; align-items: center; gap: 2px; font-size: .85rem; }
 .hello-bits em .ic { width: 14px; height: 14px; transform: rotate(-90deg); color: var(--muted); }
 .hello-bits:hover { border-color: var(--accent); }
+.hello-bits a { margin-left: auto; color: var(--muted); text-decoration: none; display: inline-flex; align-items: center; gap: 2px; font-size: .85rem; }
+.hello-bits a .ic { width: 14px; height: 14px; transform: rotate(-90deg); color: var(--muted); }
+.hello-bits a:hover { color: var(--accent); }
+.hb-add { display: inline-flex; align-items: center; gap: 4px; padding: 4px 10px; border-radius: 999px; border: 1px solid color-mix(in srgb, #38bdf8 50%, var(--line)); background: color-mix(in srgb, #38bdf8 12%, transparent); color: var(--text); font: inherit; font-size: .82rem; cursor: pointer; }
+.hb-add .ic { width: 13px !important; height: 13px !important; color: #0284c7 !important; }
+.hb-add:hover { background: color-mix(in srgb, #38bdf8 22%, transparent); }

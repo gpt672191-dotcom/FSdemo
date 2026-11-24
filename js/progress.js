@@ -415,12 +415,23 @@ function dailyBits(u) {
   const glasses = (u.water || {})[k] || 0, goal = Math.min(16, Math.max(6, Math.round(w * 33 / 250))); // same as waterGoal() in water.js
   const day = (u.protein || {})[k] || {}, grams = FOODS.reduce((a, f) => a + f.g * (day[f.id] || 0), 0);
   const th = lang === "th";
-  return `<a class="hello-bits" href="for-you.html#fyWater">
+  return `<div class="hello-bits">
     <span class="${glasses >= goal ? "ok" : ""}">${icon("droplet")}${th ? `น้ำ ${glasses}/${goal} แก้ว` : `Water ${glasses}/${goal} glasses`}</span>
+    <button type="button" class="hb-add" data-water-add aria-label="${th ? "ดื่มน้ำเพิ่ม 1 แก้ว" : "Add 1 glass of water"}">${icon("plus")}${th ? "1 แก้ว" : "1 glass"}</button>
     <span>${icon("egg")}${th ? `โปรตีน ${grams} กรัม` : `Protein ${grams} g`}</span>
-    <em>${th ? "บันทึก" : "Log"} ${icon("chevron")}</em>
-  </a>`;
+    <a href="for-you.html#fyWater">${th ? "บันทึก" : "Log"} ${icon("chevron")}</a>
+  </div>`;
 }
+
+// one tap: +1 glass of water today (same storage as the water tracker, user.water[day])
+document.addEventListener("click", e => {
+  if (!e.target.closest("[data-water-add]")) return;
+  const k = Progress.key(new Date());
+  updateUser(u => { const w = +((u.profile && u.profile.weight) || 60), goal = Math.min(16, Math.max(6, Math.round(w * 33 / 250)));
+    u.water = { ...(u.water || {}), [k]: Math.min(goal + 4, ((u.water || {})[k] || 0) + 1) }; });
+  renderAll();
+  const b = document.querySelector("[data-water-add]"); if (b) b.focus();
+});
 
 // New users: a 4-step "getting started" checklist until every step is done (or it is hidden)
 const STEPS_T = {
