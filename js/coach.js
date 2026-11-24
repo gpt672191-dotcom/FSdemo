@@ -93,6 +93,7 @@ const KW = {
   busy: ["ไม่มีเวลา", "เวลาน้อย", "ยุ่ง", "busy", "no time", "quick"],
   water: ["ดื่มน้ำ", "กินน้ำ", "น้ำกี่", "น้ำวันละ", "water", "hydrat"],
   warm: ["วอร์ม", "อบอุ่นร่างกาย", "คูลดาวน์", "warm up", "warm-up", "warmup", "cool down", "cool-down"],
+  week: ["สรุปสัปดาห์", "สัปดาห์นี้เป็นยังไง", "สัปดาห์นี้ทำไปเท่าไหร่", "สรุปผล", "สรุปให้หน่อย", "weekly summary", "this week so far", "how did i do this week", "my week"],
   goalw: ["น้ำหนักเป้าหมาย", "เป้าหมายน้ำหนัก", "เป้าน้ำหนัก", "ถึงเป้า", "อีกนานไหม", "อีกนานแค่ไหน", "goal weight", "target weight", "reach my goal", "how long until"],
   today: ["วันนี้ทำอะไร", "วันนี้ต้องทำ", "วันนี้ออกกำลัง", "วันนี้เล่น", "วันนี้ฝึก", "ของวันนี้", "today"],
   remind: ["เตือน", "ปฏิทิน", "ลืม", "remind", "calendar", "forget"],
@@ -110,6 +111,34 @@ const GROUP_KW = {
   glutes: ["ก้น", "สะโพก", "glute", "butt", "hip"], core: ["หน้าท้อง", "ซิกแพ็ก", "abs", "core", "six pack", "sixpack"]
 };
 const has = (m, list) => list.some(k => m.includes(k));
+
+// "How was my week?": workouts, minutes, kcal, water and protein since Monday
+function weekAnswer(u) {
+  const th = lang === "th";
+  if (!u) return { text: th ? "ล็อกอินก่อนนะครับ ผมจะสรุปการออกกำลังกาย น้ำ และโปรตีนของสัปดาห์นี้ให้" : "Log in first and I'll sum up your workouts, water and protein this week." };
+  const key = d => `${d.getFullYear()}-${String(d.getMonth() + 1).padStart(2, "0")}-${String(d.getDate()).padStart(2, "0")}`;
+  const mon = new Date(); mon.setDate(mon.getDate() - ((mon.getDay() + 6) % 7));
+  const days = []; for (const d = new Date(mon); d <= new Date(); d.setDate(d.getDate() + 1)) days.push(key(d));
+  const log = (u.log || []).filter(x => x.d >= days[0]);
+  const wDays = new Set(log.map(x => x.d)).size, mins = log.reduce((a, x) => a + (+x.mins || 0), 0), kcal = log.reduce((a, x) => a + (+x.kcal || 0), 0);
+  const water = days.map(d => (u.water || {})[d] || 0).filter(Boolean);
+  const pr = typeof FOODS !== "undefined" ? days.map(d => { const day = (u.protein || {})[d] || {}; return FOODS.reduce((a, f) => a + f.g * (day[f.id] || 0), 0); }).filter(Boolean) : [];
+  const avg = a => Math.round(a.reduce((x, y) => x + y, 0) / a.length);
+  const lines = th ? [
+    `<b>สรุปสัปดาห์นี้</b> (ตั้งแต่วันจันทร์ ${days.length} วัน)`,
+    wDays ? `ออกกำลังกาย ${wDays} วัน รวม ${mins} นาที${kcal ? ` เผาผลาญประมาณ ${kcal} kcal` : ""}` : "ยังไม่ได้ออกกำลังกายเลย เริ่มวันนี้ 10 นาทีก็ยังดีครับ",
+    water.length ? `บันทึกน้ำ ${water.length} วัน เฉลี่ย ${avg(water)} แก้ว/วัน` : "ยังไม่ได้บันทึกน้ำดื่ม",
+    pr.length ? `บันทึกโปรตีน ${pr.length} วัน เฉลี่ย ${avg(pr)} กรัม/วัน` : "",
+    wDays >= 3 ? "ทำได้ดีมาก รักษาจังหวะนี้ไว้" : wDays ? "ดีแล้ว ลองเพิ่มอีก 1 วันให้ถึง 3 วัน/สัปดาห์" : ""
+  ] : [
+    `<b>Your week so far</b> (${days.length} day${days.length > 1 ? "s" : ""} since Monday)`,
+    wDays ? `Worked out ${wDays} day${wDays > 1 ? "s" : ""}, ${mins} min in total${kcal ? `, about ${kcal} kcal` : ""}` : "No workouts yet. Even 10 minutes today is a good start.",
+    water.length ? `Water logged ${water.length} day${water.length > 1 ? "s" : ""}, ${avg(water)} glasses a day on average` : "No water logged yet",
+    pr.length ? `Protein logged ${pr.length} day${pr.length > 1 ? "s" : ""}, ${avg(pr)} g a day on average` : "",
+    wDays >= 3 ? "Great work, keep this rhythm." : wDays ? "Nice. Try one more day to reach 3 a week." : ""
+  ];
+  return { text: lines.filter(Boolean).join("<br>"), links: [{ href: "profile.html#progress", label: th ? "ดูความคืบหน้า" : "See my progress" }] };
+}
 
 // Goal weight (set on the profile page): how far, and how long at a safe pace
 const GOALW_T = {
@@ -210,6 +239,7 @@ function reply(raw) {
     return { text: tx.waterNeed, links: links(["profile.html", tx.linkProfile]) };
   }
   if (has(m, KW.warm)) return { text: tx.warm, ex: ["march", "wgs", "hamstring", "child"], links: links(["planner.html", tx.linkPlan]) };
+  if (has(m, KW.week)) return weekAnswer(u);
   if (has(m, KW.goalw)) return goalWAnswer(u);
   if (has(m, KW.today)) return todayAnswer(u);
   if (has(m, KW.remind)) return { text: tx.remind, links: links(["planner.html#plan", tx.linkPlan]) };
