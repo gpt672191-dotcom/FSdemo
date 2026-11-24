@@ -1,7 +1,8 @@
 // โหมดนำออกกำลังกาย: บอกท่าต่อไป → นับ 5-4-3-2-1 → ออกกำลังกาย → พักนับถอยหลัง (ข้าม / +15 วิ ได้) → ท่าต่อไป
 // (Guided workout player — full-screen overlay)
 //
-// Workout.start({ title, rest: 60, items: [{ ex, sets: 3, target: "8–12", secs: null }] })
+// Workout.start({ title, rest: 60, items: [{ ex, sets: 3, target: "8–12", secs: null }], warm: true })
+//   warm   = adds a short warm-up before and a cool-down stretch after (default on; false turns it off)
 //   ex     = an exercise from EX (data.js)
 //   target = rep text shown for rep-based moves (secs = null → user presses "Done")
 //   secs   = seconds for timed moves (plank, cardio intervals) — counts down by itself
@@ -14,7 +15,8 @@ const WO_T = {
     finTitle: "เยี่ยมมาก! ออกกำลังกายเสร็จแล้ว", finSub: "พักดื่มน้ำ แล้วยืดกล้ามเนื้อเบาๆ นะ",
     finEx: "ท่า", finSets: "เซ็ต", finMin: "นาที", again: "เล่นอีกครั้ง",
     sayNext: (n, s, all) => `ท่าต่อไป ${n} เซ็ตที่ ${s} จาก ${all}`, sayRest: "พักก่อน", sayGo: "เริ่ม", sayDone: "เยี่ยมมาก ออกกำลังกายเสร็จแล้ว",
-    tapDone: "ทำครบแล้วกด \"เสร็จแล้ว\""
+    tapDone: "ทำครบแล้วกด \"เสร็จแล้ว\"",
+    warm: "วอร์มอัพ", cool: "คูลดาวน์", skipWarm: "ข้ามวอร์มอัพ", skipCool: "ข้ามคูลดาวน์", warmNote: "อุ่นเครื่องเบาๆ ลดโอกาสบาดเจ็บ", coolNote: "ยืดกล้ามเนื้อช้าๆ หายใจลึกๆ"
   },
   en: {
     move: "Move", next: "Next up", ready: "Get ready", work: "Work", rest: "Rest", set: "Set", of: "of",
@@ -23,7 +25,8 @@ const WO_T = {
     finTitle: "Great job! Workout complete", finSub: "Have some water and stretch gently.",
     finEx: "exercises", finSets: "sets", finMin: "min", again: "Do it again",
     sayNext: (n, s, all) => `Next, ${n}. Set ${s} of ${all}`, sayRest: "Rest", sayGo: "Go", sayDone: "Great job, workout complete",
-    tapDone: "Press \"Done\" when you finish the set"
+    tapDone: "Press \"Done\" when you finish the set",
+    warm: "Warm-up", cool: "Cool-down", skipWarm: "Skip warm-up", skipCool: "Skip cool-down", warmNote: "Ease in gently to lower the risk of injury", coolNote: "Stretch slowly and breathe deeply"
   }
 };
 
@@ -57,15 +60,20 @@ const Workout = (() => {
     } catch {}
   }
 
+  /* ---------- warm-up and cool-down (added around every workout unless opts.warm === false) ---------- */
+  const WARM = [["march", 45], ["stepjack", 30], ["wgs", 30]], COOL = [["hamstring", 30], ["hipflex", 30], ["child", 30]];
+  const phaseItems = (list, phase) => list.map(([id, secs]) => ({ ex: EX.find(e => e.id === id), sets: 1, secs, phase })).filter(x => x.ex);
+
   /* ---------- build the step list ---------- */
   function build(items) {
     const steps = [];
     items.forEach((it, i) => {
       for (let s = 1; s <= it.sets; s++) {
-        steps.push({ kind: "count", it, s, dur: 5 });
+        steps.push({ kind: "count", it, s, dur: it.phase ? 4 : 5 });
         steps.push({ kind: "work", it, s, dur: it.secs || 0 });
-        const last = i === items.length - 1 && s === it.sets;
-        if (!last) steps.push({ kind: "rest", dur: S.rest });
+        // rest only between sets and moves of the main workout
+        const nextMain = s < it.sets || (items[i + 1] && !items[i + 1].phase);
+        if (!it.phase && nextMain && !(i === items.length - 1 && s === it.sets)) steps.push({ kind: "rest", dur: S.rest });
       }
     });
     // Each rest step knows what comes next
@@ -105,7 +113,9 @@ const Workout = (() => {
     const tx = wt(), st = S.steps[S.i], body = $("#woBody");
     $("#woTitle").textContent = S.title;
     const cur = st.it || st.next.it, setNo = st.s || st.next.s;
-    $("#woStep").textContent = `${tx.move} ${S.items.indexOf(cur) + 1}/${S.items.length} · ${tx.set} ${setNo}/${cur.sets}`;
+    $("#woStep").textContent = cur.phase ? tx[cur.phase] : `${tx.move} ${S.main.indexOf(cur) + 1}/${S.main.length} · ${tx.set} ${setNo}/${cur.sets}`;
+    const ph = st.it && st.it.phase;
+    const skipPhase = ph ? `<button type="button" class="wo-btn ghost" data-wo="skip-${ph}">${ph === "warm" ? tx.skipWarm : tx.skipCool}</button>` : "";
     $("#woProg").style.width = `${(S.i / S.steps.length) * 100}%`;
     const pauseBtn = `<button type="button" class="wo-btn ghost" data-wo="pause">${S.paused ? icon("play") + tx.resume : icon("pause") + tx.pause}</button>`;
     const exName = it => it.ex[lang];
@@ -114,17 +124,17 @@ const Workout = (() => {
     if (st.kind === "count") {
       body.className = "wo-body is-count";
       body.innerHTML = `
-        <span class="wo-tag">${tx.next}</span>
+        <span class="wo-tag">${ph ? tx[ph] + " · " + tx.next : tx.next}</span>
         <h2 class="wo-name">${exName(st.it)}</h2>
-        <p class="wo-sub">${tx.set} ${st.s}/${st.it.sets} · ${goal(st.it)}</p>
+        <p class="wo-sub">${ph ? `${goal(st.it)} · ${ph === "warm" ? tx.warmNote : tx.coolNote}` : `${tx.set} ${st.s}/${st.it.sets} · ${goal(st.it)}`}</p>
         <div class="wo-fig"><div class="fig" data-fig="${st.it.ex.id}"></div></div>
         ${ring("big")}
-        <div class="wo-ctrl">${pauseBtn}<button type="button" class="wo-btn" data-wo="skip">${icon("skip")}${tx.skip}</button></div>`;
+        <div class="wo-ctrl">${pauseBtn}<button type="button" class="wo-btn" data-wo="skip">${icon("skip")}${tx.skip}</button>${skipPhase}</div>`;
     } else if (st.kind === "work") {
       body.className = "wo-body is-work";
       const cue = lang === "th" ? st.it.ex.cth : st.it.ex.cen;
       body.innerHTML = `
-        <span class="wo-tag work">${tx.work} · ${tx.set} ${st.s}/${st.it.sets}</span>
+        <span class="wo-tag work">${ph ? tx[ph] : `${tx.work} · ${tx.set} ${st.s}/${st.it.sets}`}</span>
         <h2 class="wo-name">${exName(st.it)}</h2>
         <p class="wo-sub">${cue}</p>
         <div class="wo-fig big"><div class="fig" data-fig="${st.it.ex.id}"></div></div>
@@ -132,6 +142,7 @@ const Workout = (() => {
         <div class="wo-ctrl">
           ${st.dur ? pauseBtn : ""}
           <button type="button" class="wo-btn main" data-wo="skip">${icon("check")}${tx.done}</button>
+          ${skipPhase}
         </div>`;
     } else if (st.kind === "rest") {
       body.className = "wo-body is-rest";
@@ -154,7 +165,7 @@ const Workout = (() => {
   function finish() {
     clearInterval(S.timer);
     const tx = wt(), mins = Math.max(1, Math.round((Date.now() - S.started) / 60000));
-    const sets = S.items.reduce((a, it) => a + it.sets, 0);
+    const sets = S.main.reduce((a, it) => a + it.sets, 0);
     // Save to progress (progress.js), if the page has it and the user is logged in
     let saved = "";
     if (typeof Progress !== "undefined") {
@@ -171,7 +182,7 @@ const Workout = (() => {
       <p class="wo-sub">${tx.finSub}</p>
       ${saved}
       <div class="wo-stats">
-        <div><b>${S.items.length}</b><span>${tx.finEx}</span></div>
+        <div><b>${S.main.length}</b><span>${tx.finEx}</span></div>
         <div><b>${sets}</b><span>${tx.finSets}</span></div>
         <div><b>${mins}</b><span>${tx.finMin}</span></div>
       </div>
@@ -222,6 +233,8 @@ const Workout = (() => {
     if (act === "again") { const o = S.opts; stop(); return start(o); }
     if (!S) return;
     if (act === "skip") return enter(S.i + 1);
+    if (act === "skip-warm") { const k = S.steps.findIndex(x => x.it && !x.it.phase); return enter(k < 0 ? S.steps.length : k); }
+    if (act === "skip-cool") return enter(S.steps.length);
     if (act === "add") { if (S.paused) S.left += 15000; else S.end += 15000; S.total += 15000; return tick(true); }
     if (act === "pause") {
       if (S.paused) { S.end = Date.now() + S.left; S.paused = false; }
@@ -237,7 +250,9 @@ const Workout = (() => {
   /* ---------- public ---------- */
   async function start(opts) {
     if (S) stop();
-    S = { opts, title: opts.title, items: opts.items, rest: opts.rest || 60, i: 0, paused: false, started: Date.now() };
+    const withWarm = opts.warm !== false;
+    S = { opts, title: opts.title, main: opts.items, rest: opts.rest || 60, i: 0, paused: false, started: Date.now() };
+    S.items = withWarm ? [...phaseItems(WARM, "warm"), ...opts.items, ...phaseItems(COOL, "cool")] : opts.items;
     S.steps = build(S.items);
     mount();
     try { if ("wakeLock" in navigator) wake = await navigator.wakeLock.request("screen"); } catch {}
