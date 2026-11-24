@@ -14,7 +14,8 @@ let lastPlan = store.get("fs-plan", null); // { answers, seed }
 /* ---------- Plan generation ---------- */
 function allowedEquip(eq) { return eq === "gym" ? ["none", "db", "gym"] : eq === "db" ? ["none", "db"] : ["none"]; }
 
-function dose(ex, a) {
+function dose(ex, a) { return bumpDose(doseBase(ex, a), ex); }
+function doseBase(ex, a) {
   const t = T[lang], beg = a.level === "beg";
   const side = ex.side ? ` ${t.perSide}` : "";
   if (ex.machine) return `${beg ? 8 : 12} ${t.min}`;
@@ -153,6 +154,7 @@ function renderPlan() {
       <div><b>${t.printTitle}</b><small>FitStart AI${u ? ` · ${esc(u.name)}` : ""} · ${dateFmt.format(new Date())}</small></div>
     </div>
     <div class="summary"><span class="ai-badge">AI</span><p>${summary}</p></div>
+    ${weekBanner()}
     <div class="pstats">${stats}</div>
     <div class="week2">${week}</div>
     <p class="tick-note print-only">${t.tickNote}</p>
@@ -182,7 +184,7 @@ function generate(a, scroll = true) {
   box.innerHTML = `<div class="thinking"><span class="dots"><span></span><span></span><span></span></span>${T[lang].thinking}</div>`;
   if (scroll) box.scrollIntoView({ behavior: "smooth", block: "start" });
   setTimeout(() => {
-    lastPlan = { answers: a, seed: Math.floor(Math.random() * 1e9) };
+    lastPlan = { answers: a, seed: Math.floor(Math.random() * 1e9), created: Date.now() };
     openDays = new Set([0]);
     store.set("fs-plan", lastPlan);
     renderPlan();
@@ -266,7 +268,12 @@ function toggleDay(i) {
 
 /* ---------- Guided workout for one plan day (js/workout.js) ---------- */
 // Same sets / reps / seconds as the plan card shows (see dose())
-function woItem(ex, a) {
+function woItem(ex, a) { const it = woItemBase(ex, a), w = planWeek() - 1;
+  if (!w || ex.machine) return it;
+  if (it.secs) return { ...it, secs: it.secs + 5 * w };
+  return { ...it, target: String(it.target).replace(/\d+/g, n => +n + w) };
+}
+function woItemBase(ex, a) {
   const beg = a.level === "beg";
   if (ex.machine) return { ex, sets: 1, secs: (beg ? 8 : 12) * 60 };
   if (ex.cat === "mobility") return { ex, sets: 2, secs: beg ? 30 : 45 };
@@ -416,4 +423,38 @@ function swapMove(n, k) {
   if (typeof currentUser === "function" && currentUser()) updateUser(u => { (u.plans || []).forEach(p => { if (p.seed === lastPlan.seed && JSON.stringify(p.answers) === JSON.stringify(lastPlan.answers)) p.swaps = lastPlan.swaps; }); });
   renderPlan();
   toast(tx.done(cur[lang], next[lang]));
+}
+
+/* ---------- Progressive overload: the plan gets a little harder each week (weeks 1-4) ---------- */
+const WEEK_T = {
+  th: { title: n => `สัปดาห์ที่ ${n} จาก 4 ของแผนนี้`, w1: "สัปดาห์แรก: เน้นท่าให้ถูกก่อน ยังไม่ต้องรีบเพิ่ม",
+    more: n => `เพิ่มความหนักแล้ว: +${n} ครั้งต่อเซ็ต และ +${n * 5} วินาทีในท่าจับเวลา (ปรับให้ในแผนและโหมดนำแล้ว)`,
+    done: "ครบ 4 สัปดาห์แล้ว ร่างกายพร้อมสำหรับความท้าทายใหม่ ลองสร้างแผนใหม่ (ระดับกลาง หรือเพิ่มวัน/เวลา)", newPlan: "สร้างแผนใหม่" },
+  en: { title: n => `Week ${n} of 4 of this plan`, w1: "Week one: focus on good form, no need to push yet",
+    more: n => `Stepped up: +${n} rep${n > 1 ? "s" : ""} per set and +${n * 5} s on timed moves (already in your plan and guided mode)`,
+    done: "Four weeks done. You're ready for a new challenge: make a new plan (intermediate, or more days/time).", newPlan: "Make a new plan" }
+};
+const WEEK_MS = 7 * 864e5;
+function planWeekRaw() {
+  if (!lastPlan) return 1;
+  if (!lastPlan.created) { lastPlan.created = Date.now(); store.set("fs-plan", lastPlan); } // older plans start counting today
+  return Math.floor((Date.now() - lastPlan.created) / WEEK_MS) + 1;
+}
+const planWeek = () => Math.min(4, planWeekRaw());
+function bumpDose(text, ex) {
+  const w = planWeek() - 1;
+  if (!w || ex.machine) return text;
+  // "2 × 10" -> "2 × 11" (reps); "2 × 20 วินาที" -> "2 × 25 วินาที" (seconds); the set count stays the same
+  return text.replace(/× (\d+)(–(\d+))?/, (m, a, r, b) => {
+    // seconds, not reps ("each side" also contains " s", so match a number followed by the unit)
+    const timed = !b && (lang === "th" ? /\d วินาที/ : /\d s(\b|$)/).test(text);
+    const add = timed ? 5 * w : w;
+    return `× ${+a + add}${b ? "–" + (+b + add) : ""}`;
+  });
+}
+function weekBanner() {
+  const tx = WEEK_T[lang], raw = planWeekRaw(), w = Math.min(4, raw);
+  const dots = [1, 2, 3, 4].map(i => `<i class="${i <= w ? "on" : ""}"></i>`).join("");
+  const msg = raw > 4 ? `${tx.done} <a href="#planForm" class="pw-new">${tx.newPlan}</a>` : w === 1 ? tx.w1 : tx.more(w - 1);
+  return `<div class="plan-week${raw > 4 ? " done" : ""}"><div class="pw-top"><b>${tx.title(w)}</b><span class="pw-dots" aria-hidden="true">${dots}</span></div><p>${msg}</p></div>`;
 }

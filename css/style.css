@@ -2051,3 +2051,12 @@ main:focus { outline: none; }
   .result-row .result { min-width: 0; }
   .result-row .result b { font-size: 1.15rem; word-break: break-word; }
 }
+/* ---------- Plan week progress (planner.js weekBanner) ---------- */
+.plan-week { margin: 12px 0 4px; padding: 12px 14px; border-radius: 14px; border: 1px solid color-mix(in srgb, var(--accent) 30%, var(--line)); background: color-mix(in srgb, var(--accent) 8%, var(--surface)); }
+.plan-week.done { border-color: color-mix(in srgb, #22c55e 40%, var(--line)); background: color-mix(in srgb, #22c55e 9%, var(--surface)); }
+.pw-top { display: flex; justify-content: space-between; align-items: center; gap: 10px; }
+.pw-dots { display: flex; gap: 5px; }
+.pw-dots i { width: 22px; height: 6px; border-radius: 9px; background: var(--line); }
+.pw-dots i.on { background: var(--accent); }
+.plan-week p { margin: 6px 0 0; font-size: .9rem; color: var(--muted); }
+.pw-new { color: var(--accent); font-weight: 600; }
