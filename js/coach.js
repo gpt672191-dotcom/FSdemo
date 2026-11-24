@@ -93,6 +93,7 @@ const KW = {
   busy: ["ไม่มีเวลา", "เวลาน้อย", "ยุ่ง", "busy", "no time", "quick"],
   water: ["ดื่มน้ำ", "กินน้ำ", "น้ำกี่", "น้ำวันละ", "water", "hydrat"],
   warm: ["วอร์ม", "อบอุ่นร่างกาย", "คูลดาวน์", "warm up", "warm-up", "warmup", "cool down", "cool-down"],
+  goalw: ["น้ำหนักเป้าหมาย", "เป้าหมายน้ำหนัก", "เป้าน้ำหนัก", "ถึงเป้า", "อีกนานไหม", "อีกนานแค่ไหน", "goal weight", "target weight", "reach my goal", "how long until"],
   today: ["วันนี้ทำอะไร", "วันนี้ต้องทำ", "วันนี้ออกกำลัง", "วันนี้เล่น", "วันนี้ฝึก", "ของวันนี้", "today"],
   remind: ["เตือน", "ปฏิทิน", "ลืม", "remind", "calendar", "forget"],
   badges: ["เหรียญ", "รางวัล", "ความคืบหน้า", "ต่อเนื่อง", "badge", "progress", "streak", "achievement"],
@@ -109,6 +110,28 @@ const GROUP_KW = {
   glutes: ["ก้น", "สะโพก", "glute", "butt", "hip"], core: ["หน้าท้อง", "ซิกแพ็ก", "abs", "core", "six pack", "sixpack"]
 };
 const has = (m, list) => list.some(k => m.includes(k));
+
+// Goal weight (set on the profile page): how far, and how long at a safe pace
+const GOALW_T = {
+  th: { none: (r) => `ยังไม่ได้ตั้งน้ำหนักเป้าหมายครับ ${r ? `น้ำหนักที่ดีต่อสุขภาพสำหรับส่วนสูงของคุณคือ <b>${r[0]}–${r[1]} กก.</b> ` : ""}เริ่มจากเป้าเล็กๆ ลด 5% ก่อนก็เห็นผลแล้ว ตั้งเป้าได้ที่หน้าข้อมูลส่วนตัว ส่วนน้ำหนัก`,
+        left: (cur, g, kg, w1, w2) => `ตอนนี้ ${cur} กก. เป้าหมาย ${g} กก. เหลืออีก <b>${kg.toFixed(1)} กก.</b> ถ้าไปอย่างปลอดภัย (สัปดาห์ละ 0.25–0.5 กก.) ใช้เวลาประมาณ <b>${w1}–${w2} สัปดาห์</b> ค่อยเป็นค่อยไปจะไม่เด้งกลับครับ`,
+        reached: (g) => `คุณถึงเป้า ${g} กก. แล้วครับ เก่งมาก ต่อไปลองรักษาน้ำหนักนี้ไว้ หรือตั้งเป้าใหม่ เช่น ทำท่าให้ได้มากขึ้น`,
+        link: "ตั้ง/ดูเป้าหมาย" },
+  en: { none: (r) => `You haven't set a goal weight yet. ${r ? `A healthy weight for your height is <b>${r[0]}–${r[1]} kg</b>. ` : ""}Start small: losing 5% already helps. Set a goal on your Profile page, in the weight section.`,
+        left: (cur, g, kg, w1, w2) => `You're at ${cur} kg and your goal is ${g} kg: <b>${kg.toFixed(1)} kg</b> to go. At a safe pace (0.25–0.5 kg a week) that's about <b>${w1}–${w2} weeks</b>. Slow and steady keeps it off.`,
+        reached: (g) => `You've reached your ${g} kg goal. Great job! Now keep it there, or set a new goal like doing more reps.`,
+        link: "Set or see my goal" }
+};
+function goalWAnswer(u) {
+  const tx = GOALW_T[lang], links = [{ href: "profile.html#progress", label: tx.link }];
+  const pr = u && u.profile, h = pr && pr.height, m = h / 100;
+  if (!u || !u.goalW) return { text: tx.none(h ? [(18.5 * m * m).toFixed(1), (22.9 * m * m).toFixed(1)] : null), links };
+  const ws = u.weights || [], cur = ws.length ? ws[ws.length - 1].w : pr && pr.weight;
+  if (!cur) return { text: tx.none(null), links };
+  const start = ws.length ? ws[0].w : cur, g = u.goalW, left = g < start ? cur - g : g - cur;
+  if (left <= 0.05) return { text: tx.reached(g), links };
+  return { text: tx.left(cur, g, left, Math.ceil(left / 0.5), Math.ceil(left / 0.25)), links };
+}
 
 // "What's my workout today?": read the current plan (same schedule as the planner and the home strip)
 const TODAY_T = {
@@ -187,6 +210,7 @@ function reply(raw) {
     return { text: tx.waterNeed, links: links(["profile.html", tx.linkProfile]) };
   }
   if (has(m, KW.warm)) return { text: tx.warm, ex: ["march", "wgs", "hamstring", "child"], links: links(["planner.html", tx.linkPlan]) };
+  if (has(m, KW.goalw)) return goalWAnswer(u);
   if (has(m, KW.today)) return todayAnswer(u);
   if (has(m, KW.remind)) return { text: tx.remind, links: links(["planner.html#plan", tx.linkPlan]) };
   if (has(m, KW.badges)) return { text: tx.badges, links: links(["profile.html#progress", tx.linkProgress]) };
