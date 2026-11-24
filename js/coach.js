@@ -86,13 +86,13 @@ const KW = {
   bmi: ["bmi", "บีเอ็มไอ", "ดัชนีมวล", "อ้วนไหม", "อ้วนมั้ย", "น้ำหนักเกิน"],
   kcal: ["แคล", "kcal", "calorie", "พลังงาน", "tdee", "bmr", "กินเท่าไหร่", "กินเท่าไร"],
   protein: ["โปรตีน", "protein", "เวย์", "whey"],
-  lose: ["ลดน้ำหนัก", "ลดพุง", "ลดไขมัน", "น้ำหนักขึ้น", "อ้วน", "พุง", "ผอม", "lose", "fat", "belly", "slim", "weight gain"],
+  lose: ["ลดน้ำหนัก", "ลดพุง", "ลดไขมัน", "น้ำหนักขึ้น", "อ้วน", "พุง", "lose", "fat", "belly", "slim", "weight gain"],
   muscle: ["สร้างกล้าม", "เพิ่มกล้าม", "กล้ามโต", "build muscle", "gain muscle", "bulk"],
   home: ["ที่บ้าน", "ไม่มีอุปกรณ์", "ไม่มีเครื่อง", "home", "no equipment", "bodyweight"],
   start: ["เริ่ม", "มือใหม่", "ไม่เคย", "start", "beginner", "new to"],
   busy: ["ไม่มีเวลา", "เวลาน้อย", "ยุ่ง", "busy", "no time", "quick"],
   water: ["ดื่มน้ำ", "กินน้ำ", "น้ำกี่", "น้ำวันละ", "water", "hydrat"],
-  warm: ["วอร์ม", "อบอุ่นร่างกาย", "คูลดาวน์", "warm up", "warm-up", "warmup", "cool down", "cool-down"],
+  warm: ["วอร์ม", "อบอุ่นร่างกาย", "คูลดาวน์", "ยืดเหยียด", "stretch", "warm up", "warm-up", "warmup", "cool down", "cool-down"],
   when: ["ตอนเช้า", "ตอนเย็น", "ตอนไหนดี", "เวลาไหนดี", "ช่วงไหนดี", "ก่อนนอน", "กลางคืน", "ตอนดึก", "what time", "when should i work out", "morning or evening", "best time", "at night"],
   eatwhen: ["กินก่อน", "กินหลัง", "ก่อนออกกำลัง", "หลังออกกำลัง", "ท้องว่าง", "ท้องว่าง", "eat before", "eat after", "before workout", "after workout", "empty stomach"],
   plateau: ["น้ำหนักไม่ลง", "น้ำหนักขึ้นลง", "ทำไมน้ำหนักขึ้น", "น้ำหนักขึ้นทั้งที่", "น้ำหนักนิ่ง", "ไม่ลดเลย", "not losing weight", "weight went up", "weight is up", "plateau", "scale won't move", "weight going down", "weight down"],
@@ -108,6 +108,44 @@ const KW = {
   food: ["อาหาร", "กินอะไร", "เมนู", "food", "diet", "eat", "meal"],
   plan: ["แผน", "ตาราง", "plan", "schedule", "program"]
 };
+// More beginner questions (round 87): sore muscles, rest days, whey, gaining weight, no jumping, plan too hard, swapping, data, motivation
+const KW2 = {
+  doms: ["เมื่อย", "ระบม", "ปวดกล้ามเนื้อหลังออก", "ปวดกล้ามเนื้อวันแรก", "ปวดกล้ามเนื้อหลังเล่น", "doms", "sore muscles", "sore after", "muscles are sore"],
+  rest: ["พักกี่วัน", "วันพัก", "ทุกวันได้ไหม", "ทุกวันได้มั้ย", "ออกทุกวัน", "rest day", "every day", "how many rest"],
+  whey: ["เวย์จำเป็น", "ต้องกินเวย์", "เวย์ดีไหม", "need whey", "is whey"],
+  gain: ["เพิ่มน้ำหนัก", "ผอม", "อยากอ้วน", "น้ำหนักน้อย", "gain weight", "too thin", "skinny", "underweight"],
+  nojump: ["กระโดดไม่ได้", "ไม่กระโดด", "ไม่อยากกระโดด", "คอนโด", "เสียงดัง", "เพื่อนบ้าน", "no jump", "no jumping", "apartment", "neighbours", "neighbors"],
+  hard: ["ยากไป", "หนักไป", "เหนื่อยเกินไป", "too hard", "too difficult", "can't keep up"],
+  swap: ["เปลี่ยนท่า", "สลับท่า", "ไม่ชอบท่า", "swap", "change a move", "replace"],
+  data: ["ย้ายข้อมูล", "เครื่องใหม่", "สำรองข้อมูล", "ลบบัญชี", "ลบข้อมูล", "export", "backup", "new phone", "delete my account", "delete account"],
+  motivate: ["ท้อ", "ขี้เกียจ", "ไม่มีแรงจูงใจ", "เบื่อ", "ไม่อยากทำ", "lazy", "unmotivated", "motivation", "give up", "bored"]
+};
+const KW2_T = {
+  th: {
+    doms: "ปวดเมื่อยกล้ามเนื้อ 1–3 วันหลังออกกำลังกาย (โดยเฉพาะครั้งแรกๆ) เป็นเรื่องปกติครับ เรียกว่า DOMS แปลว่ากล้ามเนื้อกำลังปรับตัว<br>- ขยับเบาๆ เดิน ยืดเหยียด ช่วยให้หายเร็วกว่านอนนิ่งๆ<br>- นอนให้พอ ดื่มน้ำ กินโปรตีน<br>- ฝึกส่วนอื่นได้ หรือทำเบาลง<br>แต่ถ้า<b>เจ็บแปลบ ปวดที่ข้อ บวม หรือเกิน 5 วัน</b> ให้หยุดและปรึกษาแพทย์",
+    rest: "มือใหม่ออกกำลังกาย 3–4 วันต่อสัปดาห์ แล้วพักวันเว้นวันก็พอครับ กล้ามเนื้อโตตอนพัก ส่วนเดินหรือยืดเหยียดเบาๆ ทำทุกวันได้ ถ้าอยากฝึกติดกันให้สลับส่วน เช่น ช่วงบนวันหนึ่ง ช่วงล่างอีกวัน (แผนในเว็บจัดวันพักให้แล้ว)",
+    whey: "เวย์<b>ไม่จำเป็น</b>ครับ เป็นแค่อาหารโปรตีนแบบผงที่สะดวก ถ้ากินไข่ นม อกไก่ ปลา เต้าหู้ ได้ถึงเป้าโปรตีนต่อวันก็ไม่ต้องใช้ ลองนับโปรตีนที่หน้าแนะนำดูก่อนว่าขาดเท่าไหร่",
+    gain: "อยากเพิ่มน้ำหนักให้เป็นกล้าม ไม่ใช่ไขมัน:<br>1. กินมากกว่าที่ใช้วันละ 300–500 kcal (เพิ่มมื้อว่าง เช่น นม กล้วย ถั่ว ข้าวเพิ่ม)<br>2. โปรตีน 1.6–2 กรัม/กก.<br>3. ฝึกสร้างกล้าม 3 วัน/สัปดาห์ ค่อยๆ เพิ่มความหนัก<br>4. นอน 7–9 ชั่วโมง<br>เพิ่มสัปดาห์ละ 0.25–0.5 กก. กำลังดี",
+    nojump: "ไม่ต้องกระโดดก็เหนื่อยได้ครับ ใช้ท่าแบบไม่กระโดด เช่น สเต็ปแจ็ค ย่ำเท้ายกเข่า สควอท ลันจ์ช้าๆ เมาน์เทนไคลม์เบอร์ช้าๆ<br>- หน้าสร้างแผน: ติ๊ก \"ไม่กระโดด\" ระบบจะเลือกแต่ท่าที่ไม่กระโดด<br>- คลังท่า: กดตัวกรอง \"ไม่กระโดด\"",
+    hard: "หนักไปไม่ใช่เรื่องแย่ครับ ปรับให้พอดีได้:<br>1. ลดจำนวนครั้ง/เซ็ต หรือพักนานขึ้น (+15 วิในโหมดนำ)<br>2. ใช้ท่าที่ง่ายลง (ในหน้ารายละเอียดท่ามี \"ท่าง่ายลง\")<br>3. สร้างแผนใหม่แบบ 15 นาที และไม่กระโดด<br>ร่างกายจะปรับตัวภายใน 2–3 สัปดาห์",
+    swap: "ได้ครับ ในหน้าสร้างแผน เปิดการ์ดของวันนั้นแล้วกด \"เปลี่ยนท่า\" ข้างท่าที่ไม่ชอบ ระบบจะสลับเป็นท่าอื่นในกลุ่มเดียวกันที่ใช้อุปกรณ์ได้ และจำไว้กับแผนเลย",
+    data: "ข้อมูลทั้งหมดเก็บในเบราว์เซอร์เครื่องนี้ครับ<br>- ย้ายเครื่อง: หน้าตั้งค่า > ดาวน์โหลดข้อมูล แล้วไปเครื่องใหม่ กด \"นำเข้าข้อมูล\"<br>- ลบข้อมูล/ลบบัญชี: หน้าตั้งค่า ส่วนท้ายสุด (ต้องกดยืนยัน)",
+    motivate: "รู้สึกท้อเป็นเรื่องปกติครับ ลองแบบนี้:<br>1. ลดเป้าให้เล็กมาก แค่ 10 นาที หรือ 1 ท่าก็นับ<br>2. ใส่เวลาออกกำลังกายลงปฏิทิน เหมือนนัดสำคัญ<br>3. ดูความคืบหน้า วันต่อเนื่อง และเหรียญรางวัล<br>4. ชวนเพื่อนทำด้วย<br>ความสม่ำเสมอสำคัญกว่าความหนัก ทำน้อยแต่ทำบ่อยชนะเสมอ"
+  },
+  en: {
+    doms: "Sore muscles 1–3 days after a workout (especially at the start) are normal; it's called DOMS and means your muscles are adapting.<br>- Light movement, walking and stretching help more than resting still<br>- Sleep, water and protein<br>- Train other body parts or go lighter<br>But if it's <b>sharp, in a joint, swollen, or lasts over 5 days</b>, stop and see a doctor.",
+    rest: "As a beginner, 3–4 workouts a week with a rest day in between is plenty; muscles grow while you rest. Easy walking or stretching is fine every day. To train on back-to-back days, alternate body parts (upper one day, lower the next). Your plan already includes rest days.",
+    whey: "Whey is <b>not necessary</b>. It's just convenient powdered protein. If eggs, milk, chicken, fish or tofu get you to your daily protein goal, you don't need it. Count your protein on the For you page first.",
+    gain: "To gain weight as muscle, not fat:<br>1. Eat 300–500 kcal more than you burn (add snacks like milk, bananas, nuts, more rice)<br>2. Protein 1.6–2 g per kg<br>3. Strength training 3 days a week, adding a little each week<br>4. Sleep 7–9 hours<br>0.25–0.5 kg a week is a good pace.",
+    nojump: "You can get your heart rate up without jumping: step jacks, marching high knees, squats, slow lunges, slow mountain climbers.<br>- Build a plan: tick \"No jumping\" and only no-jump moves are picked<br>- Exercise library: use the \"No jumping\" filter",
+    hard: "Too hard is easy to fix:<br>1. Fewer reps or longer rests (+15 s in workout mode)<br>2. Use the easier version (shown on each exercise's detail)<br>3. Make a new 15-minute, no-jump plan<br>Your body adapts in 2–3 weeks.",
+    swap: "Yes. On the Build a plan page, open that day's card and tap \"Swap move\" next to the move you don't like. You get another move from the same group that fits your equipment, saved with the plan.",
+    data: "All your data lives in this browser.<br>- New phone: Settings > Download my data, then on the new device tap \"Import data\"<br>- Delete data or account: at the bottom of Settings (asks you to confirm)",
+    motivate: "Feeling unmotivated is normal. Try this:<br>1. Make the goal tiny: 10 minutes or one move counts<br>2. Put workouts in your calendar like an appointment<br>3. Look at your progress, streak and badges<br>4. Bring a friend<br>Consistency beats intensity: small and often always wins."
+  }
+};
+const KW2_LINK = { doms: "more.html#faq", rest: "planner.html#plan", whey: "for-you.html#fyProtein", gain: "planner.html?goal=muscle", nojump: "planner.html?impact=low", hard: "planner.html?time=15&impact=low", swap: "planner.html#plan", data: "settings.html", motivate: "profile.html#progress" };
+
 const GROUP_KW = {
   chest: ["อก", "chest", "pec"], back: ["หลัง", "back", "lat"], shoulders: ["ไหล่", "shoulder", "delt"],
   arms: ["แขน", "arm", "bicep", "tricep", "ไบเซ็ป", "ไทรเซ็ป"], legs: ["ขา", "ต้นขา", "น่อง", "leg", "thigh", "calf"],
@@ -249,8 +287,12 @@ function reply(raw) {
     if (w) return proteinAnswer(w);
   }
 
+  // sore-after-training questions come before the general pain answer (which says stop)
+  if (has(m, KW2.doms)) return { text: KW2_T[lang].doms, links: [{ href: KW2_LINK.doms, label: tx.linkMore }] };
   if (has(m, KW.pain)) return { text: tx.pain, links: links(["more.html#faq", tx.linkMore]) };
   if (has(m, KW.thanks)) return { text: tx.thanks };
+  for (const k of ["whey", "gain", "nojump", "hard", "swap", "data", "rest", "motivate"])
+    if (has(m, KW2[k])) return { text: KW2_T[lang][k], links: [{ href: KW2_LINK[k], label: lang === "th" ? "ไปที่หน้านี้" : "Open this page" }] };
   if (has(m, KW.bmi)) {
     // numbers typed in the question ("bmi 170 65") win over the saved profile
     const h = nums.find(n => n >= 100 && n <= 230), w = nums.find(n => n !== h && n >= 25 && n <= 250);
