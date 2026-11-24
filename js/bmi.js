@@ -17,7 +17,7 @@ function renderBMI() {
     <div style="color:var(--muted);font-size:.92rem">${tx.bmiAdvice[idx]}</div>
     <p style="margin:10px 0 0;font-size:.92rem">${tx.idealRange(lo, hi)}</p>
     ${teenNote()}
-    ${pathHTML(w, +lo, +hi)}
+    ${isTeen() ? teenPath() : pathHTML(w, +lo, +hi)}
     <p style="margin:10px 0 0"><a href="${BMI_LINKS[idx]}" style="color:var(--accent);font-weight:600;text-decoration:none">${tx.bmiLink[idx]}</a></p>`;
 }
 
@@ -26,6 +26,15 @@ const TEEN_T = {
   th: (a, any) => `${any ? "ถ้าอายุต่ำกว่า 18 ปี" : `คุณอายุ ${a} ปี`}: เกณฑ์ BMI ข้างบนเป็นของผู้ใหญ่ วัยรุ่นร่างกายยังโตอยู่ ต้องดูเทียบกับอายุและเพศ (กราฟ BMI ตามอายุของ WHO) ใช้ผลนี้เป็นแนวทางคร่าวๆ อย่าอดอาหารเพื่อลดน้ำหนัก ถ้ากังวลปรึกษาครูพยาบาลหรือแพทย์`,
   en: (a, any) => `${any ? "If you are under 18" : `You are ${a}`}: the cut-offs above are for adults. Teens are still growing, so BMI has to be compared by age and sex (WHO BMI-for-age charts). Use this result as a rough guide only, don't diet hard to lose weight, and talk to a school nurse or doctor if you're worried.`
 };
+const isTeen = () => { const u = typeof currentUser === "function" && currentUser(), a = u && u.profile && +u.profile.age; return !!a && a < 18; };
+// Under 18 (known from the profile): no "lose X kg in N weeks" path, just habits that fit a growing body
+function teenPath() {
+  const th = lang === "th";
+  return `<div class="bmi-path"><h3 class="sub-h">${th ? "ทำอะไรได้บ้าง (วัยรุ่น)" : "What helps (teens)"}</h3>
+    <p>${th ? "ไม่ต้องนับว่าต้องลดกี่กิโล ร่างกายยังโตอยู่ ส่วนสูงที่เพิ่มขึ้นจะช่วยให้ BMI ดีขึ้นเอง เน้น 4 อย่างนี้:" : "No need to count kilos to lose. You're still growing, and getting taller improves BMI by itself. Focus on these 4 things:"}</p>
+    <ol style="margin:6px 0 10px;padding-left:20px">${(th ? ["ขยับร่างกายวันละ 60 นาที (เล่นกีฬา เดิน ปั่นจักรยาน รวมกันได้)", "กินครบ 3 มื้อ มีข้าว เนื้อสัตว์ ผัก ผลไม้ นม", "ลดน้ำหวาน ชานม น้ำอัดลม ขนมกรุบกรอบ", "นอน 8–10 ชั่วโมง"] : ["Move 60 minutes a day (sport, walking, cycling all count)", "Three balanced meals: rice, meat, vegetables, fruit, milk", "Cut sweet drinks, bubble tea, soda and crisps", "Sleep 8–10 hours"]).map(x => `<li>${x}</li>`).join("")}</ol>
+    <a class="btn sm" href="planner.html">${th ? "สร้างแผนออกกำลังกาย" : "Make a workout plan"}</a></div>`;
+}
 function teenNote() {
   const u = typeof currentUser === "function" && currentUser(), age = u && u.profile && +u.profile.age;
   if (age && age >= 18) return "";
