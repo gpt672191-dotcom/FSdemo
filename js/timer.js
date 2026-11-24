@@ -37,3 +37,6 @@ $("#presets").addEventListener("click", e => {
   stopTimer(); tTotal = tLeft = +s; drawTimer();
 });
 onRender(drawTimer);
+
+// Preset buttons read "30 วิ" in Thai and "30 s" in English
+onRender(() => document.querySelectorAll("[data-sec]").forEach(b => { b.textContent = `${b.dataset.sec} ${lang === "th" ? "วิ" : "s"}`; b.setAttribute("aria-label", lang === "th" ? `ตั้งเวลา ${b.dataset.sec} วินาที` : `Set ${b.dataset.sec} seconds`); }));
