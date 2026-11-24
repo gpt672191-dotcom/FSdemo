@@ -1951,3 +1951,7 @@ main:focus { outline: none; }
 .ad-hbar.feel-ok i { background: #22c55e; }
 .ad-hbar.feel-hard i { background: #f97316; }
 @media (max-width: 820px) { .ad-charts2 { grid-template-columns: 1fr; } }
+/* ---------- Favourite moves (profile.html#favs, js/favs.js) ---------- */
+.fav-head { display: flex; justify-content: space-between; align-items: center; gap: 12px; flex-wrap: wrap; margin-bottom: 16px; }
+.xd-fav .ic { color: #f43f5e; }
+.xd-fav[aria-pressed="true"] .ic { fill: currentColor; color: inherit; }
