@@ -1782,3 +1782,27 @@ footer { text-align: left; padding-block: 44px 24px; background: color-mix(in sr
 .ad-recent li small { color: var(--muted); }
 .ad-pw { margin: 16px 0 0; padding: 10px 12px; border-radius: 10px; background: var(--accent-soft); font-size: .9rem; }
 .ad-acts { display: flex; flex-wrap: wrap; gap: 8px; margin-top: 20px; padding-top: 16px; border-top: 1px solid var(--line); }
+
+/* ---------- Water tracker (for-you.html, js/water.js) ---------- */
+.wt-goal { margin: -6px 0 14px; color: var(--muted); font-size: .92rem; }
+.wt-top { display: flex; justify-content: space-between; align-items: center; gap: 12px; flex-wrap: wrap; }
+.wt-count b { display: block; font-size: 1.5rem; font-weight: 600; }
+.wt-count span { color: var(--muted); font-size: .9rem; }
+.wt-btns { display: flex; gap: 8px; }
+.wt-btns .btn[data-wt="-1"] { min-width: 40px; font-size: 1.1rem; justify-content: center; }
+.wt-bar { height: 10px; border-radius: 99px; background: var(--surface-2); overflow: hidden; margin: 14px 0; }
+.wt-bar i { display: block; height: 100%; border-radius: 99px; background: linear-gradient(90deg, #38bdf8, var(--accent)); transition: width .3s; }
+.wt-glasses { display: flex; flex-wrap: wrap; gap: 6px; }
+.wt-glass { width: 40px; height: 44px; border-radius: 12px; border: 1px solid var(--line); background: var(--surface-2); color: var(--muted); display: grid; place-items: center; cursor: pointer; transition: background .15s, color .15s, transform .1s; }
+.wt-glass .ic { width: 20px; height: 20px; }
+.wt-glass.on { background: color-mix(in srgb, #38bdf8 22%, var(--surface)); border-color: color-mix(in srgb, #38bdf8 55%, var(--line)); color: #0284c7; }
+.wt-glass.on .ic { fill: currentColor; fill-opacity: .35; }
+.wt-glass.extra { border-style: dashed; }
+.wt-glass:active { transform: scale(.94); }
+.wt-glass:focus-visible { outline: 2px solid var(--accent); outline-offset: 2px; }
+@media (prefers-color-scheme: dark) { :root:not([data-theme="light"]) .wt-glass.on { color: #7dd3fc; } }
+:root[data-theme="dark"] .wt-glass.on { color: #7dd3fc; }
+.wt-week { display: flex; gap: 8px; align-items: flex-end; height: 70px; margin-top: 18px; }
+.wt-day { flex: 1; height: 100%; display: flex; flex-direction: column; justify-content: flex-end; align-items: center; gap: 4px; max-width: 40px; }
+.wt-day i { width: 100%; min-height: 3px; border-radius: 6px 6px 2px 2px; background: color-mix(in srgb, #38bdf8 70%, var(--accent)); }
+.wt-day small { color: var(--muted); font-size: .72rem; }
