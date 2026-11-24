@@ -1882,3 +1882,20 @@ main:focus { outline: none; }
 .xl-chip:focus-visible { outline: 2px solid var(--accent); outline-offset: 2px; }
 .xl-count { color: var(--muted); font-size: .88rem; margin: 0 0 12px; }
 .xl-none { text-align: center; color: var(--muted); padding: 30px 10px; border: 1px dashed var(--line); border-radius: 14px; }
+
+/* ---------- Protein tracker (for-you.html, js/protein.js) ---------- */
+.pr-bar { position: relative; height: 10px; border-radius: 99px; background: var(--surface-2); margin: 14px 0; }
+.pr-bar i { display: block; height: 100%; border-radius: 99px; background: linear-gradient(90deg, #f59e0b, var(--accent)); transition: width .3s; }
+.pr-lo { position: absolute; top: -4px; bottom: -4px; width: 2px; background: var(--text); opacity: .45; border-radius: 2px; }
+.pr-foods { list-style: none; margin: 0; padding: 0; display: grid; grid-template-columns: repeat(auto-fill, minmax(250px, 1fr)); gap: 8px; }
+.pr-food { display: flex; align-items: center; justify-content: space-between; gap: 10px; padding: 10px 12px; border: 1px solid var(--line); border-radius: 12px; background: var(--surface-2); }
+.pr-food.on { border-color: color-mix(in srgb, var(--accent) 50%, var(--line)); background: color-mix(in srgb, var(--accent) 9%, var(--surface)); }
+.pr-txt { min-width: 0; }
+.pr-txt b { display: block; font-size: .9rem; font-weight: 600; }
+.pr-txt small { color: var(--muted); font-size: .78rem; }
+.pr-ctl { display: flex; align-items: center; gap: 6px; flex: none; }
+.pr-ctl button { width: 34px; height: 34px; border-radius: 10px; border: 1px solid var(--line); background: var(--surface); color: var(--text); font: inherit; font-size: 1.1rem; font-weight: 600; cursor: pointer; display: grid; place-items: center; }
+.pr-ctl button[data-d="1"] { background: var(--accent); border-color: var(--accent); color: var(--accent-ink); }
+.pr-ctl button:disabled { opacity: .4; cursor: default; }
+.pr-ctl button:focus-visible { outline: 2px solid var(--accent); outline-offset: 2px; }
+.pr-ctl span { min-width: 1.4em; text-align: center; font-weight: 600; }
