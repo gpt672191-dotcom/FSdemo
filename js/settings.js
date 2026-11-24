@@ -102,6 +102,7 @@ function cleanImport(d) {
     protein: Object.fromEntries(Object.entries(obj(d.protein)).filter(([k]) => isDay(k))
       .map(([k, v]) => [k, Object.fromEntries(Object.entries(obj(v)).filter(([f, n]) => foods.has(f) && num(n, 0, 20)))])),
     favs: arr(d.favs).filter(id => EX.some(e => e.id === id)),
+    goalW: num(d.goalW, 30, 250) ? Math.round(d.goalW * 10) / 10 : null,
     profile: num(p.age, 13, 90) && num(p.height, 100, 230) && num(p.weight, 25, 250) ? { sex: p.sex === "f" ? "f" : "m", age: p.age, height: p.height, weight: p.weight, ...(num(p.activity, 1, 5) ? { activity: p.activity } : {}) } : null
   };
 }
@@ -116,6 +117,7 @@ function mergeImport(u, raw) {
   u.waist = byKey(u.waist, d.waist, x => x.d).sort((a, b) => (a.d < b.d ? -1 : 1)).slice(-200);
   u.water = { ...(d.water || {}), ...(u.water || {}) };
   u.protein = { ...(d.protein || {}), ...(u.protein || {}) };
+  if (!u.goalW && d.goalW) u.goalW = d.goalW;
   if (!hasBody(u.profile) && d.profile && hasBody(d.profile)) u.profile = d.profile;
   return { p: u.plans.length - before.p, l: u.log.length - before.l };
 }

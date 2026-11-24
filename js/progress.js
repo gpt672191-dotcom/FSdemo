@@ -264,12 +264,69 @@ function renderProgress() {
             <input id="wIn" type="number" inputmode="decimal" step="0.1" min="25" max="250" placeholder="${tx.wPh}" value="${(u.profile && u.profile.weight) || ""}">
             <button type="submit" class="btn">${icon("plus")}${tx.wAdd}</button>
           </form>
+          ${goalHTML(u, ws)}
         </div>
         ${waistHTML(u)}
       </div>
     </div>`;
 }
 onRender(renderProgress);
+
+/* ---------- Goal weight: progress from the first weigh-in, and a safe-pace estimate ---------- */
+const GOAL_T = {
+  th: { title: "น้ำหนักเป้าหมาย", ph: "เป้าหมาย (กก.)", set: "ตั้งเป้า", change: "เปลี่ยนเป้า", clear: "ลบเป้า",
+    hint: (lo, hi) => `น้ำหนักที่ดีต่อสุขภาพสำหรับส่วนสูงของคุณคือ ${lo}–${hi} กก. (BMI 18.5–22.9) ตั้งเป้าแรกแค่ 5% ก็เห็นผลต่อสุขภาพแล้ว`,
+    hintNoH: "กรอกส่วนสูงในโปรไฟล์ เพื่อดูช่วงน้ำหนักที่ดีต่อสุขภาพ",
+    prog: (done, all) => `${done < 0 ? "ห่างจากจุดเริ่ม" : "ทำได้แล้ว"} ${Math.abs(done).toFixed(1)} จาก ${all.toFixed(1)} กก.`,
+    left: (kg, w1, w2) => `เหลืออีก ${kg.toFixed(1)} กก. ถ้าไปอย่างปลอดภัย ใช้เวลาประมาณ ${w1}–${w2} สัปดาห์`,
+    reached: "ถึงเป้าหมายแล้ว เก่งมาก ลองรักษาน้ำหนักนี้ไว้ หรือตั้งเป้าใหม่",
+    saved: "บันทึกเป้าหมายแล้ว", cleared: "ลบเป้าหมายแล้ว", err: "กรอกน้ำหนักเป้าหมาย 30–250 กก.", needW: "บันทึกน้ำหนักวันนี้ก่อน แล้วค่อยตั้งเป้า" },
+  en: { title: "Goal weight", ph: "Goal (kg)", set: "Set goal", change: "Change goal", clear: "Remove goal",
+    hint: (lo, hi) => `A healthy weight for your height is ${lo}–${hi} kg (BMI 18.5–22.9). A first goal of just 5% already helps your health.`,
+    hintNoH: "Add your height in your profile to see a healthy weight range.",
+    prog: (done, all) => `${done < 0 ? "Away from your start by" : "Done"} ${Math.abs(done).toFixed(1)} of ${all.toFixed(1)} kg`,
+    left: (kg, w1, w2) => `${kg.toFixed(1)} kg to go. At a safe pace that's about ${w1}–${w2} weeks.`,
+    reached: "Goal reached. Great job! Keep this weight, or set a new goal.",
+    saved: "Goal saved", cleared: "Goal removed", err: "Enter a goal weight from 30 to 250 kg", needW: "Log today's weight first, then set a goal" }
+};
+let goalEdit = false;
+function goalHTML(u, ws) {
+  const tx = GOAL_T[lang], h = u.profile && u.profile.height, goal = u.goalW;
+  const cur = ws.length ? ws[ws.length - 1].w : u.profile && u.profile.weight;
+  const m = h / 100, range = h ? [(18.5 * m * m).toFixed(1), (22.9 * m * m).toFixed(1)] : null;
+  const form = `<form class="pg-w-form goal-form" id="goalForm" novalidate>
+      <input id="goalIn" type="number" inputmode="decimal" step="0.1" min="30" max="250" placeholder="${tx.ph}" value="${goal || ""}" aria-label="${tx.ph}">
+      <button type="submit" class="btn ghost">${tx.set}</button>
+      ${goal ? `<button type="button" class="btn ghost sm" data-goal-clear>${tx.clear}</button>` : ""}
+    </form>
+    <p class="hint goal-hint">${range ? tx.hint(range[0], range[1]) : tx.hintNoH}</p>`;
+  let body = form;
+  if (goal && cur && !goalEdit) {
+    const start = ws.length ? ws[0].w : cur, lose = goal < start;
+    const all = Math.abs(start - goal) || 0.1, done = lose ? start - cur : cur - start, left = lose ? cur - goal : goal - cur;
+    const pct = Math.max(0, Math.min(100, (done / all) * 100));
+    // safe pace: lose 0.25–0.5 kg a week; gain 0.25–0.5 kg a week as well (slower = more muscle, less fat)
+    const msg = left <= 0.05 ? `<p class="goal-msg ok">${icon("trophy")}<span>${tx.reached}</span></p>`
+      : `<p class="goal-msg">${tx.left(left, Math.ceil(left / 0.5), Math.ceil(left / 0.25))}</p>`;
+    body = `<div class="goal-bar" role="progressbar" aria-valuemin="0" aria-valuemax="100" aria-valuenow="${Math.round(pct)}" aria-label="${tx.title}"><i style="width:${pct}%"></i></div>
+      <div class="goal-nums"><span>${start} ${lang === "th" ? "กก." : "kg"}</span><b>${tx.prog(done, all)}</b><span>${goal} ${lang === "th" ? "กก." : "kg"}</span></div>
+      ${msg}
+      <button type="button" class="btn ghost sm" data-goal-edit>${tx.change}</button>`;
+  }
+  return `<div class="goal-box"><div class="pg-sub" style="margin:0 0 8px">${icon("trending")}${tx.title}</div>${body}</div>`;
+}
+document.addEventListener("submit", e => {
+  if (e.target.id !== "goalForm") return;
+  e.preventDefault();
+  const tx = GOAL_T[lang], g = num("goalIn", 30, 250);
+  if (isNaN(g)) { toast(tx.err); return; }
+  updateUser(u => { u.goalW = Math.round(g * 10) / 10; });
+  goalEdit = false; renderAll(); toast(tx.saved);
+});
+document.addEventListener("click", e => {
+  if (e.target.closest("[data-goal-edit]")) { goalEdit = true; renderAll(); const i = $("#goalIn"); if (i) i.focus(); }
+  else if (e.target.closest("[data-goal-clear]")) { updateUser(u => { delete u.goalW; }); goalEdit = false; renderAll(); toast(GOAL_T[lang].cleared); }
+});
 
 /* ---------- Waist (cm): often shrinks even when the scale doesn't move ---------- */
 const WAIST_T = {

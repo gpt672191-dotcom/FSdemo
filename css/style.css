@@ -2106,3 +2106,14 @@ main:focus { outline: none; }
 .hello-steps li.next .st-dot { border-color: var(--accent); color: var(--accent); }
 .hello-steps li.next a { font-weight: 700; }
 .hello-steps a { color: var(--text); text-decoration: underline; text-decoration-color: color-mix(in srgb, var(--accent) 50%, transparent); text-underline-offset: 3px; }
+
+/* Goal weight inside the weight card */
+.goal-box { margin-top: 14px; padding-top: 14px; border-top: 1px dashed var(--line); }
+.goal-box .pg-sub .ic { width: 1em; height: 1em; margin-right: 6px; vertical-align: -2px; color: var(--accent); }
+.goal-bar { height: 10px; border-radius: 99px; background: color-mix(in srgb, var(--accent) 14%, transparent); overflow: hidden; }
+.goal-bar i { display: block; height: 100%; border-radius: inherit; background: linear-gradient(90deg, var(--accent), #16a34a); }
+.goal-nums { display: flex; justify-content: space-between; align-items: baseline; gap: 8px; margin: 6px 0; font-size: .82rem; color: var(--muted); }
+.goal-nums b { color: var(--text); font-size: .9rem; text-align: center; }
+.goal-msg { margin: 6px 0 10px; font-size: .9rem; display: flex; gap: 8px; align-items: center; }
+.goal-msg.ok .ic { color: #16a34a; width: 18px; height: 18px; flex: none; }
+.goal-hint { margin: 6px 0 0; font-size: .82rem; }
