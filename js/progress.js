@@ -331,10 +331,10 @@ document.addEventListener("click", e => {
 /* ---------- Waist (cm): often shrinks even when the scale doesn't move ---------- */
 const WAIST_T = {
   th: { title: "รอบเอว", ph: "รอบเอววันนี้ (ซม.)", none: "วัดรอบเอวระดับสะดือ หายใจออกปกติ สัปดาห์ละครั้ง น้ำหนักไม่ลงแต่เอวลดก็ถือว่าได้ผล",
-    ratio: (r, ok) => `รอบเอว/ส่วนสูง = ${r} ${ok ? "อยู่ในเกณฑ์ดี (ต่ำกว่า 0.5)" : "เกิน 0.5 ควรลดรอบเอว (เกณฑ์: รอบเอวไม่ควรเกินครึ่งหนึ่งของส่วนสูง)"}`,
+    ratio: (r, ok) => `รอบเอว/ส่วนสูง = ${r} ${ok ? "อยู่ในเกณฑ์ดี (ต่ำกว่า 0.5)" : "ตั้งแต่ 0.5 ขึ้นไป ควรลดรอบเอว (เกณฑ์: รอบเอวควรน้อยกว่าครึ่งหนึ่งของส่วนสูง)"}`,
     change: d => `${d > 0 ? "+" : ""}${d.toFixed(1)} ซม. จากครั้งแรก`, saved: "บันทึกรอบเอวแล้ว", err: "กรอกรอบเอว 40–200 ซม." },
   en: { title: "Waist", ph: "Today's waist (cm)", none: "Measure at the belly button after a normal breath out, once a week. A smaller waist counts even if your weight stays the same.",
-    ratio: (r, ok) => `Waist-to-height = ${r} ${ok ? "is in the healthy range (under 0.5)" : "is above 0.5; aim to bring your waist under half your height"}`,
+    ratio: (r, ok) => `Waist-to-height = ${r} ${ok ? "is in the healthy range (under 0.5)" : "is 0.5 or above; aim to bring your waist under half your height"}`,
     change: d => `${d > 0 ? "+" : ""}${d.toFixed(1)} cm since first entry`, saved: "Waist saved", err: "Enter a waist from 40 to 200 cm" }
 };
 function waistHTML(u) {
