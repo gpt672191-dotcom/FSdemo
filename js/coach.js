@@ -93,7 +93,7 @@ const KW = {
   busy: ["ไม่มีเวลา", "เวลาน้อย", "ยุ่ง", "busy", "no time", "quick"],
   water: ["ดื่มน้ำ", "กินน้ำ", "น้ำกี่", "น้ำวันละ", "water", "hydrat"],
   warm: ["วอร์ม", "อบอุ่นร่างกาย", "คูลดาวน์", "warm up", "warm-up", "warmup", "cool down", "cool-down"],
-  plateau: ["น้ำหนักไม่ลง", "น้ำหนักขึ้นลง", "ทำไมน้ำหนักขึ้น", "น้ำหนักขึ้นทั้งที่", "น้ำหนักนิ่ง", "ไม่ลดเลย", "not losing weight", "weight went up", "weight is up", "plateau", "scale won't move"],
+  plateau: ["น้ำหนักไม่ลง", "น้ำหนักขึ้นลง", "ทำไมน้ำหนักขึ้น", "น้ำหนักขึ้นทั้งที่", "น้ำหนักนิ่ง", "ไม่ลดเลย", "not losing weight", "weight went up", "weight is up", "plateau", "scale won't move", "weight going down", "weight down"],
   week: ["สรุปสัปดาห์", "สัปดาห์นี้เป็นยังไง", "สัปดาห์นี้ทำไปเท่าไหร่", "สรุปผล", "สรุปให้หน่อย", "weekly summary", "this week so far", "how did i do this week", "my week"],
   goalw: ["น้ำหนักเป้าหมาย", "เป้าหมายน้ำหนัก", "เป้าน้ำหนัก", "ถึงเป้า", "อีกนานไหม", "อีกนานแค่ไหน", "goal weight", "target weight", "reach my goal", "how long until"],
   today: ["วันนี้ทำอะไร", "วันนี้ต้องทำ", "วันนี้ออกกำลัง", "วันนี้เล่น", "วันนี้ฝึก", "ของวันนี้", "today"],
@@ -213,6 +213,14 @@ function bodyFrom(u) { return u && hasBody(u.profile) ? u.profile : null; }
 
 function exCard(ids) { return ids.slice(0, 4); }
 
+// Suggestion chips: logged-in users see their daily questions first; guests see how to start
+function coachChips() {
+  const u = currentUser(), th = lang === "th";
+  if (!u) return ct().chips;
+  const mine = th ? ["วันนี้ต้องทำอะไร", "สรุปสัปดาห์นี้", "อีกนานไหมจะถึงเป้า", "ทำไมน้ำหนักไม่ลง"] : ["What's my workout today?", "How did I do this week?", "How long until my goal weight?", "Why isn't my weight going down?"];
+  return [...mine, ...ct().chips.slice(0, 3)];
+}
+
 function reply(raw) {
   const tx = ct(), m = " " + raw.toLowerCase().trim() + " ";
   const u = currentUser(), p = bodyFrom(u);
@@ -285,7 +293,9 @@ function reply(raw) {
   if (has(m, KW.lose)) return { text: tx.lose, links: links(["weight-loss.html", tx.linkLose], ["planner.html?goal=lose", tx.linkPlan]) };
 
   // A muscle group
-  const g = Object.keys(GROUP_KW).find(k => has(m, GROUP_KW[k]));
+  // "อก" (chest) also sits inside "ออก" (ออกกำลังกาย = exercise) and "หลัง" (back) inside "หลังจาก" (after): drop those words first
+  const mg = m.replace(/ออก|หลังจาก|หลังออก/g, " ");
+  const g = Object.keys(GROUP_KW).find(k => has(mg, GROUP_KW[k]));
   if (g) {
     const list = EX.filter(e => (MUSCLES[e.id] || [])[0] === g).sort((a, b) => (a.eq === "none" ? 0 : 1) - (b.eq === "none" ? 0 : 1));
     return { text: tx.group(t()[`mg_${g}`]), ex: exCard(list.map(e => e.id)), links: links([`muscle.html#${g}`, tx.linkMuscle]) };
@@ -297,8 +307,8 @@ function reply(raw) {
   if (has(m, KW.food)) return { text: tx.food, links: links(["weight-loss.html", tx.linkLose]) };
   if (has(m, KW.sleep)) return { text: tx.sleep };
   if (has(m, KW.plan)) return { text: tx.plan, links: links(["planner.html", tx.linkPlan]) };
-  if (has(m, KW.hello)) return { text: tx.hello(u && u.name), chips: tx.chips };
-  return { text: tx.fallback, chips: tx.chips };
+  if (has(m, KW.hello)) return { text: tx.hello(u && u.name), chips: coachChips() };
+  return { text: tx.fallback, chips: coachChips() };
 
   function bmiAnswer(h, w) {
     const b = health.bmi(w, h), [lo, hi] = health.ideal(h).map(x => x.toFixed(1));
@@ -351,13 +361,13 @@ function drawLog() {
   coachLog.innerHTML = coachHistory.map(bubbleHTML).join("");
   coachLog.scrollTop = coachLog.scrollHeight;
   const last = [...coachHistory].reverse().find(x => x.who === "bot");
-  const chips = (last && last.r.chips) || ct().chips;
+  const chips = (last && last.r.chips) || coachChips();
   $("#coachChips").innerHTML = chips.map(c => `<button type="button" class="coach-chip">${esc(c)}</button>`).join("");
 }
 
 function greet() {
   const u = currentUser();
-  coachHistory = [{ who: "bot", r: { text: ct().hello(u && u.name), chips: ct().chips } }];
+  coachHistory = [{ who: "bot", r: { text: ct().hello(u && u.name), chips: coachChips() } }];
   saveHistory(); drawLog();
 }
 
