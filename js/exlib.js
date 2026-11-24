@@ -4,14 +4,14 @@
 const XL = {
   th: { title: n => `คลังท่าทั้งหมด (${n} ท่า)`, sub: "ค้นหาท่าที่อยากรู้ หรือกรองตามส่วนของร่างกายและอุปกรณ์ กดการ์ดเพื่อดูวิธีทำ",
     search: "ค้นหา เช่น สควอท, อก, ดัมเบล", all: "ทั้งหมด", anyEq: "อุปกรณ์ทั้งหมด", count: (n, all) => n === all ? `${all} ท่า` : `พบ ${n} จาก ${all} ท่า`,
-    none: "ไม่พบท่าที่ค้นหา ลองคำอื่นหรือเปลี่ยนตัวกรอง", clear: "ล้างการค้นหา" },
+    none: "ไม่พบท่าที่ค้นหา ลองคำอื่นหรือเปลี่ยนตัวกรอง", clear: "ล้างการค้นหา", beg: "เหมาะกับมือใหม่", noJump: "ไม่กระโดด", tagAdv: "ระดับกลาง", tagJump: "มีกระโดด" },
   en: { title: n => `All exercises (${n})`, sub: "Search for a move, or filter by body part and equipment. Tap a card to see how to do it.",
     search: "Search, e.g. squat, chest, dumbbell", all: "All", anyEq: "Any equipment", count: (n, all) => n === all ? `${all} moves` : `${n} of ${all} moves`,
-    none: "No moves match. Try another word or change the filters.", clear: "Clear search" }
+    none: "No moves match. Try another word or change the filters.", clear: "Clear search", beg: "Beginner friendly", noJump: "No jumping", tagAdv: "Intermediate", tagJump: "Jumping" }
 };
 const xl = () => XL[lang];
 const XL_CATS = ["lower", "upper", "core", "cardio", "mobility"], XL_EQ = ["none", "db", "gym"];
-let xlCat = "all", xlEq = "all";
+let xlCat = "all", xlEq = "all", xlBeg = false, xlNoJump = false;
 
 function xlText(e) {
   const tx = t(), mus = ((typeof MUSCLES !== "undefined" && MUSCLES[e.id]) || []).map(m => tx["mg_" + m]);
@@ -39,6 +39,7 @@ function renderLibrary() {
         <label class="xl-search">${icon("search")}<input id="xlQ" type="search" autocomplete="off"><button type="button" id="xlClear" hidden></button></label>
         <div class="xl-chips" id="xlCats" role="group"></div>
         <div class="xl-chips" id="xlEqs" role="group"></div>
+        <div class="xl-chips" id="xlLvl" role="group"></div>
       </div>
       <p class="xl-count" id="xlCount" aria-live="polite"></p>
       <div class="ex-grid" id="xlGrid"></div>
@@ -50,6 +51,8 @@ function renderLibrary() {
       const c = e.target.closest("[data-xlcat]"), q = e.target.closest("[data-xleq]");
       if (c) { xlCat = c.dataset.xlcat; renderLibrary(); }
       if (q) { xlEq = q.dataset.xleq; renderLibrary(); }
+      const f = e.target.closest("[data-xlf]");
+      if (f) { if (f.dataset.xlf === "beg") xlBeg = !xlBeg; else xlNoJump = !xlNoJump; renderLibrary(); }
     });
   }
   $("#xlTitle").textContent = x.title(EX.length);
@@ -60,9 +63,11 @@ function renderLibrary() {
   $("#xlCats").innerHTML = chip("data-xlcat", "all", x.all, xlCat === "all") + XL_CATS.map(c => chip("data-xlcat", c, tx["part_" + c].split(" (")[0], xlCat === c)).join("");
   $("#xlEqs").innerHTML = chip("data-xleq", "all", x.anyEq, xlEq === "all") + XL_EQ.map(q => chip("data-xleq", q, tx["equip_" + q], xlEq === q)).join("");
 
+  // on/off filters: beginner friendly (no intermediate-only moves), no jumping (easier on knees and neighbours)
+  $("#xlLvl").innerHTML = chip("data-xlf", "beg", x.beg, xlBeg) + chip("data-xlf", "nojump", x.noJump, xlNoJump);
   const words = $("#xlQ").value.trim().toLowerCase().split(/\s+/).filter(Boolean);
   $("#xlClear").hidden = !words.length;
-  const list = EX.filter(e => (xlCat === "all" || e.cat === xlCat) && (xlEq === "all" || e.eq === xlEq))
+  const list = EX.filter(e => (xlCat === "all" || e.cat === xlCat) && (xlEq === "all" || e.eq === xlEq) && (!xlBeg || !e.adv) && (!xlNoJump || !e.jump))
     .filter(e => { const s = xlText(e); return words.every(w => muscleWord(w) ? ((typeof MUSCLES !== "undefined" && MUSCLES[e.id]) || []).includes(muscleWord(w)) : s.includes(w)); });
   $("#xlCount").textContent = x.count(list.length, EX.length);
   $("#xlNone").hidden = list.length > 0; $("#xlNone").textContent = x.none;
@@ -75,7 +80,7 @@ function renderLibrary() {
       <div class="fig" data-fig="${e.id}"></div>
       <b>${e[lang]}</b>
       <p>${lang === "th" ? e.cth : e.cen}</p>
-      <span class="tag acc">${tx["part_" + e.cat].split(" (")[0]}</span><span class="tag">${tx["equip_" + e.eq]}</span>
+      <span class="tag acc">${tx["part_" + e.cat].split(" (")[0]}</span><span class="tag">${tx["equip_" + e.eq]}</span>${e.adv ? `<span class="tag lvl">${x.tagAdv}</span>` : ""}${e.jump ? `<span class="tag lvl">${x.tagJump}</span>` : ""}
     </div>`).join("");
 }
 onRender(renderLibrary);

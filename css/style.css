@@ -2146,3 +2146,7 @@ main:focus { outline: none; }
 /* Profile "saved N plans · see my plans" button: wrap as one line of text, not two squeezed columns */
 a.btn:has(> #pPlans) { display: inline-block; text-align: center; line-height: 1.5; }
 a.btn:has(> #pPlans) > span { white-space: nowrap; }
+/* level tags in the exercise library (intermediate / jumping) */
+.tag.lvl { background: color-mix(in srgb, #f59e0b 16%, var(--surface)); color: #92400e; }
+@media (prefers-color-scheme: dark) { :root:not([data-theme="light"]) .tag.lvl { color: #fcd34d; } }
+:root[data-theme="dark"] .tag.lvl { color: #fcd34d; }
