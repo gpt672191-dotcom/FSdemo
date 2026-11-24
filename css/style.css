@@ -2168,3 +2168,7 @@ a.btn:has(> #pPlans) > span { white-space: nowrap; }
 input[aria-invalid="true"], select[aria-invalid="true"] { outline: 2px solid #dc2626; outline-offset: 1px; }
 .nm-f input[aria-invalid="true"] { outline: none; } /* the signup form uses its own inset outline */
 input[aria-invalid="true"]:not(.nm-f input), select[aria-invalid="true"] { outline: none; border-color: #dc2626 !important; box-shadow: 0 0 0 3px color-mix(in srgb, #dc2626 25%, transparent) !important; }
+
+/* Jumping to #section: stop below the sticky top bar (and the profile jump menu) instead of under it */
+html { scroll-padding-top: 76px; }
+html:has(.pnav) { scroll-padding-top: 124px; }
