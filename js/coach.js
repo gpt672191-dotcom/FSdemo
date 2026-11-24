@@ -281,6 +281,17 @@ function todayAnswer(u) {
 // Remember what we last asked, so "170 65" after "BMI?" is understood
 let coachWaiting = null;
 
+// Body numbers written in a question: "อายุ 20 สูง 170 หนัก 65 หญิง" / "20 years 170 cm 65 kg female"
+function bodyTyped(m, nums) {
+  const pick = re => { const x = m.match(re); return x ? +x[1] : NaN; };
+  let age = pick(/(?:อายุ|age)\s*(\d{2})/) || pick(/(\d{2})\s*(?:ปี|years?|yrs?)/);
+  const height = pick(/(?:สูง|height)\s*(\d{3})/) || pick(/(\d{3})\s*(?:ซม|cm)/);
+  const weight = pick(/(?:หนัก|น้ำหนัก|weight)\s*(\d{2,3}(?:\.\d)?)/) || pick(/(\d{2,3}(?:\.\d)?)\s*(?:กก|กิโล|kg)/);
+  if (!(age >= 13 && age <= 90 && height >= 100 && height <= 230 && weight >= 25 && weight <= 250)) return null;
+  const female = /หญิง|ผู้หญิง|female|woman|girl/.test(m), male = /ชาย|ผู้ชาย|male|man|boy/.test(m.replace(/female|woman/g, ""));
+  return { age, height, weight, sex: female ? "f" : "m", guessSex: !female && !male };
+}
+
 function bodyFrom(u) { return u && hasBody(u.profile) ? u.profile : null; }
 
 function exCard(ids) { return ids.slice(0, 4); }
@@ -335,9 +346,12 @@ function reply(raw) {
     return { text: tx.proteinNeed };
   }
   if (has(m, KW.kcal)) {
-    if (!p) return { text: tx.kcalNeed, links: links(["weight-loss.html", tx.linkLose], ["profile.html", tx.linkProfile]) };
-    const bmr = health.bmr(p.weight, p.height, p.age, p.sex), tdee = bmr * ACT_FACTORS[(p.activity || 1) - 1];
-    return { text: tx.kcal(round10(bmr), round10(tdee), round10(Math.max(health.minKcal(p.sex), tdee - 500))), links: links(["for-you.html", t().navForYou]) };
+    // body numbers typed in the question ("อายุ 20 สูง 170 หนัก 65 ผู้ชาย") win over the profile
+    const typed = bodyTyped(m, nums);
+    const b = typed || p;
+    if (!b) return { text: tx.kcalNeed, links: links(["weight-loss.html", tx.linkLose], ["profile.html", tx.linkProfile]) };
+    const bmr = health.bmr(b.weight, b.height, b.age, b.sex), tdee = bmr * ACT_FACTORS[((typed ? 1 : b.activity) || 1) - 1];
+    return { text: tx.kcal(round10(bmr), round10(tdee), round10(Math.max(health.minKcal(b.sex), tdee - 500))) + (typed && typed.guessSex ? (lang === "th" ? "<br>(คิดแบบผู้ชาย ถ้าเป็นผู้หญิงพิมพ์ \"หญิง\" เพิ่ม)" : "<br>(Calculated as male; add \"female\" if needed.)") : ""), links: links(["for-you.html", t().navForYou]) };
   }
   if (has(m, KW.water)) {
     if (p) { const g = Math.min(16, Math.max(6, Math.round(p.weight * 33 / 250))); return { text: tx.water(g, (p.weight * 0.033).toFixed(1)), links: links(["for-you.html#fyWater", tx.linkForYou]) }; }
@@ -390,6 +404,11 @@ function reply(raw) {
   if (has(m, KW.sleep)) return { text: tx.sleep };
   if (has(m, KW.plan)) return { text: tx.plan, links: links(["planner.html", tx.linkPlan]) };
   if (has(m, KW.hello)) return { text: tx.hello(u && u.name), chips: coachChips() };
+  // Just height and weight ("ผมสูง 170 หนัก 65", "175 cm 80 kg", "170 65"): answer with BMI
+  {
+    const h = nums.find(n => n >= 100 && n <= 230), w = nums.find(n => n !== h && n >= 25 && n <= 250);
+    if (h && w && nums.length <= 3) return bmiAnswer(h, w);
+  }
   return { text: tx.fallback, chips: coachChips() };
 
   function bmiAnswer(h, w) {
