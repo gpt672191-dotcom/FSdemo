@@ -11,6 +11,9 @@ const PG_T = {
     logged: "บันทึกลงความคืบหน้าแล้ว", loginToLog: "เข้าสู่ระบบเพื่อบันทึกความคืบหน้า",
     hello: n => `สวัสดี ${n}`, helloSub: (s, w) => s ? `ต่อเนื่อง ${s} วัน · สัปดาห์นี้ ${w} ครั้ง` : (w ? `สัปดาห์นี้ ${w} ครั้ง` : "วันนี้เริ่มออกกำลังกายกันเลย!"),
     goPlan: "ไปที่แผนของฉัน", goProgress: "ดูความคืบหน้า", mins2: n => `${n} นาที`,
+    feel: { easy: "ง่ายไป", ok: "พอดี", hard: "หนักไป" },
+    upTip: "3 ครั้งล่าสุดคุณบอกว่าง่ายไป ลองเพิ่มระดับเป็น \"ฝึกมาบ้างแล้ว\" ดูไหม", upBtn: "สร้างแผนระดับกลาง",
+    downTip: "ช่วงนี้รู้สึกหนักไป ลองลดเวลาต่อวัน หรือเลือกท่าแบบไม่กระโดด ร่างกายจะค่อยๆ ปรับตัว", downBtn: "ปรับแผนให้เบาลง",
     today: "วันนี้", todayWork: (d, m, n) => `${d} · ${m} นาที · ${n} ท่า`, todayRest: "วันพัก พักผ่อนหรือเดินเบาๆ ก็พอ", startToday: "เริ่มของวันนี้", noPlan: "ยังไม่มีแผน สร้างแผนแรกใช้เวลา 1 นาที", makePlan: "สร้างแผน",
     badges: "เหรียญรางวัล", badgesSub: (a, b) => `ได้แล้ว ${a} จาก ${b} เหรียญ`, got: "ได้แล้ว",
     b_first: ["ก้าวแรก", "ออกกำลังกายครั้งแรก"], b_streak3: ["ติดต่อ 3 วัน", "ออกกำลังกาย 3 วันติด"], b_streak7: ["ครบสัปดาห์", "ออกกำลังกาย 7 วันติด"],
@@ -23,6 +26,9 @@ const PG_T = {
     logged: "Saved to your progress", loginToLog: "Log in to save your progress",
     hello: n => `Hi ${n}`, helloSub: (s, w) => s ? `${s}-day streak · ${w} this week` : (w ? `${w} workouts this week` : "Let's get moving today!"),
     goPlan: "Go to my plan", goProgress: "See progress", mins2: n => `${n} min`,
+    feel: { easy: "too easy", ok: "just right", hard: "too hard" },
+    upTip: "Your last 3 workouts felt too easy. Ready to move up to intermediate?", upBtn: "Make an intermediate plan",
+    downTip: "Workouts have felt too hard lately. Try shorter sessions or no-jump moves; your body will adapt.", downBtn: "Make it lighter",
     today: "Today", todayWork: (d, m, n) => `${d} · ${m} min · ${n} moves`, todayRest: "Rest day. Relax or take an easy walk.", startToday: "Start today's workout", noPlan: "No plan yet. Your first plan takes a minute.", makePlan: "Make a plan",
     badges: "Badges", badgesSub: (a, b) => `${a} of ${b} earned`, got: "Earned",
     b_first: ["First step", "Your first workout"], b_streak3: ["3 in a row", "Work out 3 days in a row"], b_streak7: ["Full week", "Work out 7 days in a row"],
@@ -130,7 +136,7 @@ function renderProgress() {
     const k = Progress.key(d), n = s.perDay[k] || 0, future = d > end;
     cells += `<i class="hm l${Math.min(n, 3)}${future ? " fut" : ""}" title="${k}${n ? ` · ${n}` : ""}"></i>`;
   }
-  const recent = [...(u.log || [])].sort((a, b) => (a.d < b.d ? -1 : 1)).slice(-5).reverse().map(x => `<li><b>${esc(x.t)}</b><span>${x.d.slice(5).replace("-", "/")} · ${tx.mins2(x.mins || 0)}</span></li>`).join("");
+  const recent = [...(u.log || [])].sort((a, b) => (a.d < b.d ? -1 : 1)).slice(-5).reverse().map(x => `<li><b>${esc(x.t)}</b><span>${x.d.slice(5).replace("-", "/")} · ${tx.mins2(x.mins || 0)}${x.feel ? ` · ${tx.feel[x.feel]}` : ""}</span></li>`).join("");
   const ws = u.weights || [];
   const change = ws.length >= 2 ? `<span class="w-change ${ws[ws.length - 1].w - ws[0].w <= 0 ? "down" : "up"}">${tx.wChange(ws[ws.length - 1].w - ws[0].w)}</span>` : "";
   box.innerHTML = `
@@ -193,11 +199,19 @@ onRender(() => {
       today = `<div class="hello-today">${icon("calendar")}<span><b>${tx.today}</b> ${tx.todayWork(t().dayType[tpl.type], a.time, COUNT[a.time])}</span><a class="btn sm" href="planner.html?day=${i}#plan">${icon("play")}${tx.startToday}</a></div>`;
     }
   }
+  // Level tip from how the last workouts felt (asked at the end of each guided workout)
+  const feels = (u.log || []).filter(x => x.feel).slice(-3).map(x => x.feel);
+  const lvl = plan && plan.answers ? plan.answers.level : "beg";
+  let tip = "";
+  if (feels.length === 3 && feels.every(f => f === "easy") && lvl === "beg")
+    tip = `<div class="hello-today tip">${icon("trending")}<span>${tx.upTip}</span><a class="btn sm" href="planner.html?level=int">${tx.upBtn}</a></div>`;
+  else if (feels.length >= 2 && feels.filter(f => f === "hard").length >= 2)
+    tip = `<div class="hello-today tip">${icon("heart")}<span>${tx.downTip}</span><a class="btn sm ghost" href="planner.html?time=15&impact=low">${tx.downBtn}</a></div>`;
   box.innerHTML = `
     <div class="hello">
       <span class="avatar">${esc(u.name.trim().charAt(0).toUpperCase())}</span>
       <div class="hello-txt"><b>${esc(tx.hello(u.name))}</b><span>${s.streak ? icon("flame") : ""}${tx.helloSub(s.streak, s.week)}</span></div>
       <div class="btn-row"><a class="btn sm ghost" href="planner.html#plan">${tx.goPlan}</a><a class="btn sm ghost" href="profile.html#progress">${tx.goProgress}</a></div>
-      ${today}
+      ${today}${tip}
     </div>`;
 });

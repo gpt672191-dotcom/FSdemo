@@ -16,6 +16,7 @@ const WO_T = {
     finEx: "ท่า", finSets: "เซ็ต", finMin: "นาที", again: "เล่นอีกครั้ง",
     sayNext: (n, s, all) => `ท่าต่อไป ${n} เซ็ตที่ ${s} จาก ${all}`, sayRest: "พักก่อน", sayGo: "เริ่ม", sayDone: "เยี่ยมมาก ออกกำลังกายเสร็จแล้ว",
     tapDone: "ทำครบแล้วกด \"เสร็จแล้ว\"",
+    feelQ: "วันนี้รู้สึกยังไง", feelEasy: "ง่ายไป", feelOk: "พอดี", feelHard: "หนักไป", feelThanks: "บันทึกความรู้สึกแล้ว ระบบจะช่วยแนะนำระดับให้",
     warm: "วอร์มอัพ", cool: "คูลดาวน์", skipWarm: "ข้ามวอร์มอัพ", skipCool: "ข้ามคูลดาวน์", warmNote: "อุ่นเครื่องเบาๆ ลดโอกาสบาดเจ็บ", coolNote: "ยืดกล้ามเนื้อช้าๆ หายใจลึกๆ"
   },
   en: {
@@ -26,6 +27,7 @@ const WO_T = {
     finEx: "exercises", finSets: "sets", finMin: "min", again: "Do it again",
     sayNext: (n, s, all) => `Next, ${n}. Set ${s} of ${all}`, sayRest: "Rest", sayGo: "Go", sayDone: "Great job, workout complete",
     tapDone: "Press \"Done\" when you finish the set",
+    feelQ: "How did it feel?", feelEasy: "Too easy", feelOk: "Just right", feelHard: "Too hard", feelThanks: "Saved. We'll use it to suggest your level.",
     warm: "Warm-up", cool: "Cool-down", skipWarm: "Skip warm-up", skipCool: "Skip cool-down", warmNote: "Ease in gently to lower the risk of injury", coolNote: "Stretch slowly and breathe deeply"
   }
 };
@@ -170,7 +172,10 @@ const Workout = (() => {
     let saved = "";
     if (typeof Progress !== "undefined") {
       saved = Progress.logWorkout({ t: S.title, sets, mins })
-        ? `<p class="wo-saved">${icon("check")}${pt().logged}</p>`
+        ? `<p class="wo-saved">${icon("check")}${pt().logged}</p>
+           <div class="wo-feel" id="woFeel"><span>${tx.feelQ}</span><div>
+             <button type="button" data-feel="easy">${tx.feelEasy}</button><button type="button" data-feel="ok">${tx.feelOk}</button><button type="button" data-feel="hard">${tx.feelHard}</button>
+           </div></div>`
         : `<p class="wo-saved off">${pt().loginToLog}</p>`;
     }
     $("#woProg").style.width = "100%";
@@ -226,6 +231,14 @@ const Workout = (() => {
   }
 
   function onClick(e) {
+    const f = e.target.closest("[data-feel]");
+    if (f) {
+      // remember how the last workout felt (progress.js uses it to suggest a level)
+      updateUser(u => { const l = u.log || []; if (l.length) l[l.length - 1].feel = f.dataset.feel; });
+      $$("#woFeel button").forEach(x => { x.classList.toggle("on", x === f); x.setAttribute("aria-pressed", x === f); });
+      toast(wt().feelThanks);
+      return;
+    }
     const b = e.target.closest("[data-wo]"); if (!b) return;
     const act = b.dataset.wo;
     if (act === "close") return stop();
