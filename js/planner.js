@@ -68,6 +68,16 @@ function buildPlan(a, seed) {
 
 // Which plan days are expanded (only the first day open by default, to keep the page tidy)
 let openDays = new Set([0]);
+// planner.html?day=2#plan (from the home page "today" button) opens that day and highlights its start button
+const dayParam = Number(new URLSearchParams(location.search).get("day"));
+if (Number.isInteger(dayParam) && new URLSearchParams(location.search).has("day")) {
+  openDays = new Set([dayParam]);
+  window.addEventListener("load", () => setTimeout(() => {
+    const card = document.querySelector(`#plan .pday[data-day="${dayParam}"]`); if (!card) return;
+    card.scrollIntoView({ block: "center" }); card.classList.add("pday-today");
+    const btn = card.querySelector(".btn"); if (btn) btn.focus({ preventScroll: true });
+  }, 120));
+}
 
 function renderPlan() {
   const box = $("#plan");

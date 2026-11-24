@@ -11,6 +11,7 @@ const PG_T = {
     logged: "บันทึกลงความคืบหน้าแล้ว", loginToLog: "เข้าสู่ระบบเพื่อบันทึกความคืบหน้า",
     hello: n => `สวัสดี ${n}`, helloSub: (s, w) => s ? `ต่อเนื่อง ${s} วัน · สัปดาห์นี้ ${w} ครั้ง` : (w ? `สัปดาห์นี้ ${w} ครั้ง` : "วันนี้เริ่มออกกำลังกายกันเลย!"),
     goPlan: "ไปที่แผนของฉัน", goProgress: "ดูความคืบหน้า", mins2: n => `${n} นาที`,
+    today: "วันนี้", todayWork: (d, m, n) => `${d} · ${m} นาที · ${n} ท่า`, todayRest: "วันพัก พักผ่อนหรือเดินเบาๆ ก็พอ", startToday: "เริ่มของวันนี้", noPlan: "ยังไม่มีแผน สร้างแผนแรกใช้เวลา 1 นาที", makePlan: "สร้างแผน",
     badges: "เหรียญรางวัล", badgesSub: (a, b) => `ได้แล้ว ${a} จาก ${b} เหรียญ`, got: "ได้แล้ว",
     b_first: ["ก้าวแรก", "ออกกำลังกายครั้งแรก"], b_streak3: ["ติดต่อ 3 วัน", "ออกกำลังกาย 3 วันติด"], b_streak7: ["ครบสัปดาห์", "ออกกำลังกาย 7 วันติด"],
     b_ten: ["ขยันสิบครั้ง", "ออกกำลังกายครบ 10 ครั้ง"], b_thirty: ["นักสู้", "ออกกำลังกายครบ 30 ครั้ง"], b_mins: ["300 นาที", "รวมเวลาออกกำลังกาย 300 นาที"],
@@ -22,6 +23,7 @@ const PG_T = {
     logged: "Saved to your progress", loginToLog: "Log in to save your progress",
     hello: n => `Hi ${n}`, helloSub: (s, w) => s ? `${s}-day streak · ${w} this week` : (w ? `${w} workouts this week` : "Let's get moving today!"),
     goPlan: "Go to my plan", goProgress: "See progress", mins2: n => `${n} min`,
+    today: "Today", todayWork: (d, m, n) => `${d} · ${m} min · ${n} moves`, todayRest: "Rest day. Relax or take an easy walk.", startToday: "Start today's workout", noPlan: "No plan yet. Your first plan takes a minute.", makePlan: "Make a plan",
     badges: "Badges", badgesSub: (a, b) => `${a} of ${b} earned`, got: "Earned",
     b_first: ["First step", "Your first workout"], b_streak3: ["3 in a row", "Work out 3 days in a row"], b_streak7: ["Full week", "Work out 7 days in a row"],
     b_ten: ["Ten down", "Finish 10 workouts"], b_thirty: ["Fighter", "Finish 30 workouts"], b_mins: ["300 minutes", "300 minutes of exercise in total"],
@@ -180,10 +182,22 @@ onRender(() => {
   const u = currentUser();
   box.hidden = !u; if (!u) return;
   const tx = pt(), s = Progress.stats(u);
+  // Today's workout from the current plan (same schedule the planner uses: SCHEDULE / TEMPLATES in data.js)
+  const plan = store.get("fs-plan", null);
+  let today = `<div class="hello-today">${icon("clipboard")}<span>${tx.noPlan}</span><a class="btn sm" href="planner.html">${tx.makePlan}</a></div>`;
+  if (plan && plan.answers && SCHEDULE[plan.answers.days]) {
+    const a = plan.answers, wd = (new Date().getDay() + 6) % 7, i = SCHEDULE[a.days].indexOf(wd);
+    if (i < 0) today = `<div class="hello-today rest">${icon("moon")}<span><b>${tx.today}</b> ${tx.todayRest}</span><a class="btn sm ghost" href="planner.html#plan">${tx.goPlan}</a></div>`;
+    else {
+      const tpl = TEMPLATES[a.goal][i % TEMPLATES[a.goal].length];
+      today = `<div class="hello-today">${icon("calendar")}<span><b>${tx.today}</b> ${tx.todayWork(t().dayType[tpl.type], a.time, COUNT[a.time])}</span><a class="btn sm" href="planner.html?day=${i}#plan">${icon("play")}${tx.startToday}</a></div>`;
+    }
+  }
   box.innerHTML = `
     <div class="hello">
       <span class="avatar">${esc(u.name.trim().charAt(0).toUpperCase())}</span>
       <div class="hello-txt"><b>${esc(tx.hello(u.name))}</b><span>${s.streak ? icon("flame") : ""}${tx.helloSub(s.streak, s.week)}</span></div>
-      <div class="btn-row"><a class="btn sm" href="planner.html#plan">${icon("play")}${tx.goPlan}</a><a class="btn sm ghost" href="profile.html#progress">${tx.goProgress}</a></div>
+      <div class="btn-row"><a class="btn sm ghost" href="planner.html#plan">${tx.goPlan}</a><a class="btn sm ghost" href="profile.html#progress">${tx.goProgress}</a></div>
+      ${today}
     </div>`;
 });
