@@ -320,7 +320,10 @@ function goalHTML(u, ws) {
     const pct = Math.max(0, Math.min(100, (done / all) * 100));
     // safe pace: lose 0.25–0.5 kg a week; gain 0.25–0.5 kg a week as well (slower = more muscle, less fat)
     const msg = left <= 0.05 ? `<p class="goal-msg ok">${icon("trophy")}<span>${tx.reached}</span></p>`
-      : `<p class="goal-msg">${tx.left(left, Math.ceil(left / 0.5), Math.ceil(left / 0.25))}</p>`;
+      : +(u.profile && u.profile.age) < 18 && lose
+        // under 18: no weekly weight-loss pace (still growing), same as the BMI page and calculators
+        ? `<p class="goal-msg">${lang === "th" ? `เหลืออีก ${left.toFixed(1)} กก. แต่ร่างกายยังโตอยู่ ไม่ต้องเร่งลด เน้นขยับวันละ 60 นาที กินครบหมู่ ลดน้ำหวาน และนอนให้พอ ส่วนสูงที่เพิ่มขึ้นจะช่วยเองครับ` : `${left.toFixed(1)} kg to go, but you're still growing: no need to rush. Move 60 minutes a day, eat balanced meals, cut sweet drinks and sleep well; growing taller helps too.`}</p>`
+        : `<p class="goal-msg">${tx.left(left, Math.ceil(left / 0.5), Math.ceil(left / 0.25))}</p>`;
     body = `<div class="goal-bar" role="progressbar" aria-valuemin="0" aria-valuemax="100" aria-valuenow="${Math.round(pct)}" aria-label="${tx.title}"><i style="width:${pct}%"></i></div>
       <div class="goal-nums"><span>${start} ${lang === "th" ? "กก." : "kg"}</span><b>${tx.prog(done, all)}</b><span>${goal} ${lang === "th" ? "กก." : "kg"}</span></div>
       ${msg}${goalLowNote(goal, h)}

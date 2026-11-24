@@ -250,6 +250,9 @@ function goalWAnswer(u) {
   if (!cur) return { text: tx.none(null), links };
   const start = ws.length ? ws[0].w : cur, g = u.goalW, left = g < start ? cur - g : g - cur;
   if (left <= 0.05) return { text: tx.reached(g), links };
+  if (+(pr && pr.age) < 18 && g < start) return { text: lang === "th"
+    ? `ตอนนี้ ${cur} กก. เป้าหมาย ${g} กก. เหลืออีก <b>${left.toFixed(1)} กก.</b> แต่อายุต่ำกว่า 18 ร่างกายยังโตอยู่ ไม่ต้องเร่งลดครับ เน้นขยับวันละ 60 นาที กินครบหมู่ ลดน้ำหวาน นอนให้พอ`
+    : `You're at ${cur} kg, goal ${g} kg: <b>${left.toFixed(1)} kg</b> to go. Under 18 you're still growing, so no need to rush: move 60 minutes a day, eat balanced meals, cut sweet drinks, sleep well.`, links };
   return { text: tx.left(cur, g, left, Math.ceil(left / 0.5), Math.ceil(left / 0.25)), links };
 }
 
