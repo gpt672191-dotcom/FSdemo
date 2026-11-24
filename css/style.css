@@ -1973,3 +1973,29 @@ main:focus { outline: none; }
 :root[data-theme="dark"] .wk-vs b.down { color: #f87171; }
 .wo-keys { position: absolute; left: 0; right: 0; bottom: 10px; margin: 0; text-align: center; font-size: .75rem; color: rgba(255,255,255,.5); pointer-events: none; }
 @media (hover: none), (max-width: 720px) { .wo-keys { display: none; } }
+
+/* ---------- Readiness check (planner.html#parq, js/parq.js) ---------- */
+.pq { padding: 0; }
+.pq summary { list-style: none; display: flex; align-items: center; gap: 12px; padding: 18px 22px; cursor: pointer; }
+.pq summary::-webkit-details-marker { display: none; }
+.pq summary > .ic:last-child { width: 18px; height: 18px; color: var(--muted); transition: transform .2s; flex: none; }
+.pq[open] summary > .ic:last-child { transform: rotate(180deg); }
+.pq summary:focus-visible { outline: 2px solid var(--accent); outline-offset: -2px; border-radius: 20px; }
+.pq-ic { width: 40px; height: 40px; border-radius: 12px; display: grid; place-items: center; background: color-mix(in srgb, #f43f5e 14%, var(--surface)); color: #f43f5e; flex: none; }
+.pq-ic .ic { width: 20px; height: 20px; }
+.pq-t { flex: 1; display: grid; gap: 2px; min-width: 0; }
+.pq-t small { color: var(--muted); font-size: .82rem; }
+.pq-list { margin: 0; padding: 0 22px 0 44px; display: grid; gap: 10px; }
+.pq-list li { display: flex; justify-content: space-between; align-items: center; gap: 10px 16px; flex-wrap: wrap; padding: 10px 0; border-top: 1px solid var(--line); font-size: .93rem; }
+.pq-list li span { flex: 1 1 260px; }
+.pq-foot { display: flex; align-items: center; gap: 10px; flex-wrap: wrap; padding: 14px 22px 20px; }
+.pq-left { margin: 0; color: var(--muted); font-size: .88rem; flex: 1; }
+.pq-res { flex: 1 1 100%; display: flex; gap: 10px; align-items: flex-start; padding: 12px 14px; border-radius: 12px; font-size: .92rem; }
+.pq-res .ic { flex: none; width: 18px; height: 18px; margin-top: 2px; }
+.pq-res.ok { background: color-mix(in srgb, #22c55e 12%, var(--surface)); }
+.pq-res.ok .ic { color: #16a34a; }
+.pq-res.mid { background: color-mix(in srgb, #f59e0b 12%, var(--surface)); }
+.pq-res.mid .ic { color: #d97706; }
+.pq-res.warn { background: color-mix(in srgb, #dc2626 12%, var(--surface)); }
+.pq-res.warn .ic { color: #dc2626; }
+@media (max-width: 520px) { .pq summary { padding: 16px; } .pq-list { padding: 0 16px 0 34px; } .pq-foot { padding: 12px 16px 18px; } }
