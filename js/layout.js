@@ -159,3 +159,13 @@ $("#announceX").onclick = () => {
   try { sessionStorage.setItem("fs-announce-x", String(a && a.id)); } catch {}
   $("#announce").hidden = true;
 };
+
+/* ---------- Skip link for keyboard and screen-reader users (the first Tab on every page) ---------- */
+$("main").id = $("main").id || "main";
+$("main").tabIndex = -1;
+{
+  const skip = document.createElement("a");
+  skip.className = "skip-link"; skip.href = "#main";
+  document.body.prepend(skip);
+  onRender(() => { skip.textContent = lang === "th" ? "ข้ามไปที่เนื้อหา" : "Skip to content"; });
+}

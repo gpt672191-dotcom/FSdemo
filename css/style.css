@@ -204,7 +204,9 @@ section { padding-block: 56px; }
 /* Tools */
 .tools { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; }
 @media (max-width: 820px) { .tools { grid-template-columns: 1fr; } }
-.tool h3 { margin: 0 0 4px; }
+.tool h3, .tool .h3 { margin: 0 0 4px; }
+/* A section heading that keeps the smaller h3 look (keeps heading levels in order for screen readers) */
+h2.h3 { font-size: 1.17em; }
 .tool > p { margin: 0 0 18px; color: var(--muted); font-size: .95rem; }
 .field-row { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; margin-bottom: 14px; }
 .field label { display: block; font-size: .88rem; color: var(--muted); margin-bottom: 4px; }
@@ -1806,3 +1808,8 @@ footer { text-align: left; padding-block: 44px 24px; background: color-mix(in sr
 .wt-day { flex: 1; height: 100%; display: flex; flex-direction: column; justify-content: flex-end; align-items: center; gap: 4px; max-width: 40px; }
 .wt-day i { width: 100%; min-height: 3px; border-radius: 6px 6px 2px 2px; background: color-mix(in srgb, #38bdf8 70%, var(--accent)); }
 .wt-day small { color: var(--muted); font-size: .72rem; }
+
+/* ---------- Skip link: first Tab press jumps straight to the page content ---------- */
+.skip-link { position: absolute; left: 12px; top: -60px; z-index: 100; padding: 10px 16px; border-radius: 10px; background: var(--accent); color: var(--accent-ink); font-weight: 600; text-decoration: none; transition: top .15s; }
+.skip-link:focus { top: 12px; outline: 2px solid var(--text); outline-offset: 2px; }
+main:focus { outline: none; }
