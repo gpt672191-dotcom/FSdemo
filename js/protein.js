@@ -2,25 +2,7 @@
 // เก็บในบัญชีผู้ใช้: user.protein = { "2026-11-24": { chicken: 1, egg: 2 } }
 // ค่าโปรตีน/พลังงานเป็นค่าประมาณต่อ 1 หน่วยบริโภค (อ้างอิงฐานข้อมูลโภชนาการทั่วไป เช่น USDA) ใช้เป็นแนวทางเท่านั้น
 
-const FOODS = [
-  { id: "chicken", g: 31, kcal: 165, th: "อกไก่สุก 100 ก.", en: "Chicken breast, cooked 100 g" },
-  { id: "egg",     g: 6,  kcal: 72,  th: "ไข่ไก่ 1 ฟอง", en: "1 egg" },
-  { id: "milk",    g: 7,  kcal: 120, th: "นมจืด 1 กล่อง (200 มล.)", en: "Milk, 1 carton (200 ml)" },
-  { id: "pork",    g: 26, kcal: 145, th: "หมูสันในสุก 100 ก.", en: "Pork tenderloin, cooked 100 g" },
-  { id: "fish",    g: 17, kcal: 150, th: "ปลาทู 1 ตัว", en: "1 short mackerel" },
-  { id: "tuna",    g: 20, kcal: 90,  th: "ทูน่ากระป๋องในน้ำแร่ 1 กระป๋อง", en: "Tuna in water, 1 can" },
-  { id: "tofu",    g: 13, kcal: 120, th: "เต้าหู้แข็ง 100 ก.", en: "Firm tofu 100 g" },
-  { id: "beans",   g: 14, kcal: 210, th: "ถั่วเขียวต้ม 1 ถ้วย", en: "Cooked mung beans, 1 cup" },
-  { id: "yogurt",  g: 15, kcal: 100, th: "กรีกโยเกิร์ต 1 ถ้วย (150 ก.)", en: "Greek yogurt, 1 cup (150 g)" },
-  { id: "whey",    g: 24, kcal: 120, th: "เวย์โปรตีน 1 สกู๊ป", en: "Whey protein, 1 scoop" },
-  // common Thai street and convenience-store food (approximate)
-  { id: "soymilk", g: 7,  kcal: 120, th: "นมถั่วเหลือง 1 กล่อง (250 มล.)", en: "Soy milk, 1 carton (250 ml)" },
-  { id: "shrimp",  g: 20, kcal: 100, th: "กุ้งสุก 100 ก.", en: "Cooked shrimp 100 g" },
-  { id: "kmk",     g: 25, kcal: 600, th: "ข้าวมันไก่ 1 จาน", en: "Khao man gai (chicken rice), 1 plate" },
-  { id: "mooping", g: 6,  kcal: 90,  th: "หมูปิ้ง 1 ไม้", en: "Moo ping (grilled pork), 1 stick" },
-  { id: "kaprao",  g: 22, kcal: 550, th: "ข้าวกะเพราไก่ 1 จาน (ไม่มีไข่)", en: "Basil chicken on rice, 1 plate (no egg)" },
-  { id: "sousvide", g: 22, kcal: 110, th: "อกไก่นุ่มพร้อมทาน 1 ซอง", en: "Ready-to-eat chicken breast, 1 pack" }
-];
+// FOODS (the food list) lives in js/data.js, so the coach and data import can use it on every page
 const PR_T = {
   th: { title: "โปรตีนวันนี้", goal: (a, b) => `เป้าหมาย ${a}–${b} กรัมต่อวัน (จากน้ำหนักและเป้าหมายของคุณ)`, total: g => `${g} กรัม`, kcal: k => `ประมาณ ${k} kcal จากรายการนี้`,
     left: n => `อีก ${n} กรัมถึงเป้าขั้นต่ำ`, done: "ถึงเป้าแล้ว ดีมาก", add: n => `เพิ่ม ${n}`, remove: n => `ลด ${n}`, reset: "ล้างของวันนี้",

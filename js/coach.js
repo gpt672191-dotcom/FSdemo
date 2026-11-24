@@ -122,7 +122,7 @@ function weekAnswer(u) {
   const log = (u.log || []).filter(x => x.d >= days[0]);
   const wDays = new Set(log.map(x => x.d)).size, mins = log.reduce((a, x) => a + (+x.mins || 0), 0), kcal = log.reduce((a, x) => a + (+x.kcal || 0), 0);
   const water = days.map(d => (u.water || {})[d] || 0).filter(Boolean);
-  const pr = typeof FOODS !== "undefined" ? days.map(d => { const day = (u.protein || {})[d] || {}; return FOODS.reduce((a, f) => a + f.g * (day[f.id] || 0), 0); }).filter(Boolean) : [];
+  const pr = days.map(d => { const day = (u.protein || {})[d] || {}; return FOODS.reduce((a, f) => a + f.g * (day[f.id] || 0), 0); }).filter(Boolean);
   const avg = a => Math.round(a.reduce((x, y) => x + y, 0) / a.length);
   const lines = th ? [
     `<b>สรุปสัปดาห์นี้</b> (ตั้งแต่วันจันทร์ ${days.length} วัน)`,

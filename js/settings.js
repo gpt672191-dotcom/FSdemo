@@ -88,7 +88,7 @@ function cleanImport(d) {
   const num = (v, lo, hi) => typeof v === "number" && isFinite(v) && v >= lo && v <= hi;
   const arr = a => (Array.isArray(a) ? a : []);
   const obj = o => (o && typeof o === "object" && !Array.isArray(o) ? o : {});
-  const foods = new Set(["chicken", "egg", "milk", "pork", "fish", "tuna", "tofu", "beans", "yogurt", "whey", "soymilk", "shrimp", "kmk", "mooping", "kaprao", "sousvide"]);
+  const foods = new Set(FOODS.map(f => f.id));
   const okAnswers = a => a && typeof a === "object" && Object.keys(OPTIONS).every(k => a[k] === undefined || OPTIONS[k].includes(String(a[k])));
   const p = obj(d.profile);
   return {
