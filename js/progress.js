@@ -323,7 +323,7 @@ function goalHTML(u, ws) {
       : `<p class="goal-msg">${tx.left(left, Math.ceil(left / 0.5), Math.ceil(left / 0.25))}</p>`;
     body = `<div class="goal-bar" role="progressbar" aria-valuemin="0" aria-valuemax="100" aria-valuenow="${Math.round(pct)}" aria-label="${tx.title}"><i style="width:${pct}%"></i></div>
       <div class="goal-nums"><span>${start} ${lang === "th" ? "กก." : "kg"}</span><b>${tx.prog(done, all)}</b><span>${goal} ${lang === "th" ? "กก." : "kg"}</span></div>
-      ${msg}
+      ${msg}${goalLowNote(goal, h)}
       <button type="button" class="btn ghost sm" data-goal-edit>${tx.change}</button>`;
   }
   return `<div class="goal-box"><div class="pg-sub" style="margin:0 0 8px">${icon("trending")}${tx.title}</div>${body}</div>`;
@@ -336,6 +336,15 @@ document.addEventListener("submit", e => {
   updateUser(u => { u.goalW = Math.round(g * 10) / 10; });
   goalEdit = false; renderAll(); toast(tx.saved);
 });
+// A goal below BMI 18.5 for the user's height is underweight: say so (and give the lowest healthy weight)
+function goalLowNote(goal, h) {
+  if (!h) return "";
+  const low = 18.5 * (h / 100) ** 2;
+  if (goal >= low - 0.05) return "";
+  return `<p class="goal-low" role="note">${icon("alert")}<span>${lang === "th"
+    ? `เป้านี้ต่ำกว่าน้ำหนักที่ดีต่อสุขภาพ (BMI ต่ำกว่า 18.5) สำหรับส่วนสูงของคุณ ไม่ควรต่ำกว่า ${low.toFixed(1)} กก. ลองตั้งเป้าใหม่ หรือปรึกษาแพทย์`
+    : `This goal is below a healthy weight for your height (BMI under 18.5). Aim for at least ${low.toFixed(1)} kg, or talk to a doctor.`}</span></p>`;
+}
 document.addEventListener("click", e => {
   if (e.target.closest("[data-goal-edit]")) { goalEdit = true; renderAll(); const i = $("#goalIn"); if (i) i.focus(); }
   else if (e.target.closest("[data-goal-clear]")) { updateUser(u => { delete u.goalW; }); goalEdit = false; renderAll(); toast(GOAL_T[lang].cleared); }
