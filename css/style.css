@@ -1525,6 +1525,12 @@ footer { text-align: left; padding-block: 44px 24px; background: color-mix(in sr
 .fig.is3d { position: relative; }
 .fig .fig3d { position: absolute; inset: 0; width: 100%; height: 100%; display: block; }
 .fig.is3d svg { display: none; }
+/* Loading pulse while the 3D model downloads */
+.fig.fig-loading::after { content: ""; position: absolute; left: 50%; top: 50%; width: 34px; height: 34px; margin: -17px 0 0 -17px; border-radius: 50%;
+  border: 3px solid color-mix(in srgb, var(--accent) 25%, transparent); border-top-color: var(--accent); animation: figspin .9s linear infinite; }
+@keyframes figspin { to { transform: rotate(360deg); } }
+:root[data-motion="reduce"] .fig.fig-loading::after { animation: none; }
+@media (prefers-reduced-motion: reduce) { .fig.fig-loading::after { animation-duration: 2.4s; } }
 .bm-wrap { position: relative; }
 .bm-wrap .bm3d { position: absolute; inset: 0; width: auto; height: auto; aspect-ratio: auto; border-radius: inherit; background: none; }
 

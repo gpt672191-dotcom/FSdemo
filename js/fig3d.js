@@ -360,7 +360,7 @@
       if (!BOT.masks) meshes.forEach(ms => dressPerson(ms.material));
       Object.assign(BOT, { ready: true, root, model, B, rest, AX, meshes, footPitch, ankleH, toeH, unit });
       F.refresh();
-    }, undefined, e => console.warn("3D body model not loaded; using the simple figure", e));
+    }, undefined, e => { BOT.failed = true; F.refresh(); console.warn("3D body model not loaded; using the simple figure", e); });
   }
 
   // Person model: a touch of self-light so skin reads well on the dark cards
@@ -501,6 +501,10 @@
     const e = 0.5 - 0.5 * Math.cos(Math.PI * (t / durs[i]));
     const pose = F.mix(m.f[i], m.f[(i + 1) % m.f.length], e);
     const bot = BOTS[inst.mann ? "mann" : "fig"], J = F.solve(pose, m.front);
+    // While the model downloads, show a loading pulse instead of the simple figure (used only if loading fails)
+    const waiting = !bot.ready && !bot.failed && !!THREE.GLTFLoader;
+    inst.el.classList.toggle("fig-loading", waiting);
+    if (waiting) { inst.ctx.clearRect(0, 0, w, h); return; }
     for (const k in BOTS) if (BOTS[k].root) BOTS[k].root.visible = BOTS[k] === bot;
     if (bot.ready) { RIG_PARTS().forEach(o => (o.visible = false)); poseBot(bot, J, !!m.front, m, inst.mann, inst.hl); }
     else { RIG_PARTS().forEach(o => (o.visible = true)); poseRig(J, !!m.front, m, inst.mann, inst.hl); }
