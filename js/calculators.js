@@ -43,6 +43,16 @@ if ($("#calOut")) {
     const floor = health.minKcal(sex);
     const lose = Math.max(floor, tdee - 500), fast = Math.max(floor, tdee - 750);
     const r = round10;
+    // under 18: no deficit numbers (still growing) — same rule as the For you page and the coach
+    if (age < 18) {
+      out.innerHTML = `
+      <div class="result-row">
+        <div class="result"><small>${tx.calBmr}</small><b>${r(bmr)}</b> ${tx.kcal}</div>
+        <div class="result acc"><small>${tx.calMaintain}</small><b>${r(tdee)}</b> ${tx.kcal}</div>
+      </div>
+      <p class="teen-note">${icon("alert")}<span>${lang === "th" ? "อายุต่ำกว่า 18 ปี ร่างกายยังโตอยู่ ไม่ควรลดแคลอรี่ กินประมาณตัวเลข \"คงน้ำหนัก\" แบบครบหมู่ ลดน้ำหวาน ขนม ของทอด แล้วออกกำลังกายสม่ำเสมอแทน" : "Under 18 your body is still growing, so don't cut calories. Eat around the maintenance number with balanced meals, fewer sweet drinks, snacks and fried food, and stay active."}</span></p>`;
+      return;
+    }
     out.innerHTML = `
       <div class="result-row">
         <div class="result"><small>${tx.calBmr}</small><b>${r(bmr)}</b> ${tx.kcal}</div>

@@ -351,6 +351,10 @@ function reply(raw) {
     const b = typed || p;
     if (!b) return { text: tx.kcalNeed, links: links(["weight-loss.html", tx.linkLose], ["profile.html", tx.linkProfile]) };
     const bmr = health.bmr(b.weight, b.height, b.age, b.sex), tdee = bmr * ACT_FACTORS[((typed ? 1 : b.activity) || 1) - 1];
+    // under 18: still growing, so no calorie deficit (same rule as recommend() on the For you page)
+    if (+b.age < 18) return { text: lang === "th"
+      ? `ร่างกายคุณใช้พลังงานประมาณ <b>${round10(tdee)} kcal/วัน</b> (พลังงานพื้นฐาน ${round10(bmr)})<br>อายุต่ำกว่า 18 ปี ร่างกายยังโตอยู่ <b>ไม่ควรลดแคลอรี่</b> ให้กินประมาณนี้ เน้นข้าว เนื้อสัตว์ ผัก ผลไม้ นม ครบหมู่ ลดน้ำหวาน ขนม ของทอด แล้วออกกำลังกายสม่ำเสมอ ถ้ากังวลเรื่องน้ำหนักปรึกษาครูพยาบาลหรือแพทย์`
+      : `You burn about <b>${round10(tdee)} kcal/day</b> (base ${round10(bmr)}).<br>Under 18 your body is still growing, so <b>don't cut calories</b>: eat about this much with balanced meals, fewer sweet drinks, snacks and fried food, and stay active. Talk to a school nurse or doctor if you're worried about your weight.`, links: links(["for-you.html", t().navForYou]) };
     return { text: tx.kcal(round10(bmr), round10(tdee), round10(Math.max(health.minKcal(b.sex), tdee - 500))) + (typed && typed.guessSex ? (lang === "th" ? "<br>(คิดแบบผู้ชาย ถ้าเป็นผู้หญิงพิมพ์ \"หญิง\" เพิ่ม)" : "<br>(Calculated as male; add \"female\" if needed.)") : ""), links: links(["for-you.html", t().navForYou]) };
   }
   if (has(m, KW.water)) {
