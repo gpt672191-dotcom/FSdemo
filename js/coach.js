@@ -118,6 +118,14 @@ const KW2 = {
   hard: ["ยากไป", "หนักไป", "เหนื่อยเกินไป", "too hard", "too difficult", "can't keep up"],
   swap: ["เปลี่ยนท่า", "สลับท่า", "ไม่ชอบท่า", "swap", "change a move", "replace"],
   data: ["ย้ายข้อมูล", "เครื่องใหม่", "สำรองข้อมูล", "ลบบัญชี", "ลบข้อมูล", "export", "backup", "new phone", "delete my account", "delete account"],
+  runvsweights: ["วิ่งหรือเวท", "เวทหรือวิ่ง", "คาร์ดิโอหรือเวท", "เวทหรือคาร์ดิโอ", "cardio or weights", "weights or cardio", "running or weights"],
+  cardio: ["คาร์ดิโอคือ", "คาร์ดิโอคืออะไร", "what is cardio"],
+  rice: ["ข้าวเหนียว", "กินข้าวได้ไหม", "งดข้าว", "งดแป้ง", "กินแป้ง", "sticky rice", "cut carbs", "no rice", "eat rice"],
+  eggs: ["ไข่วันละ", "กินไข่กี่ฟอง", "ไข่กี่ฟอง", "eggs a day", "how many eggs"],
+  short: ["10 นาทีพอ", "นาทีพอไหม", "นาทีพอมั้ย", "ทำแค่", "enough time", "is 10 minutes", "only 10 minutes", "15 minutes enough"],
+  steps: ["ก้าวเดิน", "เดินวันละ", "กี่ก้าว", "steps a day", "how many steps"],
+  condition: ["เบาหวาน", "ความดัน", "โรคหัวใจ", "หอบหืด", "ตั้งครรภ์", "ท้องอยู่", "diabetes", "blood pressure", "heart disease", "asthma", "pregnant"],
+  device: ["มือถือได้ไหม", "ใช้ในมือถือ", "ใช้บนมือถือ", "แอปมือถือ", "on my phone", "use on phone", "mobile"],
   motivate: ["ท้อ", "ขี้เกียจ", "ไม่มีแรงจูงใจ", "เบื่อ", "ไม่อยากทำ", "lazy", "unmotivated", "motivation", "give up", "bored"]
 };
 const KW2_T = {
@@ -130,6 +138,14 @@ const KW2_T = {
     hard: "หนักไปไม่ใช่เรื่องแย่ครับ ปรับให้พอดีได้:<br>1. ลดจำนวนครั้ง/เซ็ต หรือพักนานขึ้น (+15 วิในโหมดนำ)<br>2. ใช้ท่าที่ง่ายลง (ในหน้ารายละเอียดท่ามี \"ท่าง่ายลง\")<br>3. สร้างแผนใหม่แบบ 15 นาที และไม่กระโดด<br>ร่างกายจะปรับตัวภายใน 2–3 สัปดาห์",
     swap: "ได้ครับ ในหน้าสร้างแผน เปิดการ์ดของวันนั้นแล้วกด \"เปลี่ยนท่า\" ข้างท่าที่ไม่ชอบ ระบบจะสลับเป็นท่าอื่นในกลุ่มเดียวกันที่ใช้อุปกรณ์ได้ และจำไว้กับแผนเลย",
     data: "ข้อมูลทั้งหมดเก็บในเบราว์เซอร์เครื่องนี้ครับ<br>- ย้ายเครื่อง: หน้าตั้งค่า > ดาวน์โหลดข้อมูล แล้วไปเครื่องใหม่ กด \"นำเข้าข้อมูล\"<br>- ลบข้อมูล/ลบบัญชี: หน้าตั้งค่า ส่วนท้ายสุด (ต้องกดยืนยัน)",
+    runvsweights: "ทั้งคู่ดีครับ ใช้ร่วมกันดีที่สุด:<br>- <b>เวท/บอดี้เวท</b>: สร้างและรักษากล้ามเนื้อ ทำให้รูปร่างกระชับ เผาผลาญดีขึ้นในระยะยาว<br>- <b>วิ่ง/คาร์ดิโอ</b>: หัวใจปอดแข็งแรง เผาแคลอรี่ระหว่างทำมาก<br>มือใหม่: เวท 2–3 วัน + คาร์ดิโอเบาๆ 2–3 วัน/สัปดาห์ แผนในเว็บจัดให้แบบนี้อยู่แล้ว",
+    cardio: "คาร์ดิโอคือการออกกำลังกายที่ทำให้หัวใจเต้นเร็วต่อเนื่อง เช่น เดินเร็ว วิ่ง ปั่นจักรยาน ว่ายน้ำ กระโดดเชือก หรือวงจรท่าต่อเนื่อง ช่วยหัวใจ ปอด และเผาพลังงาน<br>ความหนักที่พอดีสำหรับมือใหม่: <b>ยังพูดได้แต่ร้องเพลงไม่ได้</b> สัปดาห์ละ 150 นาที (เช่น วันละ 30 นาที 5 วัน)",
+    rice: "กินข้าวได้ครับ ไม่ต้องงดแป้ง ที่สำคัญคือ<b>ปริมาณรวมทั้งวัน</b><br>- ข้าวสวย/ข้าวเหนียว มื้อละประมาณ 1 ทัพพี (ข้าวเหนียวพลังงานสูงกว่าเล็กน้อย ปั้นก้อนเท่ากำปั้นเล็ก)<br>- เพิ่มผักครึ่งจาน และโปรตีนทุกมื้อ จะอิ่มนาน<br>- ลดน้ำหวาน ขนม ของทอด ได้ผลกว่างดข้าว",
+    eggs: "คนสุขภาพดีกินไข่ได้วันละ 1–2 ฟอง สบายๆ ครับ (ไข่ 1 ฟอง โปรตีนประมาณ 6 กรัม) ถ้ามีไขมันในเลือดสูงหรือเป็นเบาหวาน ให้กินไข่ขาวเพิ่มแทนไข่แดง หรือถามแพทย์ นับโปรตีนจากไข่ได้ที่ตัวนับในหน้าแนะนำ",
+    short: "พอครับ! 10–15 นาทีที่ทำจริงดีกว่า 1 ชั่วโมงที่ไม่ได้ทำ เริ่มจากวงจรสั้นๆ (เช่น สควอท วิดพื้น แพลงก์ วนรอบ) ทำให้สม่ำเสมอ 3 วัน/สัปดาห์ แล้วค่อยเพิ่มเวลา สร้างแผนแบบ 15 นาทีได้ที่หน้าสร้างแผน",
+    steps: "เป้าหมายที่ดีคือ 7,000–10,000 ก้าว/วัน แต่ถ้าตอนนี้เดินน้อย ให้เพิ่มทีละ 1,000–2,000 ก้าวจากเดิมก็ได้ผลแล้ว<br>เคล็ดลับ: เดินหลังอาหาร 10 นาที ขึ้นบันไดแทนลิฟต์ ลงรถก่อนถึง 1 ป้าย",
+    condition: "ออกกำลังกายได้และมักช่วยให้ดีขึ้นครับ แต่ถ้ามีโรคประจำตัว (เบาหวาน ความดัน หัวใจ หอบหืด) หรือตั้งครรภ์ <b>ควรปรึกษาแพทย์ก่อนเริ่ม</b><br>- เริ่มเบาๆ เช่น เดินเร็ว ยืดเหยียด<br>- พกยา/ของหวาน (ถ้าเป็นเบาหวาน) ดื่มน้ำ<br>- หยุดทันทีถ้าเจ็บหน้าอก หน้ามืด หายใจไม่ทัน<br>ทำแบบเช็กความพร้อม (PAR-Q+) ในหน้าสร้างแผนก่อนได้",
+    device: "ใช้ได้ครับ เว็บนี้ออกแบบให้ใช้บนมือถือ และติดตั้งเป็นแอปได้: บน Android กดเมนูเบราว์เซอร์ > เพิ่มลงหน้าจอหลัก, บน iPhone กดปุ่มแชร์ > เพิ่มไปยังหน้าจอโฮม เปิดได้แม้ไม่มีเน็ต",
     motivate: "รู้สึกท้อเป็นเรื่องปกติครับ ลองแบบนี้:<br>1. ลดเป้าให้เล็กมาก แค่ 10 นาที หรือ 1 ท่าก็นับ<br>2. ใส่เวลาออกกำลังกายลงปฏิทิน เหมือนนัดสำคัญ<br>3. ดูความคืบหน้า วันต่อเนื่อง และเหรียญรางวัล<br>4. ชวนเพื่อนทำด้วย<br>ความสม่ำเสมอสำคัญกว่าความหนัก ทำน้อยแต่ทำบ่อยชนะเสมอ"
   },
   en: {
@@ -141,10 +157,18 @@ const KW2_T = {
     hard: "Too hard is easy to fix:<br>1. Fewer reps or longer rests (+15 s in workout mode)<br>2. Use the easier version (shown on each exercise's detail)<br>3. Make a new 15-minute, no-jump plan<br>Your body adapts in 2–3 weeks.",
     swap: "Yes. On the Build a plan page, open that day's card and tap \"Swap move\" next to the move you don't like. You get another move from the same group that fits your equipment, saved with the plan.",
     data: "All your data lives in this browser.<br>- New phone: Settings > Download my data, then on the new device tap \"Import data\"<br>- Delete data or account: at the bottom of Settings (asks you to confirm)",
+    runvsweights: "Both are good, and together is best:<br>- <b>Weights/bodyweight</b>: build and keep muscle, look toned, burn more over time<br>- <b>Running/cardio</b>: heart and lungs, burns a lot while you do it<br>Beginners: strength 2–3 days + easy cardio 2–3 days a week. Your plan here already mixes them.",
+    cardio: "Cardio is exercise that keeps your heart rate up for a while: brisk walking, running, cycling, swimming, skipping, or a non-stop circuit. It's good for your heart and lungs and burns energy.<br>Right effort for beginners: <b>you can talk but not sing</b>. Aim for 150 minutes a week (e.g. 30 minutes, 5 days).",
+    rice: "You can eat rice; no need to cut carbs. What matters is the <b>total for the day</b>.<br>- About one scoop of rice or sticky rice per meal (sticky rice is a bit denser; a small fist-sized ball)<br>- Half a plate of vegetables and protein at every meal keep you full<br>- Cutting sweet drinks, snacks and fried food works better than cutting rice",
+    eggs: "Healthy people can eat 1–2 eggs a day without worry (one egg has about 6 g of protein). If you have high blood fats or diabetes, add egg whites instead of yolks or ask your doctor. Count eggs in the protein tracker on the For you page.",
+    short: "Yes! 10–15 minutes you actually do beats an hour you skip. Start with a short circuit (squats, push-ups, plank, repeat) 3 days a week, then add time. Make a 15-minute plan on the Build a plan page.",
+    steps: "A good goal is 7,000–10,000 steps a day, but if you walk little now, adding 1,000–2,000 steps to your usual already helps.<br>Tips: walk 10 minutes after meals, take the stairs, get off one stop early.",
+    condition: "Exercise is usually allowed and often helps, but with a health condition (diabetes, blood pressure, heart, asthma) or pregnancy <b>check with your doctor before starting</b>.<br>- Start gently: brisk walking, stretching<br>- Keep your medicine/a sweet snack (diabetes) and water nearby<br>- Stop at once for chest pain, dizziness or severe breathlessness<br>Do the readiness check (PAR-Q+) on the Build a plan page first.",
+    device: "Yes. The site is made for phones and can be installed as an app: on Android, browser menu > Add to Home screen; on iPhone, Share > Add to Home Screen. It even opens without internet.",
     motivate: "Feeling unmotivated is normal. Try this:<br>1. Make the goal tiny: 10 minutes or one move counts<br>2. Put workouts in your calendar like an appointment<br>3. Look at your progress, streak and badges<br>4. Bring a friend<br>Consistency beats intensity: small and often always wins."
   }
 };
-const KW2_LINK = { doms: "more.html#faq", rest: "planner.html#plan", whey: "for-you.html#fyProtein", gain: "planner.html?goal=muscle", nojump: "planner.html?impact=low", hard: "planner.html?time=15&impact=low", swap: "planner.html#plan", data: "settings.html", motivate: "profile.html#progress" };
+const KW2_LINK = { runvsweights: "planner.html", cardio: "weight-loss.html", rice: "weight-loss.html", eggs: "for-you.html#fyProtein", short: "planner.html?time=15", steps: "for-you.html", condition: "planner.html", device: "more.html#faq", doms: "more.html#faq", rest: "planner.html#plan", whey: "for-you.html#fyProtein", gain: "planner.html?goal=muscle", nojump: "planner.html?impact=low", hard: "planner.html?time=15&impact=low", swap: "planner.html#plan", data: "settings.html", motivate: "profile.html#progress" };
 
 const GROUP_KW = {
   chest: ["อก", "chest", "pec"], back: ["หลัง", "back", "lat"], shoulders: ["ไหล่", "shoulder", "delt"],
@@ -289,9 +313,10 @@ function reply(raw) {
 
   // sore-after-training questions come before the general pain answer (which says stop)
   if (has(m, KW2.doms)) return { text: KW2_T[lang].doms, links: [{ href: KW2_LINK.doms, label: tx.linkMore }] };
+  if (has(m, KW2.condition)) return { text: KW2_T[lang].condition, links: [{ href: KW2_LINK.condition, label: lang === "th" ? "เช็กความพร้อม" : "Readiness check" }] };
   if (has(m, KW.pain)) return { text: tx.pain, links: links(["more.html#faq", tx.linkMore]) };
   if (has(m, KW.thanks)) return { text: tx.thanks };
-  for (const k of ["whey", "gain", "nojump", "hard", "swap", "data", "rest", "motivate"])
+  for (const k of ["whey", "gain", "nojump", "hard", "swap", "data", "rest", "motivate", "runvsweights", "cardio", "rice", "eggs", "short", "steps", "device"])
     if (has(m, KW2[k])) return { text: KW2_T[lang][k], links: [{ href: KW2_LINK[k], label: lang === "th" ? "ไปที่หน้านี้" : "Open this page" }] };
   if (has(m, KW.bmi)) {
     // numbers typed in the question ("bmi 170 65") win over the saved profile
