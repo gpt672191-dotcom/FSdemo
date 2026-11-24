@@ -118,7 +118,8 @@ const WK_T = {
 function weekGoalHTML(s) {
   const tx = WK_T[lang], plan = store.get("fs-plan", null), goal = plan && plan.answers ? +plan.answers.days : 3;
   const done = Math.min(s.weekDays, goal), pc = done / goal, R = 34, C = 2 * Math.PI * R;
-  const diff = (a, b, unit) => { const d = a - b; return `<b class="${d > 0 ? "up" : d < 0 ? "down" : ""}">${d > 0 ? "+" : ""}${d === 0 ? tx.same : d}</b> ${unit}`; };
+  // "+2 ครั้ง" / "-10 นาที"; no change reads "ครั้ง เท่าเดิม" (unit first) instead of "เท่าเดิม ครั้ง"
+  const diff = (a, b, unit) => { const d = a - b; return d === 0 ? `${unit} <b>${tx.same}</b>` : `<b class="${d > 0 ? "up" : "down"}">${d > 0 ? "+" : ""}${d}</b> ${unit}`; };
   return `<div class="wk-goal">
     <svg class="wk-ring" viewBox="0 0 80 80" role="img" aria-label="${tx.of(done, goal)}">
       <circle cx="40" cy="40" r="${R}" class="wk-track"/><circle cx="40" cy="40" r="${R}" class="wk-arc" stroke-dasharray="${C}" stroke-dashoffset="${C * (1 - pc)}"/>

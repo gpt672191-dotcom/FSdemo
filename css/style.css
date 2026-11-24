@@ -2143,3 +2143,6 @@ main:focus { outline: none; }
 .wo-stats:has(> div:nth-child(4)) { grid-template-columns: repeat(4, 1fr); width: min(520px, 100%); }
 @media (max-width: 480px) { .wo-stats:has(> div:nth-child(4)) { grid-template-columns: repeat(2, 1fr); } }
 .wk-vs .wk-kcal { color: var(--muted); font-size: .85rem; }
+/* Profile "saved N plans · see my plans" button: wrap as one line of text, not two squeezed columns */
+a.btn:has(> #pPlans) { display: inline-block; text-align: center; line-height: 1.5; }
+a.btn:has(> #pPlans) > span { white-space: nowrap; }
