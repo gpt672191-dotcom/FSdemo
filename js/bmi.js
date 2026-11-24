@@ -16,8 +16,21 @@ function renderBMI() {
     <div class="bmi-bar"><i style="left:${pos}%"></i></div>
     <div style="color:var(--muted);font-size:.92rem">${tx.bmiAdvice[idx]}</div>
     <p style="margin:10px 0 0;font-size:.92rem">${tx.idealRange(lo, hi)}</p>
+    ${teenNote()}
     ${pathHTML(w, +lo, +hi)}
     <p style="margin:10px 0 0"><a href="${BMI_LINKS[idx]}" style="color:var(--accent);font-weight:600;text-decoration:none">${tx.bmiLink[idx]}</a></p>`;
+}
+
+/* ---------- Under 18: adult BMI cut-offs don't fit a growing body ---------- */
+const TEEN_T = {
+  th: (a, any) => `${any ? "ถ้าอายุต่ำกว่า 18 ปี" : `คุณอายุ ${a} ปี`}: เกณฑ์ BMI ข้างบนเป็นของผู้ใหญ่ วัยรุ่นร่างกายยังโตอยู่ ต้องดูเทียบกับอายุและเพศ (กราฟ BMI ตามอายุของ WHO) ใช้ผลนี้เป็นแนวทางคร่าวๆ อย่าอดอาหารเพื่อลดน้ำหนัก ถ้ากังวลปรึกษาครูพยาบาลหรือแพทย์`,
+  en: (a, any) => `${any ? "If you are under 18" : `You are ${a}`}: the cut-offs above are for adults. Teens are still growing, so BMI has to be compared by age and sex (WHO BMI-for-age charts). Use this result as a rough guide only, don't diet hard to lose weight, and talk to a school nurse or doctor if you're worried.`
+};
+function teenNote() {
+  const u = typeof currentUser === "function" && currentUser(), age = u && u.profile && +u.profile.age;
+  if (age && age >= 18) return "";
+  // logged in and under 18: always shown; not logged in (age unknown): shown as a general note
+  return `<p class="teen-note">${icon("alert")}<span>${TEEN_T[lang](age, !age)}</span></p>`;
 }
 
 /* ---------- Path to a healthy weight: how many kg and how long at a safe pace ---------- */

@@ -251,7 +251,9 @@ function reply(raw) {
 
   function bmiAnswer(h, w) {
     const b = health.bmi(w, h), [lo, hi] = health.ideal(h).map(x => x.toFixed(1));
-    return { text: tx.bmi(b.toFixed(1), t().bmiCat[health.bmiIdx(b)], lo, hi), links: links(["for-you.html", t().navForYou]) };
+    const age = p && +p.age, teen = age && age < 18
+      ? (lang === "th" ? `<br><br>หมายเหตุ: คุณอายุ ${age} ปี เกณฑ์นี้เป็นของผู้ใหญ่ วัยรุ่นต้องดู BMI เทียบกับอายุ ใช้เป็นแนวทางคร่าวๆ และอย่าอดอาหารนะครับ` : `<br><br>Note: you're ${age}. These cut-offs are for adults; teens should use BMI-for-age charts. Treat this as a rough guide and don't crash diet.`) : "";
+    return { text: tx.bmi(b.toFixed(1), t().bmiCat[health.bmiIdx(b)], lo, hi) + teen, links: links(["for-you.html", t().navForYou]) };
   }
   function proteinAnswer(w) {
     return { text: tx.protein(Math.round(w * 1.6), Math.round(w * 2.2), w) + "<br>" + tx.proteinTrack, links: links(["for-you.html#fyProtein", tx.linkForYou], ["muscle.html", tx.linkMuscle]) };
