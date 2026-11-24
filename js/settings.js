@@ -82,8 +82,32 @@ onRender(() => {
   const x = IMP_T[lang];
   $("#importT").textContent = x.t; $("#importD").textContent = x.d; $("#importBtnT").textContent = x.btn;
 });
-function mergeImport(u, d) {
+// Keep only well-formed values from an imported file (it could have been edited by hand)
+function cleanImport(d) {
+  const isDay = s => typeof s === "string" && /^\d{4}-\d{2}-\d{2}$/.test(s);
+  const num = (v, lo, hi) => typeof v === "number" && isFinite(v) && v >= lo && v <= hi;
+  const arr = a => (Array.isArray(a) ? a : []);
+  const obj = o => (o && typeof o === "object" && !Array.isArray(o) ? o : {});
+  const foods = new Set(["chicken", "egg", "milk", "pork", "fish", "tuna", "tofu", "beans", "yogurt", "whey"]);
+  const okAnswers = a => a && typeof a === "object" && Object.keys(OPTIONS).every(k => a[k] === undefined || OPTIONS[k].includes(String(a[k])));
+  const p = obj(d.profile);
+  return {
+    plans: arr(d.plans).filter(x => x && num(x.seed, 0, 1e10) && okAnswers(x.answers)).map(x => ({ answers: { ...DEFAULTS, ...x.answers }, seed: x.seed, savedAt: num(x.savedAt, 0, 1e14) ? x.savedAt : Date.now() })),
+    log: arr(d.log).filter(x => x && isDay(x.d)).map(x => ({ d: x.d, t: String(x.t || "").slice(0, 80), sets: num(x.sets, 0, 500) ? x.sets : 0, mins: num(x.mins, 0, 600) ? Math.round(x.mins) : 0,
+      ...(["easy", "ok", "hard"].includes(x.feel) ? { feel: x.feel } : {}) })),
+    weights: arr(d.weights).filter(x => x && isDay(x.d) && num(x.w, 25, 250)).map(x => ({ d: x.d, w: x.w })),
+    waist: arr(d.waist).filter(x => x && isDay(x.d) && num(x.w, 40, 200)).map(x => ({ d: x.d, w: x.w })),
+    water: Object.fromEntries(Object.entries(obj(d.water)).filter(([k, v]) => isDay(k) && num(v, 0, 30))),
+    protein: Object.fromEntries(Object.entries(obj(d.protein)).filter(([k]) => isDay(k))
+      .map(([k, v]) => [k, Object.fromEntries(Object.entries(obj(v)).filter(([f, n]) => foods.has(f) && num(n, 0, 20)))])),
+    favs: arr(d.favs).filter(id => EX.some(e => e.id === id)),
+    profile: num(p.age, 13, 90) && num(p.height, 100, 230) && num(p.weight, 25, 250) ? { sex: p.sex === "f" ? "f" : "m", age: p.age, height: p.height, weight: p.weight, ...(num(p.activity, 1, 5) ? { activity: p.activity } : {}) } : null
+  };
+}
+function mergeImport(u, raw) {
+  const d = cleanImport(raw);
   const byKey = (a, b, key) => { const m = new Map(); [...(a || []), ...(b || [])].forEach(x => m.set(key(x), x)); return [...m.values()]; };
+  u.favs = [...new Set([...(u.favs || []), ...d.favs])].slice(-30);
   const before = { p: (u.plans || []).length, l: (u.log || []).length };
   u.plans = byKey(u.plans, d.plans, p => p.seed + ":" + JSON.stringify(p.answers)).slice(-50);
   u.log = byKey(u.log, d.log, x => [x.d, x.t, x.mins, x.sets].join("|")).sort((a, b) => (a.d < b.d ? -1 : 1)).slice(-500);
