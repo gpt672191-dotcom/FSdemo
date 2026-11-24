@@ -2045,3 +2045,9 @@ main:focus { outline: none; }
 /* BMI box makes its own <b> big; keep the "path" text normal size */
 .bmi-out .bmi-path b { font-size: inherit; line-height: inherit; }
 .bmi-out .bmi-path .bmi-path-t { font-size: .98rem; }
+/* Phones: stat boxes two per row instead of one (profile summary, for-you numbers) */
+@media (max-width: 480px) {
+  .result-row { grid-template-columns: 1fr 1fr; gap: 8px; }
+  .result-row .result { min-width: 0; }
+  .result-row .result b { font-size: 1.15rem; word-break: break-word; }
+}
