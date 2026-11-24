@@ -128,6 +128,32 @@ function weekGoalHTML(s) {
   </div>`;
 }
 
+/* ---------- Full workout history, with delete (second tap confirms) ---------- */
+const HIST_T = {
+  th: { show: n => `ดูประวัติทั้งหมด (${n})`, hide: "ซ่อนประวัติ", del: "ลบ", sure: "ยืนยันลบ", deleted: "ลบรายการแล้ว", delLabel: (t, d) => `ลบ ${t} วันที่ ${d}` },
+  en: { show: n => `Show full history (${n})`, hide: "Hide history", del: "Delete", sure: "Confirm", deleted: "Entry deleted", delLabel: (t, d) => `Delete ${t} on ${d}` }
+};
+let histOpen = false, histArmed = null, histTimer;
+function historyHTML(u) {
+  const tx = HIST_T[lang], ptx = pt();
+  // keep the original index so delete removes the right entry
+  const rows = (u.log || []).map((x, i) => ({ x, i })).sort((a, b) => (a.x.d < b.x.d ? 1 : a.x.d > b.x.d ? -1 : b.i - a.i));
+  return `<ul class="hist-list">${rows.map(({ x, i }) => `<li>
+    <div><b>${esc(x.t || "-")}</b><small>${esc(x.d)} · ${ptx.mins2(x.mins || 0)}${x.sets ? ` · ${x.sets} ${lang === "th" ? "เซ็ต" : "sets"}` : ""}${x.feel && ptx.feel[x.feel] ? ` · ${ptx.feel[x.feel]}` : ""}</small></div>
+    <button type="button" class="btn ghost danger sm" data-hist-del="${i}" aria-label="${esc(tx.delLabel(x.t || "-", x.d))}">${histArmed === i ? tx.sure : icon("trash")}</button>
+  </li>`).join("")}</ul>`;
+}
+document.addEventListener("click", e => {
+  if (e.target.closest("[data-hist]")) { histOpen = !histOpen; histArmed = null; return renderProgress(); }
+  const d = e.target.closest("[data-hist-del]"); if (!d) return;
+  const i = Number(d.dataset.histDel);
+  clearTimeout(histTimer);
+  if (histArmed !== i) { histArmed = i; histTimer = setTimeout(() => { histArmed = null; renderProgress(); }, 3000); return renderProgress(); }
+  histArmed = null;
+  updateUser(u => { u.log = (u.log || []).filter((_, k) => k !== i); });
+  renderAll(); toast(HIST_T[lang].deleted);
+});
+
 /* ---------- Profile page: progress panel ---------- */
 function weightChart(ws, unit = "kg", gid = "wg") {
   const pts = ws.slice(-20);
@@ -185,6 +211,8 @@ function renderProgress() {
           <div>
             <div class="pg-sub">${tx.recent}</div>
             ${recent ? `<ul class="pg-recent">${recent}</ul>` : `<p class="hint" style="margin:0">${tx.none}</p>`}
+            ${(u.log || []).length ? `<button type="button" class="btn ghost sm hist-toggle" data-hist aria-expanded="${histOpen}">${histOpen ? HIST_T[lang].hide : HIST_T[lang].show((u.log || []).length)}</button>` : ""}
+            ${histOpen ? historyHTML(u) : ""}
           </div>
         </div>
         <div class="pg-w">
