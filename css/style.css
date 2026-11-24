@@ -2209,3 +2209,11 @@ body:not(:has(> header)) { padding-top: 65px; }
 .hello-weigh > .ic { width: 18px; height: 18px; color: var(--accent); flex: none; }
 .hello-weigh span { flex: 1 1 180px; }
 .hello-weigh input { width: 90px; padding: 7px 10px; border-radius: 10px; border: 1px solid var(--line); background: var(--surface); color: var(--text); font: inherit; }
+/* weight: 7-day average under the chart */
+.w-trend { margin: 6px 0 10px; font-size: .88rem; }
+.w-trend small { color: var(--muted); }
+.w-trend b.down { color: #166534; }
+.w-trend b.up { color: #b45309; }
+@media (prefers-color-scheme: dark) { :root:not([data-theme="light"]) .w-trend b.down { color: #4ade80; } :root:not([data-theme="light"]) .w-trend b.up { color: #fbbf24; } }
+:root[data-theme="dark"] .w-trend b.down { color: #4ade80; }
+:root[data-theme="dark"] .w-trend b.up { color: #fbbf24; }

@@ -261,6 +261,7 @@ function renderProgress() {
         <div class="pg-w">
           <div class="pg-w-head"><div class="pg-sub" style="margin:0">${tx.wTitle}</div>${change}</div>
           ${weightChart(ws) || `<p class="hint">${tx.wNone}</p>`}
+          ${weightTrend(ws)}
           <form class="pg-w-form" id="wForm" novalidate>
             <input id="wIn" type="number" inputmode="decimal" step="0.1" min="25" max="250" placeholder="${tx.wPh}" value="${(u.profile && u.profile.weight) || ""}">
             <button type="submit" class="btn">${icon("plus")}${tx.wAdd}</button>
@@ -272,6 +273,17 @@ function renderProgress() {
     </div>`;
 }
 onRender(renderProgress);
+
+/* ---------- Weekly average: daily weight jumps around, the 7-day average shows the real trend ---------- */
+function weightTrend(ws) {
+  const dayN = d => Math.floor(new Date(d + "T00:00:00") / 864e5), today = dayN(Progress.key(new Date()));
+  const avg = (from, to) => { const xs = ws.filter(x => { const n = today - dayN(x.d); return n >= from && n < to; }).map(x => +x.w); return xs.length ? xs.reduce((a, b) => a + b, 0) / xs.length : null; };
+  const now = avg(0, 7), before = avg(7, 14), th = lang === "th";
+  if (now === null) return "";
+  const diff = before === null ? null : now - before;
+  const cmp = diff === null ? "" : th ? ` · 7 วันก่อนหน้า ${before.toFixed(1)} กก. (<b class="${diff < 0 ? "down" : diff > 0 ? "up" : ""}">${diff > 0 ? "+" : ""}${diff.toFixed(1)}</b>)` : ` · previous 7 days ${before.toFixed(1)} kg (<b class="${diff < 0 ? "down" : diff > 0 ? "up" : ""}">${diff > 0 ? "+" : ""}${diff.toFixed(1)}</b>)`;
+  return `<p class="w-trend">${th ? `เฉลี่ย 7 วันล่าสุด ${now.toFixed(1)} กก.` : `Last 7 days average ${now.toFixed(1)} kg`}${cmp}<br><small>${th ? "น้ำหนักขึ้นลงวันละ 0.5–1 กก. เป็นเรื่องปกติ (น้ำ อาหาร เกลือ) ดูค่าเฉลี่ยรายสัปดาห์จะเห็นผลจริง" : "Weight moves 0.5–1 kg day to day (water, food, salt). The weekly average shows the real change."}</small></p>`;
+}
 
 /* ---------- Goal weight: progress from the first weigh-in, and a safe-pace estimate ---------- */
 const GOAL_T = {
