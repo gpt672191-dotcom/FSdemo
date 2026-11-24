@@ -2117,3 +2117,10 @@ main:focus { outline: none; }
 .goal-msg { margin: 6px 0 10px; font-size: .9rem; display: flex; gap: 8px; align-items: center; }
 .goal-msg.ok .ic { color: #16a34a; width: 18px; height: 18px; flex: none; }
 .goal-hint { margin: 6px 0 0; font-size: .82rem; }
+
+/* Workout: "leave now?" question */
+.wo-ask { position: absolute; inset: 0; z-index: 5; display: grid; place-items: center; padding: 16px; background: rgba(10, 6, 20, .72); backdrop-filter: blur(4px); }
+.wo-ask-card { width: min(360px, 100%); display: flex; flex-direction: column; gap: 10px; padding: 22px 18px; border-radius: 20px; background: #1e1533; border: 1px solid rgba(255, 255, 255, .14); color: #fff; text-align: center; }
+.wo-ask-card b { font-size: 1.2rem; }
+.wo-ask-card span { color: rgba(255, 255, 255, .75); margin-bottom: 6px; }
+.wo-ask-card .wo-btn { justify-content: center; width: 100%; }

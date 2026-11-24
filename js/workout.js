@@ -16,6 +16,7 @@ const WO_T = {
     finEx: "ท่า", finSets: "เซ็ต", finMin: "นาที", again: "เล่นอีกครั้ง",
     sayNext: (n, s, all) => `ท่าต่อไป ${n} เซ็ตที่ ${s} จาก ${all}`, sayRest: "พักก่อน", sayGo: "เริ่ม", sayDone: "เยี่ยมมาก ออกกำลังกายเสร็จแล้ว",
     tapDone: "ทำครบแล้วกด \"เสร็จแล้ว\"",
+    askQ: "ออกจากการฝึกตอนนี้?", askSub: (n, m) => `ทำไปแล้ว ${n} เซ็ต · ${m} นาที`, keep: "ฝึกต่อ", saveExit: "บันทึกเท่าที่ทำ แล้วออก", quit: "ออกโดยไม่บันทึก", savedPart: "บันทึกการฝึกแล้ว",
     keys: "คีย์ลัด: Space = หยุด/เล่นต่อ หรือเสร็จแล้ว · → = ข้าม · ← = ย้อนกลับ · Esc = ปิด",
     feelQ: "วันนี้รู้สึกยังไง", feelEasy: "ง่ายไป", feelOk: "พอดี", feelHard: "หนักไป", feelThanks: "บันทึกความรู้สึกแล้ว ระบบจะช่วยแนะนำระดับให้",
     warm: "วอร์มอัพ", cool: "คูลดาวน์", skipWarm: "ข้ามวอร์มอัพ", skipCool: "ข้ามคูลดาวน์", warmNote: "อุ่นเครื่องเบาๆ ลดโอกาสบาดเจ็บ", coolNote: "ยืดกล้ามเนื้อช้าๆ หายใจลึกๆ"
@@ -28,6 +29,7 @@ const WO_T = {
     finEx: "exercises", finSets: "sets", finMin: "min", again: "Do it again",
     sayNext: (n, s, all) => `Next, ${n}. Set ${s} of ${all}`, sayRest: "Rest", sayGo: "Go", sayDone: "Great job, workout complete",
     tapDone: "Press \"Done\" when you finish the set",
+    askQ: "Leave the workout now?", askSub: (n, m) => `${n} set${n > 1 ? "s" : ""} done · ${m} min`, keep: "Keep going", saveExit: "Save what I did and leave", quit: "Leave without saving", savedPart: "Workout saved",
     keys: "Shortcuts: Space = pause/resume or Done · → = skip · ← = back · Esc = close",
     feelQ: "How did it feel?", feelEasy: "Too easy", feelOk: "Just right", feelHard: "Too hard", feelThanks: "Saved. We'll use it to suggest your level.",
     warm: "Warm-up", cool: "Cool-down", skipWarm: "Skip warm-up", skipCool: "Skip cool-down", warmNote: "Ease in gently to lower the risk of injury", coolNote: "Stretch slowly and breathe deeply"
@@ -183,8 +185,36 @@ const Workout = (() => {
     return -1;
   }
 
+  // Leaving mid-workout: ask first, so a mis-tap on X does not lose the sets already done
+  const setsDone = () => S.steps.slice(0, S.i).filter(st => st.kind === "work" && !st.it.phase).length;
+  function askClose() {
+    if (!S || S.done || setsDone() === 0) return stop();
+    if ($("#woAsk")) return;
+    const tx = wt();
+    S.askWasPaused = S.paused;
+    if (!S.paused) { S.left = Math.max(0, S.end - Date.now()); S.paused = true; }
+    const mins = Math.max(1, Math.round((Date.now() - S.started) / 60000));
+    $("#wo").insertAdjacentHTML("beforeend", `
+      <div class="wo-ask" id="woAsk" role="alertdialog" aria-labelledby="woAskQ">
+        <div class="wo-ask-card">
+          <b id="woAskQ">${tx.askQ}</b>
+          <span>${tx.askSub(setsDone(), mins)}</span>
+          <button type="button" class="wo-btn main" data-wo="keep">${tx.keep}</button>
+          ${typeof Progress !== "undefined" && currentUser() ? `<button type="button" class="wo-btn ghost" data-wo="save-exit">${icon("save")}${tx.saveExit}</button>` : ""}
+          <button type="button" class="wo-btn ghost" data-wo="quit">${tx.quit}</button>
+        </div>
+      </div>`);
+    $('#woAsk [data-wo="keep"]').focus();
+  }
+  function closeAsk(resume) {
+    const a = $("#woAsk"); if (a) a.remove();
+    if (resume && S && !S.askWasPaused) { S.end = Date.now() + S.left; S.paused = false; render(); }
+    const w = $("#wo"); if (w) w.focus({ preventScroll: true });
+  }
+
   function finish() {
     clearInterval(S.timer);
+    S.done = true;
     const tx = wt(), mins = Math.max(1, Math.round((Date.now() - S.started) / 60000));
     const sets = S.main.reduce((a, it) => a + it.sets, 0);
     // Save to progress (progress.js), if the page has it and the user is logged in
@@ -260,7 +290,15 @@ const Workout = (() => {
     }
     const b = e.target.closest("[data-wo]"); if (!b) return;
     const act = b.dataset.wo;
-    if (act === "close") return stop();
+    if (act === "close") return askClose();
+    if (act === "keep") return closeAsk(true);
+    if (act === "quit") return stop();
+    if (act === "save-exit") {
+      const tx = wt(), n = setsDone(), mins = Math.max(1, Math.round((Date.now() - S.started) / 60000));
+      const ok = typeof Progress !== "undefined" && Progress.logWorkout({ t: S.title, sets: n, mins });
+      stop(); if (ok) toast(tx.savedPart);
+      return;
+    }
     if (act === "sound") { soundOn = !soundOn; store.set("fs-wo-sound", soundOn); if (!soundOn && "speechSynthesis" in window) speechSynthesis.cancel(); return drawSound(); }
     if (act === "again") { const o = S.opts; stop(); return start(o); }
     if (!S) return;
@@ -278,7 +316,8 @@ const Workout = (() => {
   // Keyboard: Esc = close, Space/Enter = pause-resume (or "Done" on rep sets), → = skip
   function onKey(e) {
     if (!S) return;
-    if (e.key === "Escape") return stop();
+    if (e.key === "Escape") return $("#woAsk") ? closeAsk(true) : askClose();
+    if ($("#woAsk")) return; // the leave question is open: only its buttons work
     if (e.target.closest && e.target.closest("button,a,input,textarea,select") && e.key !== "ArrowRight" && e.key !== "ArrowLeft") return; // let focused buttons work normally
     const st = S.steps[S.i];
     if (e.key === "ArrowRight") { e.preventDefault(); return enter(S.i + 1); }
