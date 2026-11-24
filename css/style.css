@@ -2164,3 +2164,7 @@ a.btn:has(> #pPlans) > span { white-space: nowrap; }
 /* auth form: the field that has the error gets a red outline and label */
 .nm-f input[aria-invalid="true"] { box-shadow: inset 0 0 0 2px #dc2626; }
 .nm-f input[aria-invalid="true"] + label { color: #dc2626; }
+/* any form field with an error: red outline */
+input[aria-invalid="true"], select[aria-invalid="true"] { outline: 2px solid #dc2626; outline-offset: 1px; }
+.nm-f input[aria-invalid="true"] { outline: none; } /* the signup form uses its own inset outline */
+input[aria-invalid="true"]:not(.nm-f input), select[aria-invalid="true"] { outline: none; border-color: #dc2626 !important; box-shadow: 0 0 0 3px color-mix(in srgb, #dc2626 25%, transparent) !important; }

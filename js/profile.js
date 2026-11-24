@@ -47,12 +47,17 @@ $("#pSignup").onclick = () => openAuth("signup");
 $("#profileForm").addEventListener("submit", e => {
   e.preventDefault();
   const tx = t(), err = $("#fErr");
+  // same as the signup form: message + red outline + cursor in the field to fix
+  $$("#profileForm [aria-invalid]").forEach(x => x.setAttribute("aria-invalid", "false"));
+  const fail = (msg, id) => { err.textContent = msg; const f = $("#" + id); if (f) { f.setAttribute("aria-invalid", "true"); f.setAttribute("aria-describedby", "fErr"); f.focus(); } };
   const name = $("#fName").value.trim();
-  if (!name) { err.textContent = tx.errName; return; }
+  if (!name) return fail(tx.errName, "fName");
   const body = readBody("f");
-  if (body.error) { err.textContent = tx[body.error]; return; }
+  if (body.error) return fail(tx[body.error], { errAge: "fAge", errHeight: "fH", errWeight: "fW" }[body.error]);
   err.textContent = "";
   updateUser(u => { u.name = name; u.profile = { ...(u.profile || {}), ...body.data }; });
   renderAll();
   toast(tx.savedProfile);
 });
+// a field marked wrong goes back to normal as soon as the user edits it
+$("#profileForm").addEventListener("input", e => { if (e.target.getAttribute("aria-invalid") === "true") e.target.setAttribute("aria-invalid", "false"); });
