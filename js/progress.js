@@ -71,9 +71,13 @@ const Progress = (() => {
       run = prev !== null && Math.round((t - prev) / 864e5) === 1 ? run + 1 : 1;
       best = Math.max(best, run); prev = t;
     });
+    const prevMon = new Date(monday); prevMon.setDate(prevMon.getDate() - 7);
+    const lastStart = key(prevMon), thisWeek = log.filter(x => x.d >= weekStart), lastWeek = log.filter(x => x.d >= lastStart && x.d < weekStart);
+    const sumMins = l => l.reduce((a, x) => a + (x.mins || 0), 0);
     return {
       streak, best, total: log.length,
-      week: log.filter(x => x.d >= weekStart).length,
+      week: thisWeek.length, weekMins: sumMins(thisWeek), lastWeek: lastWeek.length, lastWeekMins: sumMins(lastWeek),
+      weekDays: new Set(thisWeek.map(x => x.d)).size,
       mins: log.reduce((a, x) => a + (x.mins || 0), 0),
       perDay: log.reduce((m, x) => (m[x.d] = (m[x.d] || 0) + 1, m), {})
     };
@@ -101,6 +105,27 @@ function badgesHTML(u, s) {
         <b>${esc(name)}</b><small>${esc(desc)}</small>
         ${ok ? `<em>${tx.got}</em>` : max > 1 ? `<div class="bd-bar" role="progressbar" aria-valuemin="0" aria-valuemax="${max}" aria-valuenow="${Math.min(v, max)}" aria-label="${esc(name)}"><i style="width:${Math.min(100, v / max * 100)}%"></i></div><em class="bd-n">${Math.min(v, max)} / ${max}</em>` : ""}
       </li>`; }).join("")}</ul>`;
+}
+
+/* ---------- Weekly goal: training days this week vs the plan, and this week vs last week ---------- */
+const WK_T = {
+  th: { title: "เป้าหมายสัปดาห์นี้", of: (a, b) => `${a}/${b} วัน`, sub: b => `ตามแผน ${b} วันต่อสัปดาห์`, done: "ครบตามแผนแล้ว เยี่ยมมาก",
+    left: n => `อีก ${n} วันจะครบ`, vs: "เทียบสัปดาห์ที่แล้ว", times: "ครั้ง", mins: "นาที", same: "เท่าเดิม", noPlan: "ยังไม่มีแผน ใช้เป้าหมาย 3 วันต่อสัปดาห์" },
+  en: { title: "This week's goal", of: (a, b) => `${a}/${b} days`, sub: b => `Your plan: ${b} days a week`, done: "Goal reached, great work",
+    left: n => `${n} more day${n > 1 ? "s" : ""} to go`, vs: "Compared with last week", times: "workouts", mins: "minutes", same: "same", noPlan: "No plan yet, using 3 days a week" }
+};
+function weekGoalHTML(s) {
+  const tx = WK_T[lang], plan = store.get("fs-plan", null), goal = plan && plan.answers ? +plan.answers.days : 3;
+  const done = Math.min(s.weekDays, goal), pc = done / goal, R = 34, C = 2 * Math.PI * R;
+  const diff = (a, b, unit) => { const d = a - b; return `<b class="${d > 0 ? "up" : d < 0 ? "down" : ""}">${d > 0 ? "+" : ""}${d === 0 ? tx.same : d}</b> ${unit}`; };
+  return `<div class="wk-goal">
+    <svg class="wk-ring" viewBox="0 0 80 80" role="img" aria-label="${tx.of(done, goal)}">
+      <circle cx="40" cy="40" r="${R}" class="wk-track"/><circle cx="40" cy="40" r="${R}" class="wk-arc" stroke-dasharray="${C}" stroke-dashoffset="${C * (1 - pc)}"/>
+      <text x="40" y="45" text-anchor="middle">${done}/${goal}</text>
+    </svg>
+    <div class="wk-txt"><b>${tx.title}</b><span>${s.weekDays >= goal ? tx.done : tx.left(goal - done)}</span><small>${plan ? tx.sub(goal) : tx.noPlan}</small></div>
+    <div class="wk-vs"><small>${tx.vs}</small><span>${diff(s.week, s.lastWeek, tx.times)}</span><span>${diff(s.weekMins, s.lastWeekMins, tx.mins)}</span></div>
+  </div>`;
 }
 
 /* ---------- Profile page: progress panel ---------- */
@@ -149,6 +174,7 @@ function renderProgress() {
           <div class="pg-stat"><b>${s.total}</b><span>${tx.total}</span></div>
           <div class="pg-stat"><b>${s.mins}</b><span>${tx.mins}</span></div>
         </div>
+        ${weekGoalHTML(s)}
         <div class="bd-wrap">${badgesHTML(u, s)}</div>
         <div class="pg-two">
           <div>

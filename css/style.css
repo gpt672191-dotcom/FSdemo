@@ -1955,3 +1955,19 @@ main:focus { outline: none; }
 .fav-head { display: flex; justify-content: space-between; align-items: center; gap: 12px; flex-wrap: wrap; margin-bottom: 16px; }
 .xd-fav .ic { color: #f43f5e; }
 .xd-fav[aria-pressed="true"] .ic { fill: currentColor; color: inherit; }
+/* ---------- Weekly goal (profile progress) ---------- */
+.wk-goal { display: flex; align-items: center; gap: 16px; flex-wrap: wrap; margin: 6px 0 20px; padding: 14px 16px; border-radius: 16px; background: var(--surface-2); }
+.wk-ring { width: 76px; height: 76px; flex: none; }
+.wk-track { fill: none; stroke: var(--line); stroke-width: 8; }
+.wk-arc { fill: none; stroke: var(--accent); stroke-width: 8; stroke-linecap: round; transform: rotate(-90deg); transform-origin: 40px 40px; transition: stroke-dashoffset .5s; }
+.wk-ring text { fill: var(--text); font-size: 17px; font-weight: 600; font-family: inherit; }
+.wk-txt { flex: 1 1 160px; display: grid; gap: 2px; }
+.wk-txt b { font-size: 1.02rem; }
+.wk-txt span { font-size: .92rem; }
+.wk-txt small, .wk-vs small { color: var(--muted); font-size: .8rem; }
+.wk-vs { display: grid; gap: 2px; font-size: .9rem; min-width: 150px; }
+.wk-vs b.up { color: #16a34a; }
+.wk-vs b.down { color: #dc2626; }
+@media (prefers-color-scheme: dark) { :root:not([data-theme="light"]) .wk-vs b.up { color: #4ade80; } :root:not([data-theme="light"]) .wk-vs b.down { color: #f87171; } }
+:root[data-theme="dark"] .wk-vs b.up { color: #4ade80; }
+:root[data-theme="dark"] .wk-vs b.down { color: #f87171; }
