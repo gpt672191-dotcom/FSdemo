@@ -234,17 +234,18 @@ function reply(raw) {
   if (has(m, KW.pain)) return { text: tx.pain, links: links(["more.html#faq", tx.linkMore]) };
   if (has(m, KW.thanks)) return { text: tx.thanks };
   if (has(m, KW.bmi)) {
-    if (p) return bmiAnswer(p.height, p.weight);
+    // numbers typed in the question ("bmi 170 65") win over the saved profile
     const h = nums.find(n => n >= 100 && n <= 230), w = nums.find(n => n !== h && n >= 25 && n <= 250);
     if (h && w) return bmiAnswer(h, w);
+    if (p) return bmiAnswer(p.height, p.weight);
     coachWaiting = "bmi";
     return { text: tx.askBody, links: links(["bmi.html", tx.linkBmi]) };
   }
   // Protein before calories: "โปรตีนควรกินเท่าไหร่" also contains the calorie phrase "กินเท่าไหร่"
   if (has(m, KW.protein)) {
-    if (p) return proteinAnswer(p.weight);
     const w = nums.find(n => n >= 25 && n <= 250);
-    if (w) return proteinAnswer(w);
+    if (w) return proteinAnswer(w); // "protein for 80 kg" uses 80, not the profile weight
+    if (p) return proteinAnswer(p.weight);
     coachWaiting = "protein";
     return { text: tx.proteinNeed };
   }
