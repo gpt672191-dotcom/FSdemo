@@ -1,7 +1,7 @@
 // Service worker: lets FitStart AI open without internet and be installed as an app.
 // Pages, scripts and styles: network first (always the newest when online), saved copy when offline.
 // 3D models and icons: saved copy first (they are big and rarely change), refreshed in the background.
-const CACHE = "fitstart-v1";
+const CACHE = "fitstart-v2"; // change the name to make every phone drop its old saved copies
 const CORE = ["./", "index.html", "muscle.html", "weight-loss.html", "planner.html", "bmi.html", "more.html", "for-you.html", "profile.html", "settings.html"];
 
 self.addEventListener("install", e => {
