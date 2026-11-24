@@ -2186,3 +2186,6 @@ body:not(:has(> header)) { padding-top: 65px; }
 .teen-note { display: flex; gap: 8px; align-items: flex-start; margin: 10px 0 0; padding: 10px 12px; border-radius: 12px; font-size: .88rem; background: var(--surface-2); color: var(--text); }
 .teen-note .ic { width: 16px; height: 16px; flex: none; margin-top: 3px; color: #d97706; }
 .pr-more { margin-top: 10px; }
+/* protein: 7-day bars in the protein colours; days that reached the goal are green */
+.pr-week .wt-day i { background: linear-gradient(180deg, #f0abfc, #f59e0b); }
+.pr-week .wt-day.ok i { background: #16a34a; }

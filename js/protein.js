@@ -46,6 +46,16 @@ function setFood(id, delta) {
 // phones: show the first foods (plus anything eaten today); the rest behind "show all"
 const PR_SHORT = 8;
 let prAll = false;
+// last 7 days of protein as small bars (same look as the water tracker); full bar = the low end of the goal
+function prWeek(u, lo) {
+  const all = u.protein || {};
+  const days = [...Array(7)].map((_, k) => { const d = new Date(); d.setDate(d.getDate() - (6 - k)); const day = all[prDay(d)] || {};
+    return { d, g: FOODS.reduce((a, f) => a + f.g * (day[f.id] || 0), 0) }; });
+  if (!days.some(x => x.g)) return "";
+  const label = lang === "th" ? "7 วันล่าสุด (กรัม)" : "Last 7 days (g)";
+  return `<div class="wt-week pr-week" role="img" aria-label="${label}: ${days.map(x => x.g).join(", ")}">${days.map(x =>
+    `<div class="wt-day${x.g >= lo ? " ok" : ""}" title="${prDay(x.d)}: ${x.g} g"><i style="height:${Math.min(100, x.g / lo * 100)}%"></i><small>${x.d.toLocaleDateString(lang === "th" ? "th-TH" : "en-GB", { weekday: "narrow" })}</small></div>`).join("")}</div>`;
+}
 function renderProtein() {
   const box = $("#fyProtein"), u = currentUser();
   if (!box || !u || !hasBody(u.profile) || typeof recommend !== "function") return;
@@ -72,6 +82,7 @@ function renderProtein() {
           <button type="button" data-pr="${f.id}" data-d="1" aria-label="${esc(tx.add(name))}">+</button>
         </div>
       </li>`; }).join("")}</ul>
+    ${prWeek(u, lo)}
     ${FOODS.length > PR_SHORT ? `<button type="button" class="btn ghost sm pr-more" data-pr-all aria-expanded="${prAll}">${prAll ? (lang === "th" ? "แสดงน้อยลง" : "Show fewer") : (lang === "th" ? `ดูเมนูทั้งหมด (${FOODS.length})` : `Show all foods (${FOODS.length})`)}</button>` : ""}
     <p class="hint">${tx.note}</p>`;
 }
