@@ -2013,3 +2013,11 @@ main:focus { outline: none; }
 .man-grid .field input, .man-grid .field select { width: 100%; }
 .man-grid input[type="date"] { padding: 10px 10px; border-radius: 10px; border: 1px solid var(--line); background: var(--surface-2); color: var(--text); font: inherit; }
 @media (max-width: 760px) { .man-grid { grid-template-columns: 1fr 1fr; } .man-grid .btn { grid-column: 1 / -1; justify-content: center; } }
+/* ---------- Profile jump menu (js/profile-nav.js) ---------- */
+.pnav { position: sticky; top: 64px; z-index: 8; background: color-mix(in srgb, var(--bg) 88%, transparent); backdrop-filter: blur(10px); -webkit-backdrop-filter: blur(10px); border-bottom: 1px solid var(--line); }
+.pnav .wrap { display: flex; gap: 6px; overflow-x: auto; padding-block: 8px; scrollbar-width: none; scroll-behavior: smooth; }
+.pnav .wrap::-webkit-scrollbar { display: none; }
+.pnav a { flex: none; padding: 7px 14px; border-radius: 999px; font-size: .88rem; font-weight: 600; color: var(--muted); text-decoration: none; border: 1px solid transparent; }
+.pnav a:hover { color: var(--text); }
+.pnav a.on { background: var(--accent-soft); color: var(--accent); border-color: color-mix(in srgb, var(--accent) 35%, transparent); }
+.pnav a:focus-visible { outline: 2px solid var(--accent); outline-offset: 1px; }
