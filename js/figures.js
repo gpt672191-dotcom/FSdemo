@@ -262,8 +262,32 @@ const FIGURES = (() => {
     ? new IntersectionObserver(es => es.forEach(en => (en.isIntersecting ? visible.add(en.target) : visible.delete(en.target))), { rootMargin: "100px" })
     : null;
 
+  // The 3D engine (three.js + js/fig3d.js, about 700 KB) is loaded only once a figure is on the page.
+  // Until it arrives the figure shows a loading spinner; if 3D can't run, the 2D drawing is used.
+  const VER = ((document.currentScript && document.currentScript.src.match(/\?v=\d+/)) || [""])[0];
+  let lazy = typeof THREE === "undefined" ? 0 : 2; // 0 = not loaded, 1 = loading, 2 = done
+  const waiting = [];
+  function load3d() {
+    if (lazy) return;
+    lazy = 1;
+    const files = ["js/vendor/three.min.js", "js/vendor/GLTFLoader.js", "js/fig3d.js" + VER];
+    const next = () => {
+      const f = files.shift();
+      if (!f) return finish();
+      const sc = document.createElement("script");
+      sc.src = f; sc.onload = next; sc.onerror = finish;
+      document.head.append(sc);
+    };
+    const finish = () => {
+      lazy = 2;
+      waiting.splice(0).forEach(el => { el.classList.remove("fig-loading"); if (el.isConnected) mount(el); });
+    };
+    next();
+  }
+
   function mount(el) {
     if (el._fig) return;
+    if (lazy < 2) { if (!el.classList.contains("fig-loading")) { el.classList.add("fig-loading"); waiting.push(el); } load3d(); return; }
     // A 3D backend (js/fig3d.js) takes over when WebGL is available; otherwise the 2D SVG is used
     const be = api.backend;
     const inst = be ? be.create(el, el.dataset.fig) : create(el, el.dataset.fig);

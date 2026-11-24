@@ -1530,7 +1530,7 @@ footer { text-align: left; padding-block: 44px 24px; background: color-mix(in sr
 .foot-bottom p { margin: 0; }
 
 /* ---------- 3D figures (js/fig3d.js) ---------- */
-.fig.is3d { position: relative; }
+.fig.is3d, .fig.fig-loading { position: relative; }
 .fig .fig3d { position: absolute; inset: 0; width: 100%; height: 100%; display: block; }
 .fig.is3d svg { display: none; }
 /* Loading pulse while the 3D model downloads */
