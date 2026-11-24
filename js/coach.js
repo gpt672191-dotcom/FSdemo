@@ -92,7 +92,7 @@ const KW = {
   start: ["เริ่ม", "มือใหม่", "ไม่เคย", "start", "beginner", "new to"],
   busy: ["ไม่มีเวลา", "เวลาน้อย", "ยุ่ง", "busy", "no time", "quick"],
   water: ["ดื่มน้ำ", "กินน้ำ", "น้ำกี่", "น้ำวันละ", "water", "hydrat"],
-  warm: ["วอร์ม", "อบอุ่นร่างกาย", "คูลดาวน์", "ยืดเหยียด", "stretch", "warm up", "warm-up", "warmup", "cool down", "cool-down"],
+  warm: ["วอร์ม", "อบอุ่นร่างกาย", "คูลดาวน์", "ยืดเหยียด", "stretch", "mobility", "warm up", "warm-up", "warmup", "cool down", "cool-down"],
   when: ["ตอนเช้า", "ตอนเย็น", "ตอนไหนดี", "เวลาไหนดี", "ช่วงไหนดี", "ก่อนนอน", "กลางคืน", "ตอนดึก", "what time", "when should i work out", "morning or evening", "best time", "at night"],
   eatwhen: ["กินก่อน", "กินหลัง", "ก่อนออกกำลัง", "หลังออกกำลัง", "ท้องว่าง", "ท้องว่าง", "eat before", "eat after", "before workout", "after workout", "empty stomach"],
   plateau: ["น้ำหนักไม่ลง", "น้ำหนักขึ้นลง", "ทำไมน้ำหนักขึ้น", "น้ำหนักขึ้นทั้งที่", "น้ำหนักนิ่ง", "ไม่ลดเลย", "not losing weight", "weight went up", "weight is up", "plateau", "scale won't move", "weight going down", "weight down"],
@@ -357,8 +357,11 @@ function reply(raw) {
   if (has(m, KW.install)) return { text: tx.install };
 
   // A specific exercise by name (longest match wins)
+  // short names people actually type ("lunges", "push up", "deadlift") count too
+  const ALIAS = { lunge: ["lunge", "ลันจ์"], pushup: ["push up", "pushup", "push-up"], pullup: ["pull up", "pullup", "chin up", "ดึงข้อ"], rdl: ["deadlift", "เดดลิฟต์"],
+    dbrow: ["dumbbell row"], climber: ["mountain climber"], jj: ["jumping jack"], hipthrust: ["hip thrust"], burpee: ["burpee"], crunch: ["crunch"], wallsit: ["wall sit"], legraise: ["leg raise"] };
   const hit = EX.map(e => {
-    const names = [e.th.split(" (")[0], e.en].map(s => s.toLowerCase());
+    const names = [e.th.split(" (")[0], e.en, ...(ALIAS[e.id] || [])].map(s => s.toLowerCase());
     const n = names.find(s => s.length > 2 && m.includes(s));
     return n ? { e, len: n.length } : null;
   }).filter(Boolean).sort((a, b) => b.len - a.len)[0];
