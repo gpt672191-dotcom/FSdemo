@@ -12,7 +12,14 @@ const FOODS = [
   { id: "tofu",    g: 13, kcal: 120, th: "เต้าหู้แข็ง 100 ก.", en: "Firm tofu 100 g" },
   { id: "beans",   g: 14, kcal: 210, th: "ถั่วเขียวต้ม 1 ถ้วย", en: "Cooked mung beans, 1 cup" },
   { id: "yogurt",  g: 15, kcal: 100, th: "กรีกโยเกิร์ต 1 ถ้วย (150 ก.)", en: "Greek yogurt, 1 cup (150 g)" },
-  { id: "whey",    g: 24, kcal: 120, th: "เวย์โปรตีน 1 สกู๊ป", en: "Whey protein, 1 scoop" }
+  { id: "whey",    g: 24, kcal: 120, th: "เวย์โปรตีน 1 สกู๊ป", en: "Whey protein, 1 scoop" },
+  // common Thai street and convenience-store food (approximate)
+  { id: "soymilk", g: 7,  kcal: 120, th: "นมถั่วเหลือง 1 กล่อง (250 มล.)", en: "Soy milk, 1 carton (250 ml)" },
+  { id: "shrimp",  g: 20, kcal: 100, th: "กุ้งสุก 100 ก.", en: "Cooked shrimp 100 g" },
+  { id: "kmk",     g: 25, kcal: 600, th: "ข้าวมันไก่ 1 จาน", en: "Khao man gai (chicken rice), 1 plate" },
+  { id: "mooping", g: 6,  kcal: 90,  th: "หมูปิ้ง 1 ไม้", en: "Moo ping (grilled pork), 1 stick" },
+  { id: "kaprao",  g: 22, kcal: 550, th: "ข้าวกะเพราไก่ 1 จาน (ไม่มีไข่)", en: "Basil chicken on rice, 1 plate (no egg)" },
+  { id: "sousvide", g: 22, kcal: 110, th: "อกไก่นุ่มพร้อมทาน 1 ซอง", en: "Ready-to-eat chicken breast, 1 pack" }
 ];
 const PR_T = {
   th: { title: "โปรตีนวันนี้", goal: (a, b) => `เป้าหมาย ${a}–${b} กรัมต่อวัน (จากน้ำหนักและเป้าหมายของคุณ)`, total: g => `${g} กรัม`, kcal: k => `ประมาณ ${k} kcal จากรายการนี้`,
@@ -36,6 +43,9 @@ function setFood(id, delta) {
   renderProtein();
 }
 
+// phones: show the first foods (plus anything eaten today); the rest behind "show all"
+const PR_SHORT = 8;
+let prAll = false;
 function renderProtein() {
   const box = $("#fyProtein"), u = currentUser();
   if (!box || !u || !hasBody(u.profile) || typeof recommend !== "function") return;
@@ -52,7 +62,7 @@ function renderProtein() {
     <div class="pr-bar" role="progressbar" aria-valuemin="0" aria-valuemax="${hi}" aria-valuenow="${total}" aria-label="${tx.title}">
       <i style="width:${pc}%"></i><span class="pr-lo" style="left:${loPc}%"></span>
     </div>
-    <ul class="pr-foods">${FOODS.map(f => {
+    <ul class="pr-foods">${FOODS.filter((f, i) => prAll || i < PR_SHORT || day[f.id]).map(f => {
       const n = day[f.id] || 0, name = f[lang];
       return `<li class="pr-food${n ? " on" : ""}">
         <div class="pr-txt"><b>${esc(name)}</b><small>${f.g} g · ${f.kcal} kcal</small></div>
@@ -62,6 +72,7 @@ function renderProtein() {
           <button type="button" data-pr="${f.id}" data-d="1" aria-label="${esc(tx.add(name))}">+</button>
         </div>
       </li>`; }).join("")}</ul>
+    ${FOODS.length > PR_SHORT ? `<button type="button" class="btn ghost sm pr-more" data-pr-all aria-expanded="${prAll}">${prAll ? (lang === "th" ? "แสดงน้อยลง" : "Show fewer") : (lang === "th" ? `ดูเมนูทั้งหมด (${FOODS.length})` : `Show all foods (${FOODS.length})`)}</button>` : ""}
     <p class="hint">${tx.note}</p>`;
 }
 onRender(renderProtein);
@@ -70,6 +81,7 @@ document.addEventListener("click", e => {
   const box = $("#fyProtein"); if (!box || !box.contains(e.target) || !currentUser()) return;
   const b = e.target.closest("[data-pr]");
   if (b) return setFood(b.dataset.pr, Number(b.dataset.d));
+  if (e.target.closest("[data-pr-all]")) { prAll = !prAll; renderProtein(); const m = $("[data-pr-all]"); if (m) m.focus(); return; }
   if (e.target.closest("[data-pr-reset]")) {
     updateUser(u => { if (u.protein) delete u.protein[prDay()]; });
     renderProtein();

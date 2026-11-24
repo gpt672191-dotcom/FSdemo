@@ -2185,3 +2185,4 @@ body:not(:has(> header)) { padding-top: 65px; }
 /* BMI: note for under-18s */
 .teen-note { display: flex; gap: 8px; align-items: flex-start; margin: 10px 0 0; padding: 10px 12px; border-radius: 12px; font-size: .88rem; background: var(--surface-2); color: var(--text); }
 .teen-note .ic { width: 16px; height: 16px; flex: none; margin-top: 3px; color: #d97706; }
+.pr-more { margin-top: 10px; }
