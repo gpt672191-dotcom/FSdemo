@@ -404,7 +404,7 @@ onRender(() => {
       <span class="avatar">${esc(u.name.trim().charAt(0).toUpperCase())}</span>
       <div class="hello-txt"><b>${esc(tx.hello(u.name))}</b><span>${s.streak ? icon("flame") : ""}${tx.helloSub(s.streak, s.week)}</span></div>
       <div class="btn-row"><a class="btn sm ghost" href="planner.html#plan">${tx.goPlan}</a><a class="btn sm ghost" href="profile.html#progress">${tx.goProgress}</a></div>
-      ${today}${dailyBits(u)}${tip}${startSteps(u)}
+      ${today}${dailyBits(u)}${weighNudge(u)}${tip}${startSteps(u)}
     </div>`;
 });
 
@@ -422,6 +422,30 @@ function dailyBits(u) {
     <a href="for-you.html#fyWater">${th ? "บันทึก" : "Log"} ${icon("chevron")}</a>
   </div>`;
 }
+
+// Weekly weigh-in reminder: after 7 days without a weight entry, ask for today's weight right here
+function weighNudge(u) {
+  if (!hasBody(u.profile)) return "";
+  const ws = u.weights || [], last = ws.length ? ws[ws.length - 1].d : null;
+  const days = last ? Math.floor((new Date(Progress.key(new Date()) + "T00:00:00") - new Date(last + "T00:00:00")) / 864e5) : null;
+  if (last && days < 7) return "";
+  const th = lang === "th";
+  const msg = last ? (th ? `ไม่ได้ชั่งน้ำหนักมา ${days} วันแล้ว ชั่งตอนเช้าหลังเข้าห้องน้ำ สัปดาห์ละครั้งก็พอ` : `${days} days since your last weigh-in. Once a week, in the morning, is enough.`)
+    : (th ? "บันทึกน้ำหนักครั้งแรก เพื่อดูกราฟความเปลี่ยนแปลง" : "Log your first weight to start your progress chart.");
+  return `<form class="hello-weigh" id="homeWeigh" novalidate>
+    ${icon("scale")}<span>${msg}</span>
+    <input id="homeW" type="number" inputmode="decimal" step="0.1" min="25" max="250" value="${u.profile.weight}" aria-label="${th ? "น้ำหนักวันนี้ (กก.)" : "Today's weight (kg)"}">
+    <button type="submit" class="btn sm">${th ? "บันทึก" : "Save"}</button>
+  </form>`;
+}
+document.addEventListener("submit", e => {
+  if (e.target.id !== "homeWeigh") return;
+  e.preventDefault();
+  const w = num("homeW", 25, 250);
+  if (isNaN(w)) { toast(pt().wErr); return; }
+  Progress.addWeight(Math.round(w * 10) / 10);
+  renderAll(); toast(pt().wSaved);
+});
 
 // one tap: +1 glass of water today (same storage as the water tracker, user.water[day])
 document.addEventListener("click", e => {

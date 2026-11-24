@@ -2204,3 +2204,8 @@ body:not(:has(> header)) { padding-top: 65px; }
 .hb-add { display: inline-flex; align-items: center; gap: 4px; padding: 4px 10px; border-radius: 999px; border: 1px solid color-mix(in srgb, #38bdf8 50%, var(--line)); background: color-mix(in srgb, #38bdf8 12%, transparent); color: var(--text); font: inherit; font-size: .82rem; cursor: pointer; }
 .hb-add .ic { width: 13px !important; height: 13px !important; color: #0284c7 !important; }
 .hb-add:hover { background: color-mix(in srgb, #38bdf8 22%, transparent); }
+/* Home: weekly weigh-in reminder */
+.hello-weigh { flex-basis: 100%; display: flex; align-items: center; gap: 10px; flex-wrap: wrap; margin-top: 4px; padding: 10px 12px; border-radius: 12px; border: 1px dashed color-mix(in srgb, var(--accent) 45%, var(--line)); font-size: .9rem; }
+.hello-weigh > .ic { width: 18px; height: 18px; color: var(--accent); flex: none; }
+.hello-weigh span { flex: 1 1 180px; }
+.hello-weigh input { width: 90px; padding: 7px 10px; border-radius: 10px; border: 1px solid var(--line); background: var(--surface); color: var(--text); font: inherit; }
