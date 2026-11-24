@@ -93,6 +93,7 @@ const KW = {
   busy: ["ไม่มีเวลา", "เวลาน้อย", "ยุ่ง", "busy", "no time", "quick"],
   water: ["ดื่มน้ำ", "กินน้ำ", "น้ำกี่", "น้ำวันละ", "water", "hydrat"],
   warm: ["วอร์ม", "อบอุ่นร่างกาย", "คูลดาวน์", "warm up", "warm-up", "warmup", "cool down", "cool-down"],
+  today: ["วันนี้ทำอะไร", "วันนี้ต้องทำ", "วันนี้ออกกำลัง", "วันนี้เล่น", "วันนี้ฝึก", "ของวันนี้", "today"],
   remind: ["เตือน", "ปฏิทิน", "ลืม", "remind", "calendar", "forget"],
   badges: ["เหรียญ", "รางวัล", "ความคืบหน้า", "ต่อเนื่อง", "badge", "progress", "streak", "achievement"],
   progress: ["เพิ่มความหนัก", "ง่ายไป", "ไม่หนักแล้ว", "ไม่เหนื่อย", "ไม่เห็นผล", "ทำยังไงต่อ", "ขั้นต่อไป", "progress", "too easy", "plateau", "next step", "harder"],
@@ -108,6 +109,31 @@ const GROUP_KW = {
   glutes: ["ก้น", "สะโพก", "glute", "butt", "hip"], core: ["หน้าท้อง", "ซิกแพ็ก", "abs", "core", "six pack", "sixpack"]
 };
 const has = (m, list) => list.some(k => m.includes(k));
+
+// "What's my workout today?": read the current plan (same schedule as the planner and the home strip)
+const TODAY_T = {
+  th: { work: (d, m, n) => `วันนี้เป็นวันออกกำลังกายครับ: <b>${d}</b> ประมาณ ${m} นาที ${n} ท่า เริ่มด้วยวอร์มอัพสั้นๆ แล้วทำตามโหมดนำได้เลย`,
+        rest: "วันนี้เป็น<b>วันพัก</b>ครับ ให้กล้ามเนื้อได้ซ่อมแซม เดินเบาๆ หรือยืดเหยียด 5-10 นาทีก็พอ",
+        done: m => `วันนี้คุณออกกำลังกายไปแล้ว ${m} นาที เก่งมากครับ ดื่มน้ำ พักผ่อนให้พอ แล้วเจอกันรอบหน้า`,
+        none: "ยังไม่มีแผนครับ ตอบคำถาม 6 ข้อในหน้าสร้างแผน ใช้เวลาไม่ถึงนาที แล้วผมจะบอกได้ว่าวันไหนทำอะไร",
+        go: "เปิดแผนของวันนี้", plan: "ดูแผน" },
+  en: { work: (d, m, n) => `Today is a workout day: <b>${d}</b>, about ${m} min, ${n} moves. Start with a short warm-up, then follow the guided workout.`,
+        rest: "Today is a <b>rest day</b>. Let your muscles recover: an easy walk or 5-10 minutes of stretching is plenty.",
+        done: m => `You already worked out ${m} min today. Great job! Drink water, rest well, and see you next time.`,
+        none: "You don't have a plan yet. Answer 6 quick questions on the Build a plan page and I can tell you what to do each day.",
+        go: "Open today's plan", plan: "See plan" }
+};
+function todayAnswer(u) {
+  const tx = TODAY_T[lang], plan = store.get("fs-plan", null);
+  if (!plan || !plan.answers || !SCHEDULE[plan.answers.days]) return { text: tx.none, links: [{ href: "planner.html", label: tx.plan }] };
+  const n = new Date(), k = `${n.getFullYear()}-${String(n.getMonth() + 1).padStart(2, "0")}-${String(n.getDate()).padStart(2, "0")}`;
+  const mins = u && u.log ? u.log.filter(x => x.d === k).reduce((a, x) => a + (+x.mins || 0), 0) : 0;
+  if (mins) return { text: tx.done(mins), links: [{ href: "planner.html#plan", label: tx.plan }] };
+  const a = plan.answers, wd = (new Date().getDay() + 6) % 7, i = SCHEDULE[a.days].indexOf(wd);
+  if (i < 0) return { text: tx.rest, ex: ["catcow", "hamstring", "child"], links: [{ href: "planner.html#plan", label: tx.plan }] };
+  const tpl = TEMPLATES[a.goal][i % TEMPLATES[a.goal].length];
+  return { text: tx.work(t().dayType[tpl.type], a.time, COUNT[a.time]), links: [{ href: `planner.html?day=${i}#plan`, label: tx.go }] };
+}
 
 // Remember what we last asked, so "170 65" after "BMI?" is understood
 let coachWaiting = null;
@@ -161,6 +187,7 @@ function reply(raw) {
     return { text: tx.waterNeed, links: links(["profile.html", tx.linkProfile]) };
   }
   if (has(m, KW.warm)) return { text: tx.warm, ex: ["march", "wgs", "hamstring", "child"], links: links(["planner.html", tx.linkPlan]) };
+  if (has(m, KW.today)) return todayAnswer(u);
   if (has(m, KW.remind)) return { text: tx.remind, links: links(["planner.html#plan", tx.linkPlan]) };
   if (has(m, KW.badges)) return { text: tx.badges, links: links(["profile.html#progress", tx.linkProgress]) };
   if (has(m, KW.progress)) return { text: tx.progressA, links: links(["planner.html#plan", tx.linkPlan], ["muscle.html#allex", tx.linkLib]) };
