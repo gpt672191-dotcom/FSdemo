@@ -10,25 +10,25 @@
 const WO_T = {
   th: {
     move: "ท่า", next: "ท่าต่อไป", ready: "เตรียมตัว", work: "ออกกำลังกาย", rest: "พัก", set: "เซ็ต", of: "จาก",
-    reps: n => `${n} ครั้ง`, secs: n => `${n} วินาที`, done: "เสร็จแล้ว", skip: "ข้าม", add: "+15 วิ",
+    reps: n => `${n} ครั้ง`, secs: n => `${n} วินาที`, done: "เสร็จแล้ว", skip: "ข้าม", back: "ย้อนกลับ", backT: "ย้อนกลับไปเซ็ตก่อนหน้า", add: "+15 วิ",
     pause: "หยุด", resume: "เล่นต่อ", close: "ปิด", sound: "เสียง", upNext: "ถัดไป",
     finTitle: "เยี่ยมมาก! ออกกำลังกายเสร็จแล้ว", finSub: "พักดื่มน้ำ แล้วยืดกล้ามเนื้อเบาๆ นะ",
     finEx: "ท่า", finSets: "เซ็ต", finMin: "นาที", again: "เล่นอีกครั้ง",
     sayNext: (n, s, all) => `ท่าต่อไป ${n} เซ็ตที่ ${s} จาก ${all}`, sayRest: "พักก่อน", sayGo: "เริ่ม", sayDone: "เยี่ยมมาก ออกกำลังกายเสร็จแล้ว",
     tapDone: "ทำครบแล้วกด \"เสร็จแล้ว\"",
-    keys: "คีย์ลัด: Space = หยุด/เล่นต่อ หรือเสร็จแล้ว · → = ข้าม · Esc = ปิด",
+    keys: "คีย์ลัด: Space = หยุด/เล่นต่อ หรือเสร็จแล้ว · → = ข้าม · ← = ย้อนกลับ · Esc = ปิด",
     feelQ: "วันนี้รู้สึกยังไง", feelEasy: "ง่ายไป", feelOk: "พอดี", feelHard: "หนักไป", feelThanks: "บันทึกความรู้สึกแล้ว ระบบจะช่วยแนะนำระดับให้",
     warm: "วอร์มอัพ", cool: "คูลดาวน์", skipWarm: "ข้ามวอร์มอัพ", skipCool: "ข้ามคูลดาวน์", warmNote: "อุ่นเครื่องเบาๆ ลดโอกาสบาดเจ็บ", coolNote: "ยืดกล้ามเนื้อช้าๆ หายใจลึกๆ"
   },
   en: {
     move: "Move", next: "Next up", ready: "Get ready", work: "Work", rest: "Rest", set: "Set", of: "of",
-    reps: n => `${n} reps`, secs: n => `${n} seconds`, done: "Done", skip: "Skip", add: "+15 s",
+    reps: n => `${n} reps`, secs: n => `${n} seconds`, done: "Done", skip: "Skip", back: "Back", backT: "Go back to the previous set", add: "+15 s",
     pause: "Pause", resume: "Resume", close: "Close", sound: "Sound", upNext: "Up next",
     finTitle: "Great job! Workout complete", finSub: "Have some water and stretch gently.",
     finEx: "exercises", finSets: "sets", finMin: "min", again: "Do it again",
     sayNext: (n, s, all) => `Next, ${n}. Set ${s} of ${all}`, sayRest: "Rest", sayGo: "Go", sayDone: "Great job, workout complete",
     tapDone: "Press \"Done\" when you finish the set",
-    keys: "Shortcuts: Space = pause/resume or Done · → = skip · Esc = close",
+    keys: "Shortcuts: Space = pause/resume or Done · → = skip · ← = back · Esc = close",
     feelQ: "How did it feel?", feelEasy: "Too easy", feelOk: "Just right", feelHard: "Too hard", feelThanks: "Saved. We'll use it to suggest your level.",
     warm: "Warm-up", cool: "Cool-down", skipWarm: "Skip warm-up", skipCool: "Skip cool-down", warmNote: "Ease in gently to lower the risk of injury", coolNote: "Stretch slowly and breathe deeply"
   }
@@ -124,6 +124,8 @@ const Workout = (() => {
     const ph = st.it && st.it.phase;
     const skipPhase = ph ? `<button type="button" class="wo-btn ghost" data-wo="skip-${ph}">${ph === "warm" ? tx.skipWarm : tx.skipCool}</button>` : "";
     $("#woProg").style.width = `${(S.i / S.steps.length) * 100}%`;
+    const bk = backIdx();
+    const backBtn = bk < 0 ? "" : `<button type="button" class="wo-btn ghost wo-back" data-wo="back" title="${tx.backT}" aria-label="${tx.backT}">${icon("arrowLeft")}${tx.back}</button>`;
     const pauseBtn = `<button type="button" class="wo-btn ghost" data-wo="pause">${S.paused ? icon("play") + tx.resume : icon("pause") + tx.pause}</button>`;
     const exName = it => it.ex[lang];
     const goal = it => (it.secs ? tx.secs(it.secs) : tx.reps(it.target));
@@ -136,7 +138,7 @@ const Workout = (() => {
         <p class="wo-sub">${ph ? `${goal(st.it)} · ${ph === "warm" ? tx.warmNote : tx.coolNote}` : `${tx.set} ${st.s}/${st.it.sets} · ${goal(st.it)}`}</p>
         <div class="wo-fig"><div class="fig" data-fig="${st.it.ex.id}"></div></div>
         ${ring("big")}
-        <div class="wo-ctrl">${pauseBtn}<button type="button" class="wo-btn" data-wo="skip">${icon("skip")}${tx.skip}</button>${skipPhase}</div>`;
+        <div class="wo-ctrl">${backBtn}${pauseBtn}<button type="button" class="wo-btn" data-wo="skip">${icon("skip")}${tx.skip}</button>${skipPhase}</div>`;
     } else if (st.kind === "work") {
       body.className = "wo-body is-work";
       const cue = lang === "th" ? st.it.ex.cth : st.it.ex.cen;
@@ -147,6 +149,7 @@ const Workout = (() => {
         <div class="wo-fig big"><div class="fig" data-fig="${st.it.ex.id}"></div></div>
         ${st.dur ? ring() : `<div class="wo-reps"><b>${st.it.target}</b><span>${tx.reps("").trim()}</span><small>${tx.tapDone}</small></div>`}
         <div class="wo-ctrl">
+          ${backBtn}
           ${st.dur ? pauseBtn : ""}
           <button type="button" class="wo-btn main" data-wo="skip">${icon("check")}${tx.done}</button>
           ${skipPhase}
@@ -157,6 +160,7 @@ const Workout = (() => {
         <span class="wo-tag rest">${tx.rest}</span>
         ${ring("big")}
         <div class="wo-ctrl">
+          ${backBtn}
           <button type="button" class="wo-btn ghost" data-wo="add">${tx.add}</button>
           ${pauseBtn}
           <button type="button" class="wo-btn main" data-wo="skip">${icon("skip")}${tx.skip}</button>
@@ -167,6 +171,16 @@ const Workout = (() => {
         </div>`;
     }
     tick(true);
+  }
+
+  // "Back": the start (get-ready step) of the set before the one on screen, so a mis-tap on "Done" or "Skip" can be undone
+  function backIdx() {
+    const cur = S.steps[S.i], curWork = cur.kind === "work" ? S.i : cur.kind === "count" ? S.i + 1 : -1;
+    for (let k = S.i - 1; k >= 0; k--) {
+      if (S.steps[k].kind !== "work" || k === curWork) continue;
+      return k > 0 && S.steps[k - 1].kind === "count" ? k - 1 : k;
+    }
+    return -1;
   }
 
   function finish() {
@@ -251,6 +265,7 @@ const Workout = (() => {
     if (act === "again") { const o = S.opts; stop(); return start(o); }
     if (!S) return;
     if (act === "skip") return enter(S.i + 1);
+    if (act === "back") { const k = backIdx(); if (k >= 0) { S.paused = false; enter(k); } return; }
     if (act === "skip-warm") { const k = S.steps.findIndex(x => x.it && !x.it.phase); return enter(k < 0 ? S.steps.length : k); }
     if (act === "skip-cool") return enter(S.steps.length);
     if (act === "add") { if (S.paused) S.left += 15000; else S.end += 15000; S.total += 15000; return tick(true); }
@@ -264,15 +279,22 @@ const Workout = (() => {
   function onKey(e) {
     if (!S) return;
     if (e.key === "Escape") return stop();
-    if (e.target.closest && e.target.closest("button,a,input,textarea,select") && e.key !== "ArrowRight") return; // let focused buttons work normally
+    if (e.target.closest && e.target.closest("button,a,input,textarea,select") && e.key !== "ArrowRight" && e.key !== "ArrowLeft") return; // let focused buttons work normally
     const st = S.steps[S.i];
     if (e.key === "ArrowRight") { e.preventDefault(); return enter(S.i + 1); }
+    if (e.key === "ArrowLeft") { e.preventDefault(); const k = backIdx(); if (k >= 0) { S.paused = false; enter(k); } return; }
     if (e.key === " " || e.key === "Enter") {
       e.preventDefault();
       if (!st) return;
       if (st.kind === "work" && !st.dur) return enter(S.i + 1);
       const p = $('[data-wo="pause"]'); if (p) p.click();
     }
+  }
+
+  // The browser lets go of the screen wake lock when the tab is hidden; take it again when the user comes back
+  async function rewake() {
+    if (!S || document.visibilityState !== "visible" || !("wakeLock" in navigator)) return;
+    try { wake = await navigator.wakeLock.request("screen"); } catch {}
   }
 
   /* ---------- public ---------- */
@@ -286,6 +308,7 @@ const Workout = (() => {
     try { if ("wakeLock" in navigator) wake = await navigator.wakeLock.request("screen"); } catch {}
     S.timer = setInterval(() => tick(false), 100);
     document.addEventListener("keydown", onKey);
+    document.addEventListener("visibilitychange", rewake);
     beep(880, .01); // unlock audio on this user gesture
     enter(0);
   }
@@ -293,6 +316,7 @@ const Workout = (() => {
     if (S) clearInterval(S.timer);
     S = null;
     document.removeEventListener("keydown", onKey);
+    document.removeEventListener("visibilitychange", rewake);
     if ("speechSynthesis" in window) try { speechSynthesis.cancel(); } catch {}
     try { if (wake) wake.release(); } catch {}
     wake = null;
