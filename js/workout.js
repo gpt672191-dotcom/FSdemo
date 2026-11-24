@@ -13,7 +13,7 @@ const WO_T = {
     reps: n => `${n} ครั้ง`, secs: n => `${n} วินาที`, done: "เสร็จแล้ว", skip: "ข้าม", back: "ย้อนกลับ", backT: "ย้อนกลับไปเซ็ตก่อนหน้า", add: "+15 วิ",
     pause: "หยุด", resume: "เล่นต่อ", close: "ปิด", sound: "เสียง", upNext: "ถัดไป",
     finTitle: "เยี่ยมมาก! ออกกำลังกายเสร็จแล้ว", finSub: "พักดื่มน้ำ แล้วยืดกล้ามเนื้อเบาๆ นะ",
-    finEx: "ท่า", finSets: "เซ็ต", finMin: "นาที", again: "เล่นอีกครั้ง",
+    finEx: "ท่า", finSets: "เซ็ต", finMin: "นาที", finKcal: "kcal (ประมาณ)", again: "เล่นอีกครั้ง",
     sayNext: (n, s, all) => `ท่าต่อไป ${n} เซ็ตที่ ${s} จาก ${all}`, sayRest: "พักก่อน", sayGo: "เริ่ม", sayDone: "เยี่ยมมาก ออกกำลังกายเสร็จแล้ว",
     tapDone: "ทำครบแล้วกด \"เสร็จแล้ว\"",
     askQ: "ออกจากการฝึกตอนนี้?", askSub: (n, m) => `ทำไปแล้ว ${n} เซ็ต · ${m} นาที`, keep: "ฝึกต่อ", saveExit: "บันทึกเท่าที่ทำ แล้วออก", quit: "ออกโดยไม่บันทึก", savedPart: "บันทึกการฝึกแล้ว",
@@ -26,7 +26,7 @@ const WO_T = {
     reps: n => `${n} reps`, secs: n => `${n} seconds`, done: "Done", skip: "Skip", back: "Back", backT: "Go back to the previous set", add: "+15 s",
     pause: "Pause", resume: "Resume", close: "Close", sound: "Sound", upNext: "Up next",
     finTitle: "Great job! Workout complete", finSub: "Have some water and stretch gently.",
-    finEx: "exercises", finSets: "sets", finMin: "min", again: "Do it again",
+    finEx: "exercises", finSets: "sets", finMin: "min", finKcal: "kcal (approx.)", again: "Do it again",
     sayNext: (n, s, all) => `Next, ${n}. Set ${s} of ${all}`, sayRest: "Rest", sayGo: "Go", sayDone: "Great job, workout complete",
     tapDone: "Press \"Done\" when you finish the set",
     askQ: "Leave the workout now?", askSub: (n, m) => `${n} set${n > 1 ? "s" : ""} done · ${m} min`, keep: "Keep going", saveExit: "Save what I did and leave", quit: "Leave without saving", savedPart: "Workout saved",
@@ -217,6 +217,10 @@ const Workout = (() => {
     S.done = true;
     const tx = wt(), mins = Math.max(1, Math.round((Date.now() - S.started) / 60000));
     const sets = S.main.reduce((a, it) => a + it.sets, 0);
+    // rough energy use: MET x body weight (kg) x hours; about 5 METs for a home circuit with rests, 2.5 for stretching
+    const u = typeof currentUser === "function" && currentUser(), kg = u && u.profile && +u.profile.weight;
+    const met = S.main.every(it => it.ex.cat === "mobility") ? 2.5 : 5;
+    const kcal = kg ? Math.round((met * kg * mins) / 60) : 0;
     // Save to progress (progress.js), if the page has it and the user is logged in
     let saved = "";
     if (typeof Progress !== "undefined") {
@@ -239,6 +243,7 @@ const Workout = (() => {
         <div><b>${S.main.length}</b><span>${tx.finEx}</span></div>
         <div><b>${sets}</b><span>${tx.finSets}</span></div>
         <div><b>${mins}</b><span>${tx.finMin}</span></div>
+        ${kcal ? `<div><b>${kcal}</b><span>${tx.finKcal}</span></div>` : ""}
       </div>
       <div class="wo-ctrl">
         <button type="button" class="wo-btn ghost" data-wo="again">${icon("refresh")}${tx.again}</button>
