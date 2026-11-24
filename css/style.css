@@ -1813,3 +1813,21 @@ footer { text-align: left; padding-block: 44px 24px; background: color-mix(in sr
 .skip-link { position: absolute; left: 12px; top: -60px; z-index: 100; padding: 10px 16px; border-radius: 10px; background: var(--accent); color: var(--accent-ink); font-weight: 600; text-decoration: none; transition: top .15s; }
 .skip-link:focus { top: 12px; outline: 2px solid var(--text); outline-offset: 2px; }
 main:focus { outline: none; }
+
+/* ---------- Badges (profile progress, js/progress.js) ---------- */
+.bd-wrap { margin: 6px 0 22px; }
+.bd-head { display: flex; justify-content: space-between; align-items: baseline; gap: 10px; margin-bottom: 10px; }
+.bd-count { color: var(--muted); font-size: .85rem; }
+.badges { list-style: none; margin: 0; padding: 0; display: grid; grid-template-columns: repeat(auto-fill, minmax(150px, 1fr)); gap: 10px; }
+.badge { position: relative; background: var(--surface-2); border: 1px solid var(--line); border-radius: 14px; padding: 12px; display: flex; flex-direction: column; gap: 2px; opacity: .72; }
+.badge.ok { opacity: 1; border-color: color-mix(in srgb, var(--accent) 45%, var(--line)); background: color-mix(in srgb, var(--accent) 10%, var(--surface)); }
+.bd-ic { width: 36px; height: 36px; border-radius: 11px; display: grid; place-items: center; background: var(--surface); color: var(--muted); margin-bottom: 6px; }
+.badge.ok .bd-ic { background: linear-gradient(135deg, #7c3aed, #c026d3); color: #fff; }
+.bd-ic .ic { width: 19px; height: 19px; }
+.badge b { font-size: .92rem; font-weight: 600; }
+.badge small { color: var(--muted); font-size: .76rem; line-height: 1.35; }
+.badge em { font-style: normal; font-size: .72rem; font-weight: 600; color: var(--accent); margin-top: 4px; }
+.badge .bd-n { color: var(--muted); }
+.bd-bar { height: 5px; border-radius: 9px; background: var(--surface); overflow: hidden; margin-top: 8px; }
+.bd-bar i { display: block; height: 100%; background: var(--accent); border-radius: 9px; }
+@media (max-width: 420px) { .badges { grid-template-columns: 1fr 1fr; } }

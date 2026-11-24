@@ -10,14 +10,22 @@ const PG_T = {
     wSaved: "บันทึกน้ำหนักแล้ว", wErr: "กรอกน้ำหนัก 25–250 กก.",
     logged: "บันทึกลงความคืบหน้าแล้ว", loginToLog: "เข้าสู่ระบบเพื่อบันทึกความคืบหน้า",
     hello: n => `สวัสดี ${n}`, helloSub: (s, w) => s ? `ต่อเนื่อง ${s} วัน · สัปดาห์นี้ ${w} ครั้ง` : (w ? `สัปดาห์นี้ ${w} ครั้ง` : "วันนี้เริ่มออกกำลังกายกันเลย!"),
-    goPlan: "ไปที่แผนของฉัน", goProgress: "ดูความคืบหน้า", mins2: n => `${n} นาที` },
+    goPlan: "ไปที่แผนของฉัน", goProgress: "ดูความคืบหน้า", mins2: n => `${n} นาที`,
+    badges: "เหรียญรางวัล", badgesSub: (a, b) => `ได้แล้ว ${a} จาก ${b} เหรียญ`, got: "ได้แล้ว",
+    b_first: ["ก้าวแรก", "ออกกำลังกายครั้งแรก"], b_streak3: ["ติดต่อ 3 วัน", "ออกกำลังกาย 3 วันติด"], b_streak7: ["ครบสัปดาห์", "ออกกำลังกาย 7 วันติด"],
+    b_ten: ["ขยันสิบครั้ง", "ออกกำลังกายครบ 10 ครั้ง"], b_thirty: ["นักสู้", "ออกกำลังกายครบ 30 ครั้ง"], b_mins: ["300 นาที", "รวมเวลาออกกำลังกาย 300 นาที"],
+    b_plan: ["มีแผนแล้ว", "บันทึกแผนออกกำลังกาย 1 แผน"], b_weigh: ["ติดตามน้ำหนัก", "บันทึกน้ำหนัก 2 ครั้งขึ้นไป"], b_water: ["ดื่มน้ำครบ", "ดื่มน้ำครบเป้าในหน้าแนะนำ 1 วัน"] },
   en: { title: "Progress", streak: "day streak", total: "workouts", week: "this week", mins: "total minutes",
     times: "", days: "", cal: "Last 12 weeks", less: "Less", more: "More", recent: "Recent", none: "No workouts yet. Use guided workout mode and they'll be saved automatically.",
     wTitle: "Weight", wAdd: "Save", wPh: "Today's weight (kg)", wNone: "Log your weight once a week to see the trend.", wChange: d => `${d > 0 ? "+" : ""}${d.toFixed(1)} kg since first entry`,
     wSaved: "Weight saved", wErr: "Enter a weight from 25 to 250 kg",
     logged: "Saved to your progress", loginToLog: "Log in to save your progress",
     hello: n => `Hi ${n}`, helloSub: (s, w) => s ? `${s}-day streak · ${w} this week` : (w ? `${w} workouts this week` : "Let's get moving today!"),
-    goPlan: "Go to my plan", goProgress: "See progress", mins2: n => `${n} min` }
+    goPlan: "Go to my plan", goProgress: "See progress", mins2: n => `${n} min`,
+    badges: "Badges", badgesSub: (a, b) => `${a} of ${b} earned`, got: "Earned",
+    b_first: ["First step", "Your first workout"], b_streak3: ["3 in a row", "Work out 3 days in a row"], b_streak7: ["Full week", "Work out 7 days in a row"],
+    b_ten: ["Ten down", "Finish 10 workouts"], b_thirty: ["Fighter", "Finish 30 workouts"], b_mins: ["300 minutes", "300 minutes of exercise in total"],
+    b_plan: ["Planner", "Save a workout plan"], b_weigh: ["On the scale", "Log your weight twice"], b_water: ["Hydrated", "Reach your water goal for a day"] }
 };
 const pt = () => PG_T[lang];
 
@@ -48,8 +56,15 @@ const Progress = (() => {
     while (daysSet.has(key(d))) { streak++; d.setDate(d.getDate() - 1); }
     const monday = new Date(); monday.setDate(monday.getDate() - ((monday.getDay() + 6) % 7));
     const weekStart = key(monday);
+    // longest run of consecutive days ever (for badges)
+    let best = 0, run = 0, prev = null;
+    [...daysSet].sort().forEach(k => {
+      const t = new Date(k + "T00:00:00").getTime();
+      run = prev !== null && Math.round((t - prev) / 864e5) === 1 ? run + 1 : 1;
+      best = Math.max(best, run); prev = t;
+    });
     return {
-      streak, total: log.length,
+      streak, best, total: log.length,
       week: log.filter(x => x.d >= weekStart).length,
       mins: log.reduce((a, x) => a + (x.mins || 0), 0),
       perDay: log.reduce((m, x) => (m[x.d] = (m[x.d] || 0) + 1, m), {})
@@ -57,6 +72,28 @@ const Progress = (() => {
   }
   return { logWorkout, addWeight, stats, key };
 })();
+
+/* ---------- Badges: [id, icon, current value, target] ---------- */
+function badgeList(u, s) {
+  const w = (u.profile && u.profile.weight) || 60, goal = Math.min(16, Math.max(6, Math.round(w * 33 / 250)));
+  const waterBest = Math.max(0, ...Object.values(u.water || {}));
+  return [
+    ["first", "play", s.total, 1], ["streak3", "flame", s.best, 3], ["streak7", "calendar", s.best, 7],
+    ["ten", "dumbbell", s.total, 10], ["thirty", "trophy", s.total, 30], ["mins", "gauge", s.mins, 300],
+    ["plan", "clipboard", (u.plans || []).length, 1], ["weigh", "scale", (u.weights || []).length, 2], ["water", "droplet", waterBest >= goal ? 1 : 0, 1]
+  ];
+}
+function badgesHTML(u, s) {
+  const tx = pt(), list = badgeList(u, s), got = list.filter(b => b[2] >= b[3]).length;
+  return `<div class="bd-head"><div class="pg-sub" style="margin:0">${tx.badges}</div><span class="bd-count">${tx.badgesSub(got, list.length)}</span></div>
+    <ul class="badges">${list.map(([id, ic, v, max]) => {
+      const ok = v >= max, [name, desc] = tx["b_" + id];
+      return `<li class="badge${ok ? " ok" : ""}" title="${esc(desc)}">
+        <span class="bd-ic">${icon(ok ? ic : "lock")}</span>
+        <b>${esc(name)}</b><small>${esc(desc)}</small>
+        ${ok ? `<em>${tx.got}</em>` : max > 1 ? `<div class="bd-bar" role="progressbar" aria-valuemin="0" aria-valuemax="${max}" aria-valuenow="${Math.min(v, max)}" aria-label="${esc(name)}"><i style="width:${Math.min(100, v / max * 100)}%"></i></div><em class="bd-n">${Math.min(v, max)} / ${max}</em>` : ""}
+      </li>`; }).join("")}</ul>`;
+}
 
 /* ---------- Profile page: progress panel ---------- */
 function weightChart(ws) {
@@ -104,6 +141,7 @@ function renderProgress() {
           <div class="pg-stat"><b>${s.total}</b><span>${tx.total}</span></div>
           <div class="pg-stat"><b>${s.mins}</b><span>${tx.mins}</span></div>
         </div>
+        <div class="bd-wrap">${badgesHTML(u, s)}</div>
         <div class="pg-two">
           <div>
             <div class="pg-sub">${tx.cal}</div>
