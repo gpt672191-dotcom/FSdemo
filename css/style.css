@@ -2075,3 +2075,12 @@ main:focus { outline: none; }
 :root[data-theme="dark"] .myth-face.front small, :root[data-theme="dark"] .btn.ghost.danger { color: #f87171; }
 :root[data-theme="dark"] .myth-face.back small, :root[data-theme="dark"] .wk-vs b.up, :root[data-theme="dark"] .w-change.down { color: #4ade80; }
 :root[data-theme="dark"] .pg-stat.hot b, :root[data-theme="dark"] .pg-stat.hot .ic { color: #fb923c; }
+
+/* Plan day already done this week */
+.pday-done { display: inline-flex; align-items: center; gap: 4px; margin-left: 6px; padding: 2px 8px; border-radius: 999px; font-size: .72rem; font-weight: 700; vertical-align: middle; background: color-mix(in srgb, #16a34a 16%, var(--surface)); color: #166534; }
+.pday-done .ic { width: 12px; height: 12px; }
+@media (prefers-color-scheme: dark) { :root:not([data-theme="light"]) .pday-done { color: #4ade80; } }
+:root[data-theme="dark"] .pday-done { color: #4ade80; }
+.pday-done { white-space: nowrap; }
+@media (max-width: 560px) { .pday-done { display: flex; width: fit-content; margin: 4px 0 2px; } }
+@media (max-width: 560px) { .pday-done .pd-wk { display: none; } }

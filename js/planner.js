@@ -121,7 +121,7 @@ function renderPlan() {
     <article class="pday${openDays.has(n) ? " open" : ""}" data-day="${n}">
       <div class="pday-head" data-toggle-day="${n}" role="button" tabindex="0" aria-expanded="${openDays.has(n)}">
         <span class="pday-num">${n + 1}</span>
-        <div class="pday-title"><h3>${t.weekFull[d.weekday]}</h3><span>${t.dayType[d.type]}</span></div>
+        <div class="pday-title"><h3>${t.weekFull[d.weekday]}${dayDone(d) ? ` <span class="pday-done">${icon("check")}${DONE_T[lang][0]}<span class="pd-wk"> ${DONE_T[lang][1]}</span></span>` : ""}</h3><span>${t.dayType[d.type]}</span></div>
         <span class="pday-meta">${t.nMoves(d.list.length)} · ~${total} ${t.min}</span>
         <button type="button" class="btn sm wo-day" data-wo-day="${n}">${icon("play")}<span>${t.woStartDay}</span></button>
         <span class="pday-chev" aria-hidden="true">${icon("chevron")}</span>
@@ -285,6 +285,17 @@ function woItemBase(ex, a) {
   if (ex.timed) return { ex, sets, secs: beg ? 20 : 40 };
   return { ex, sets, target: a.goal === "muscle" ? (beg ? "8–10" : "10–12") : (beg ? "10" : "12–15"), secs: null };
 }
+// A plan day counts as done this week when the log (since Monday) has a workout with that day's title, in either language
+const DONE_T = { th: ["ทำแล้ว", "สัปดาห์นี้"], en: ["Done", "this week"] };
+function dayDone(d) {
+  const u = typeof currentUser === "function" && currentUser(); if (!u || !u.log) return false;
+  const m = new Date(); m.setDate(m.getDate() - ((m.getDay() + 6) % 7));
+  const since = `${m.getFullYear()}-${String(m.getMonth() + 1).padStart(2, "0")}-${String(m.getDate()).padStart(2, "0")}`;
+  const titles = ["th", "en"].map(l => `${T[l].weekFull[d.weekday]} · ${T[l].dayType[d.type]}`);
+  return u.log.some(x => x.d >= since && titles.includes(x.t));
+}
+// redraw the plan after a workout is saved, so the day shows its "done" mark straight away
+document.addEventListener("fs-logged", () => { if (lastPlan) renderPlan(); });
 function startDayWorkout(i) {
   if (!lastPlan) return;
   const a = lastPlan.answers, tx = T[lang];

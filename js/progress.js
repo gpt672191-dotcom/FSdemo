@@ -45,6 +45,7 @@ const Progress = (() => {
   function logWorkout(entry) {
     if (!user()) return false;
     updateUser(u => { u.log = [...(u.log || []), { d: today(), ...entry }].slice(-500); });
+    document.dispatchEvent(new Event("fs-logged"));
     return true;
   }
   function addWeight(w) {
