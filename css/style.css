@@ -2084,3 +2084,6 @@ main:focus { outline: none; }
 .pday-done { white-space: nowrap; }
 @media (max-width: 560px) { .pday-done { display: flex; width: fit-content; margin: 4px 0 2px; } }
 @media (max-width: 560px) { .pday-done .pd-wk { display: none; } }
+/* Home "today" strip once today's workout is logged */
+.hello-today.done { background: color-mix(in srgb, #16a34a 12%, var(--surface)); border-color: color-mix(in srgb, #16a34a 35%, var(--line)); }
+.hello-today.done > .ic { color: #16a34a; }

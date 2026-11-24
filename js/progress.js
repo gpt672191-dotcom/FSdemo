@@ -14,7 +14,7 @@ const PG_T = {
     feel: { easy: "ง่ายไป", ok: "พอดี", hard: "หนักไป" },
     upTip: "3 ครั้งล่าสุดคุณบอกว่าง่ายไป ลองเพิ่มระดับเป็น \"ฝึกมาบ้างแล้ว\" ดูไหม", upBtn: "สร้างแผนระดับกลาง",
     downTip: "ช่วงนี้รู้สึกหนักไป ลองลดเวลาต่อวัน หรือเลือกท่าแบบไม่กระโดด ร่างกายจะค่อยๆ ปรับตัว", downBtn: "ปรับแผนให้เบาลง",
-    today: "วันนี้", todayWork: (d, m, n) => `${d} · ${m} นาที · ${n} ท่า`, todayRest: "วันพัก พักผ่อนหรือเดินเบาๆ ก็พอ", stretchBtn: "ยืดเหยียดเบาๆ 8 นาที", stretchTitle: "ยืดเหยียดวันพัก", startToday: "เริ่มของวันนี้", noPlan: "ยังไม่มีแผน สร้างแผนแรกใช้เวลา 1 นาที", makePlan: "สร้างแผน",
+    today: "วันนี้", todayDone: m => `ออกกำลังกายแล้ว ${m} นาที เก่งมาก พักผ่อนให้พอแล้วเจอกันรอบหน้า`, seePlan: "ดูแผน", todayWork: (d, m, n) => `${d} · ${m} นาที · ${n} ท่า`, todayRest: "วันพัก พักผ่อนหรือเดินเบาๆ ก็พอ", stretchBtn: "ยืดเหยียดเบาๆ 8 นาที", stretchTitle: "ยืดเหยียดวันพัก", startToday: "เริ่มของวันนี้", noPlan: "ยังไม่มีแผน สร้างแผนแรกใช้เวลา 1 นาที", makePlan: "สร้างแผน",
     badges: "เหรียญรางวัล", badgesSub: (a, b) => `ได้แล้ว ${a} จาก ${b} เหรียญ`, got: "ได้แล้ว",
     b_first: ["ก้าวแรก", "ออกกำลังกายครั้งแรก"], b_streak3: ["ติดต่อ 3 วัน", "ออกกำลังกาย 3 วันติด"], b_streak7: ["ครบสัปดาห์", "ออกกำลังกาย 7 วันติด"],
     b_ten: ["ขยันสิบครั้ง", "ออกกำลังกายครบ 10 ครั้ง"], b_thirty: ["นักสู้", "ออกกำลังกายครบ 30 ครั้ง"], b_mins: ["300 นาที", "รวมเวลาออกกำลังกาย 300 นาที"],
@@ -29,7 +29,7 @@ const PG_T = {
     feel: { easy: "too easy", ok: "just right", hard: "too hard" },
     upTip: "Your last 3 workouts felt too easy. Ready to move up to intermediate?", upBtn: "Make an intermediate plan",
     downTip: "Workouts have felt too hard lately. Try shorter sessions or no-jump moves; your body will adapt.", downBtn: "Make it lighter",
-    today: "Today", todayWork: (d, m, n) => `${d} · ${m} min · ${n} moves`, todayRest: "Rest day. Relax or take an easy walk.", stretchBtn: "Gentle 8-min stretch", stretchTitle: "Rest-day stretch", startToday: "Start today's workout", noPlan: "No plan yet. Your first plan takes a minute.", makePlan: "Make a plan",
+    today: "Today", todayDone: m => `Workout done, ${m} min. Nice work. Rest well and see you next time.`, seePlan: "See plan", todayWork: (d, m, n) => `${d} · ${m} min · ${n} moves`, todayRest: "Rest day. Relax or take an easy walk.", stretchBtn: "Gentle 8-min stretch", stretchTitle: "Rest-day stretch", startToday: "Start today's workout", noPlan: "No plan yet. Your first plan takes a minute.", makePlan: "Make a plan",
     badges: "Badges", badgesSub: (a, b) => `${a} of ${b} earned`, got: "Earned",
     b_first: ["First step", "Your first workout"], b_streak3: ["3 in a row", "Work out 3 days in a row"], b_streak7: ["Full week", "Work out 7 days in a row"],
     b_ten: ["Ten down", "Finish 10 workouts"], b_thirty: ["Fighter", "Finish 30 workouts"], b_mins: ["300 minutes", "300 minutes of exercise in total"],
@@ -321,10 +321,13 @@ onRender(() => {
   const tx = pt(), s = Progress.stats(u);
   // Today's workout from the current plan (same schedule the planner uses: SCHEDULE / TEMPLATES in data.js)
   const plan = store.get("fs-plan", null);
+  // minutes already logged today (guided, manual or timer): the plan day then shows as done
+  const doneMins = (u.log || []).filter(x => x.d === Progress.key(new Date())).reduce((m, x) => m + (+x.mins || 0), 0) || ((u.log || []).some(x => x.d === Progress.key(new Date())) ? 1 : 0);
   let today = `<div class="hello-today">${icon("clipboard")}<span>${tx.noPlan}</span><a class="btn sm" href="planner.html">${tx.makePlan}</a></div>`;
   if (plan && plan.answers && SCHEDULE[plan.answers.days]) {
     const a = plan.answers, wd = (new Date().getDay() + 6) % 7, i = SCHEDULE[a.days].indexOf(wd);
     if (i < 0) today = `<div class="hello-today rest">${icon("moon")}<span><b>${tx.today}</b> ${tx.todayRest}</span>${typeof Workout !== "undefined" ? `<button type="button" class="btn sm" data-stretch>${icon("stretch")}${tx.stretchBtn}</button>` : `<a class="btn sm ghost" href="planner.html#plan">${tx.goPlan}</a>`}</div>`;
+    else if (doneMins) today = `<div class="hello-today done">${icon("check")}<span><b>${tx.today}</b> ${tx.todayDone(doneMins)}</span><a class="btn sm ghost" href="planner.html?day=${i}#plan">${tx.seePlan}</a></div>`;
     else {
       const tpl = TEMPLATES[a.goal][i % TEMPLATES[a.goal].length];
       today = `<div class="hello-today">${icon("calendar")}<span><b>${tx.today}</b> ${tx.todayWork(t().dayType[tpl.type], a.time, COUNT[a.time])}</span><a class="btn sm" href="planner.html?day=${i}#plan">${icon("play")}${tx.startToday}</a></div>`;
