@@ -69,6 +69,44 @@ $("#exportBtn").onclick = () => {
   toast(t().exported);
 };
 
+/* ---------- Import a file made by "Download my data" (moving to another phone or browser) ---------- */
+// Merges into the logged-in account; nothing already saved here is removed.
+const IMP_T = {
+  th: { t: "นำเข้าข้อมูล", d: "ย้ายมาจากเครื่องอื่น: เลือกไฟล์ที่ได้จาก \"ดาวน์โหลดข้อมูล\" ระบบจะรวมกับข้อมูลในเครื่องนี้ ไม่ลบของเดิม", btn: "เลือกไฟล์",
+    bad: "ไฟล์นี้ไม่ใช่ไฟล์ข้อมูลของ FitStart AI", done: (p, l) => `นำเข้าแล้ว: แผน ${p} แผน, ประวัติออกกำลังกาย ${l} ครั้ง` },
+  en: { t: "Import data", d: "Moving from another device: pick a file made with \"Download my data\". It is merged with this account; nothing here is removed.", btn: "Choose file",
+    bad: "This isn't a FitStart AI data file", done: (p, l) => `Imported: ${p} plans, ${l} workouts` }
+};
+onRender(() => {
+  if (!$("#importT")) return;
+  const x = IMP_T[lang];
+  $("#importT").textContent = x.t; $("#importD").textContent = x.d; $("#importBtnT").textContent = x.btn;
+});
+function mergeImport(u, d) {
+  const byKey = (a, b, key) => { const m = new Map(); [...(a || []), ...(b || [])].forEach(x => m.set(key(x), x)); return [...m.values()]; };
+  const before = { p: (u.plans || []).length, l: (u.log || []).length };
+  u.plans = byKey(u.plans, d.plans, p => p.seed + ":" + JSON.stringify(p.answers)).slice(-50);
+  u.log = byKey(u.log, d.log, x => [x.d, x.t, x.mins, x.sets].join("|")).sort((a, b) => (a.d < b.d ? -1 : 1)).slice(-500);
+  u.weights = byKey(u.weights, d.weights, x => x.d).sort((a, b) => (a.d < b.d ? -1 : 1)).slice(-200);
+  u.waist = byKey(u.waist, d.waist, x => x.d).sort((a, b) => (a.d < b.d ? -1 : 1)).slice(-200);
+  u.water = { ...(d.water || {}), ...(u.water || {}) };
+  u.protein = { ...(d.protein || {}), ...(u.protein || {}) };
+  if (!hasBody(u.profile) && d.profile && hasBody(d.profile)) u.profile = d.profile;
+  return { p: u.plans.length - before.p, l: u.log.length - before.l };
+}
+$("#importFile").addEventListener("change", async e => {
+  const f = e.target.files[0], x = IMP_T[lang];
+  e.target.value = "";
+  if (!f || !currentUser()) return;
+  let d;
+  try { d = JSON.parse(await f.text()); } catch { return toast(x.bad); }
+  if (!d || d.app !== "FitStart AI") return toast(x.bad);
+  let added;
+  updateUser(u => { added = mergeImport(u, d); });
+  renderAll();
+  toast(x.done(added.p, added.l));
+});
+
 $("#clearPlansBtn").onclick = () => {
   clearTimeout(clearTimer);
   if (!clearArmed) {
@@ -97,3 +135,5 @@ $("#delForm").addEventListener("submit", async e => {
   renderAll();
   toast(tx.accDeleted);
 });
+// The "Choose file" label works with the keyboard too
+$("#importLbl").addEventListener("keydown", e => { if (e.key === "Enter" || e.key === " ") { e.preventDefault(); $("#importFile").click(); } });
