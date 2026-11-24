@@ -93,6 +93,8 @@ const KW = {
   busy: ["ไม่มีเวลา", "เวลาน้อย", "ยุ่ง", "busy", "no time", "quick"],
   water: ["ดื่มน้ำ", "กินน้ำ", "น้ำกี่", "น้ำวันละ", "water", "hydrat"],
   warm: ["วอร์ม", "อบอุ่นร่างกาย", "คูลดาวน์", "warm up", "warm-up", "warmup", "cool down", "cool-down"],
+  when: ["ตอนเช้า", "ตอนเย็น", "ตอนไหนดี", "เวลาไหนดี", "ช่วงไหนดี", "ก่อนนอน", "กลางคืน", "ตอนดึก", "what time", "when should i work out", "morning or evening", "best time", "at night"],
+  eatwhen: ["กินก่อน", "กินหลัง", "ก่อนออกกำลัง", "หลังออกกำลัง", "ท้องว่าง", "ท้องว่าง", "eat before", "eat after", "before workout", "after workout", "empty stomach"],
   plateau: ["น้ำหนักไม่ลง", "น้ำหนักขึ้นลง", "ทำไมน้ำหนักขึ้น", "น้ำหนักขึ้นทั้งที่", "น้ำหนักนิ่ง", "ไม่ลดเลย", "not losing weight", "weight went up", "weight is up", "plateau", "scale won't move", "weight going down", "weight down"],
   week: ["สรุปสัปดาห์", "สัปดาห์นี้เป็นยังไง", "สัปดาห์นี้ทำไปเท่าไหร่", "สรุปผล", "สรุปให้หน่อย", "weekly summary", "this week so far", "how did i do this week", "my week"],
   goalw: ["น้ำหนักเป้าหมาย", "เป้าหมายน้ำหนัก", "เป้าน้ำหนัก", "ถึงเป้า", "อีกนานไหม", "อีกนานแค่ไหน", "goal weight", "target weight", "reach my goal", "how long until"],
@@ -112,6 +114,14 @@ const GROUP_KW = {
   glutes: ["ก้น", "สะโพก", "glute", "butt", "hip"], core: ["หน้าท้อง", "ซิกแพ็ก", "abs", "core", "six pack", "sixpack"]
 };
 const has = (m, list) => list.some(k => m.includes(k));
+
+// Timing questions every beginner asks
+const TIMING_T = {
+  th: { when: "เวลาที่ดีที่สุดคือ<b>เวลาที่คุณทำได้สม่ำเสมอ</b>ครับ เช้าหรือเย็นได้ผลพอๆ กัน<br>- ตอนเช้า: ทำเสร็จแล้วไม่มีอะไรมาขัด เหมาะกับคนชอบตื่นเช้า วอร์มอัพให้นานขึ้นเพราะร่างกายยังตึง<br>- ตอนเย็น: ร่างกายอุ่นแล้ว ยกได้ดี<br>- ก่อนนอน: ได้ แต่ควรเลิกก่อนนอนอย่างน้อย 1–2 ชั่วโมง ถ้านอนไม่หลับให้เลื่อนให้เร็วขึ้นหรือเลือกยืดเหยียดเบาๆ แทน<br>ลองใส่เวลาลงปฏิทินในหน้าสร้างแผน จะช่วยให้ไม่ลืม",
+        eat: "<b>ก่อนออกกำลังกาย</b>: ถ้ากินมื้อใหญ่ให้เว้น 2–3 ชั่วโมง หรือกินของว่างเบาๆ ก่อน 30–60 นาที เช่น กล้วย 1 ลูก ขนมปัง 1 แผ่น นม 1 กล่อง ถ้าท้องว่างแล้วไม่หน้ามืดก็ทำได้ แต่ถ้าวิงเวียนให้กินก่อนเสมอ<br><b>หลังออกกำลังกาย</b>: ดื่มน้ำ แล้วกินมื้อปกติที่มีโปรตีน (ไข่ อกไก่ นม เต้าหู้) ภายใน 1–2 ชั่วโมง ไม่ต้องรีบภายใน 30 นาทีก็ได้ สำคัญที่โปรตีนรวมทั้งวันมากกว่า" },
+  en: { when: "The best time is <b>the time you can stick to</b>. Morning and evening work about the same.<br>- Morning: done before the day gets busy; warm up a bit longer because you're stiffer.<br>- Evening: your body is already warm, lifts often feel stronger.<br>- Before bed: fine, but finish 1–2 hours before sleep. If it keeps you awake, move it earlier or do gentle stretching instead.<br>Add your workout times to your calendar on the Build a plan page so you don't forget.",
+        eat: "<b>Before</b>: after a big meal wait 2–3 hours, or have a small snack 30–60 minutes before (a banana, a slice of bread, a carton of milk). Training on an empty stomach is fine if you feel OK; if you get dizzy, always eat first.<br><b>After</b>: drink water, then have a normal meal with protein (eggs, chicken, milk, tofu) within 1–2 hours. No need to rush within 30 minutes; your total protein for the day matters more." }
+};
 
 // "Why isn't my weight going down?": daily swings are normal; look at the weekly average; what to check
 function plateauAnswer(u) {
@@ -267,6 +277,8 @@ function reply(raw) {
     return { text: tx.waterNeed, links: links(["profile.html", tx.linkProfile]) };
   }
   if (has(m, KW.warm)) return { text: tx.warm, ex: ["march", "wgs", "hamstring", "child"], links: links(["planner.html", tx.linkPlan]) };
+  if (has(m, KW.eatwhen)) return { text: TIMING_T[lang].eat, links: links(["for-you.html#fyProtein", tx.linkForYou]) };
+  if (has(m, KW.when)) return { text: TIMING_T[lang].when, links: links(["planner.html#plan", tx.linkPlan]) };
   if (has(m, KW.plateau)) return plateauAnswer(u);
   if (has(m, KW.week)) return weekAnswer(u);
   if (has(m, KW.goalw)) return goalWAnswer(u);
