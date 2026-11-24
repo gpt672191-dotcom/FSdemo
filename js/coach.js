@@ -27,7 +27,16 @@ const COACH_T = {
     plan: "ให้ AI จัดตารางออกกำลังกายให้ได้เลยครับ เลือกเป้าหมาย วัน เวลา อุปกรณ์ แล้วกดสร้างแผน",
     thanks: "ยินดีครับ! สู้ๆ นะครับ มีอะไรถามได้ตลอด",
     fallback: "ขอโทษครับ ผมยังตอบเรื่องนี้ไม่ได้ ลองถามเรื่องเหล่านี้ดูนะครับ",
-    linkMuscle: "หน้าสร้างกล้าม", linkLose: "หน้าลดน้ำหนัก", linkPlan: "สร้างแผน", linkBmi: "คำนวณ BMI", linkProfile: "ข้อมูลส่วนตัว", linkMore: "เคล็ดลับ"
+    linkMuscle: "หน้าสร้างกล้าม", linkLose: "หน้าลดน้ำหนัก", linkPlan: "สร้างแผน", linkBmi: "คำนวณ BMI", linkProfile: "ข้อมูลส่วนตัว", linkMore: "เคล็ดลับ",
+    water: (g, l) => `ควรดื่มน้ำประมาณ <b>${g} แก้ว/วัน</b> (ราว ${l} ลิตร) วันที่ออกกำลังกายหรืออากาศร้อนเพิ่มอีก 1–2 แก้ว<br>บันทึกการดื่มน้ำได้ในหน้าแนะนำ`,
+    waterNeed: "โดยทั่วไปควรดื่มน้ำประมาณ 30–35 มล. ต่อน้ำหนักตัว 1 กก. ต่อวัน เข้าสู่ระบบแล้วกรอกน้ำหนัก ผมจะคำนวณเป็นจำนวนแก้วให้",
+    proteinTrack: "นับโปรตีนที่กินแต่ละวันได้ในหน้าแนะนำ (กดอาหารที่กิน ระบบรวมให้)",
+    warm: "ทุกครั้งที่ใช้โหมดนำออกกำลังกาย จะมี <b>วอร์มอัพ 3 ท่า</b> ก่อนเริ่ม และ <b>คูลดาวน์ยืดเหยียด 3 ท่า</b> หลังจบให้อัตโนมัติ ช่วยลดโอกาสบาดเจ็บ<br>ถ้ารีบ กด \"ข้ามวอร์มอัพ\" ได้ แต่แนะนำให้ทำ",
+    remind: "กด <b>\"เพิ่มลงปฏิทิน\"</b> ใต้แผนในหน้าสร้างแผน เลือกเวลา แล้วเปิดไฟล์ที่ได้ มือถือจะเตือนก่อนออกกำลังกาย 30 นาทีทุกวันที่ต้องฝึก",
+    badges: "ดูความคืบหน้า วันต่อเนื่อง ปฏิทินการฝึก และ <b>เหรียญรางวัล 9 เหรียญ</b> ได้ในหน้าข้อมูลส่วนตัว ออกกำลังกายด้วยโหมดนำ ระบบจะบันทึกให้เอง",
+    library: "ดูท่าทั้งหมด 55 ท่าได้ที่คลังท่าในหน้าสร้างกล้าม ค้นหาชื่อท่า หรือกรองตามส่วนของร่างกายและอุปกรณ์ได้",
+    install: "ติดตั้งเว็บนี้เป็นแอปได้ครับ<br>Android: เมนู Chrome แล้วเลือก \"เพิ่มลงในหน้าจอหลัก\"<br>iPhone: ปุ่มแชร์ใน Safari แล้วเลือก \"เพิ่มไปยังหน้าจอโฮม\"<br>เปิดหน้าที่เคยดูได้แม้ไม่มีเน็ต",
+    linkForYou: "หน้าแนะนำ", linkLib: "คลังท่า", linkProgress: "ความคืบหน้า"
   },
   en: {
     title: "FitStart Coach", sub: "Automatic helper", open: "Ask the coach", placeholder: "Ask something, e.g. how to lose belly fat",
@@ -53,7 +62,16 @@ const COACH_T = {
     plan: "Let AI build your workout schedule: pick your goal, days, time and equipment, then press generate.",
     thanks: "You're welcome! Keep going, and ask me anytime.",
     fallback: "Sorry, I can't answer that yet. Try one of these:",
-    linkMuscle: "Build muscle page", linkLose: "Lose weight page", linkPlan: "Build a plan", linkBmi: "BMI calculator", linkProfile: "My profile", linkMore: "Tips"
+    linkMuscle: "Build muscle page", linkLose: "Lose weight page", linkPlan: "Build a plan", linkBmi: "BMI calculator", linkProfile: "My profile", linkMore: "Tips",
+    water: (g, l) => `Aim for about <b>${g} glasses a day</b> (around ${l} L). Add 1–2 glasses on workout days or hot days.<br>You can log your water on the For you page.`,
+    waterNeed: "A common guide is 30–35 ml of water per kg of body weight a day. Log in and add your weight, and I'll turn it into glasses.",
+    proteinTrack: "You can count the protein you eat each day on the For you page (tap the foods, it adds them up).",
+    warm: "Every guided workout now starts with a <b>3-move warm-up</b> and ends with a <b>3-move cool-down stretch</b>, to lower the risk of injury.<br>In a hurry? Tap \"Skip warm-up\", but it's worth doing.",
+    remind: "Tap <b>\"Add to calendar\"</b> under your plan on the Build a plan page, pick a time, and open the file. Your phone will remind you 30 minutes before every training day.",
+    badges: "Your progress, streak, training calendar and <b>9 badges</b> are on your profile page. Guided workouts are logged automatically.",
+    library: "All 55 exercises are in the library on the Build muscle page. Search by name or filter by body part and equipment.",
+    install: "You can install this site as an app.<br>Android: Chrome menu, then \"Add to Home screen\"<br>iPhone: Share button in Safari, then \"Add to Home Screen\"<br>Pages you've opened work offline too.",
+    linkForYou: "For you", linkLib: "Exercise library", linkProgress: "Progress"
   }
 };
 const ct = () => COACH_T[lang];
@@ -71,7 +89,13 @@ const KW = {
   home: ["ที่บ้าน", "ไม่มีอุปกรณ์", "ไม่มีเครื่อง", "home", "no equipment", "bodyweight"],
   start: ["เริ่ม", "มือใหม่", "ไม่เคย", "start", "beginner", "new to"],
   busy: ["ไม่มีเวลา", "เวลาน้อย", "ยุ่ง", "busy", "no time", "quick"],
-  sleep: ["นอน", "พักผ่อน", "ดื่มน้ำ", "กินน้ำ", "sleep", "rest", "water"],
+  water: ["ดื่มน้ำ", "กินน้ำ", "น้ำกี่", "น้ำวันละ", "water", "hydrat"],
+  warm: ["วอร์ม", "อบอุ่นร่างกาย", "คูลดาวน์", "warm up", "warm-up", "warmup", "cool down", "cool-down"],
+  remind: ["เตือน", "ปฏิทิน", "ลืม", "remind", "calendar", "forget"],
+  badges: ["เหรียญ", "รางวัล", "ความคืบหน้า", "ต่อเนื่อง", "badge", "progress", "streak", "achievement"],
+  library: ["ท่าทั้งหมด", "คลังท่า", "ค้นหาท่า", "all exercise", "exercise list", "library"],
+  install: ["ติดตั้ง", "แอป", "หน้าจอหลัก", "ออฟไลน์", "install", " app", "home screen", "offline"],
+  sleep: ["นอน", "พักผ่อน", "sleep", "rest"],
   food: ["อาหาร", "กินอะไร", "เมนู", "food", "diet", "eat", "meal"],
   plan: ["แผน", "ตาราง", "plan", "schedule", "program"]
 };
@@ -116,11 +140,7 @@ function reply(raw) {
     coachWaiting = "bmi";
     return { text: tx.askBody, links: links(["bmi.html", tx.linkBmi]) };
   }
-  if (has(m, KW.kcal)) {
-    if (!p) return { text: tx.kcalNeed, links: links(["weight-loss.html", tx.linkLose], ["profile.html", tx.linkProfile]) };
-    const bmr = health.bmr(p.weight, p.height, p.age, p.sex), tdee = bmr * ACT_FACTORS[(p.activity || 1) - 1];
-    return { text: tx.kcal(round10(bmr), round10(tdee), round10(Math.max(health.minKcal(p.sex), tdee - 500))), links: links(["for-you.html", t().navForYou]) };
-  }
+  // Protein before calories: "โปรตีนควรกินเท่าไหร่" also contains the calorie phrase "กินเท่าไหร่"
   if (has(m, KW.protein)) {
     if (p) return proteinAnswer(p.weight);
     const w = nums.find(n => n >= 25 && n <= 250);
@@ -128,6 +148,20 @@ function reply(raw) {
     coachWaiting = "protein";
     return { text: tx.proteinNeed };
   }
+  if (has(m, KW.kcal)) {
+    if (!p) return { text: tx.kcalNeed, links: links(["weight-loss.html", tx.linkLose], ["profile.html", tx.linkProfile]) };
+    const bmr = health.bmr(p.weight, p.height, p.age, p.sex), tdee = bmr * ACT_FACTORS[(p.activity || 1) - 1];
+    return { text: tx.kcal(round10(bmr), round10(tdee), round10(Math.max(health.minKcal(p.sex), tdee - 500))), links: links(["for-you.html", t().navForYou]) };
+  }
+  if (has(m, KW.water)) {
+    if (p) { const g = Math.min(16, Math.max(6, Math.round(p.weight * 33 / 250))); return { text: tx.water(g, (p.weight * 0.033).toFixed(1)), links: links(["for-you.html#fyWater", tx.linkForYou]) }; }
+    return { text: tx.waterNeed, links: links(["profile.html", tx.linkProfile]) };
+  }
+  if (has(m, KW.warm)) return { text: tx.warm, ex: ["march", "wgs", "hamstring", "child"], links: links(["planner.html", tx.linkPlan]) };
+  if (has(m, KW.remind)) return { text: tx.remind, links: links(["planner.html#plan", tx.linkPlan]) };
+  if (has(m, KW.badges)) return { text: tx.badges, links: links(["profile.html#progress", tx.linkProgress]) };
+  if (has(m, KW.library)) return { text: tx.library, links: links(["muscle.html#allex", tx.linkLib]) };
+  if (has(m, KW.install)) return { text: tx.install };
 
   // A specific exercise by name (longest match wins)
   const hit = EX.map(e => {
@@ -165,7 +199,7 @@ function reply(raw) {
     return { text: tx.bmi(b.toFixed(1), t().bmiCat[health.bmiIdx(b)], lo, hi), links: links(["for-you.html", t().navForYou]) };
   }
   function proteinAnswer(w) {
-    return { text: tx.protein(Math.round(w * 1.6), Math.round(w * 2.2), w), links: links(["muscle.html", tx.linkMuscle]) };
+    return { text: tx.protein(Math.round(w * 1.6), Math.round(w * 2.2), w) + "<br>" + tx.proteinTrack, links: links(["for-you.html#fyProtein", tx.linkForYou], ["muscle.html", tx.linkMuscle]) };
   }
 }
 
