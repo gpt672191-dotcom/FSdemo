@@ -28,6 +28,10 @@ function muscleWord(w) {
   return null;
 }
 
+function xlEdges(row) {
+  row.classList.toggle("more-r", row.scrollLeft + row.clientWidth < row.scrollWidth - 4);
+  row.classList.toggle("more-l", row.scrollLeft > 4);
+}
 function renderLibrary() {
   const box = $("#allex"); if (!box) return;
   const tx = t(), x = xl();
@@ -65,6 +69,14 @@ function renderLibrary() {
 
   // on/off filters: beginner friendly (no intermediate-only moves), no jumping (easier on knees and neighbours)
   $("#xlLvl").innerHTML = chip("data-xlf", "beg", x.beg, xlBeg) + chip("data-xlf", "nojump", x.noJump, xlNoJump);
+  // phones: keep the selected chip of each row in view, and show a soft edge where more chips are hidden
+  ["#xlCats", "#xlEqs", "#xlLvl"].forEach(id => {
+    const row = $(id), on = row.querySelector(".xl-chip.on");
+    if (on && (on.offsetLeft < row.scrollLeft || on.offsetLeft + on.offsetWidth > row.scrollLeft + row.clientWidth))
+      row.scrollLeft = on.offsetLeft - 12;
+    xlEdges(row);
+    if (!row.dataset.edges) { row.dataset.edges = 1; row.addEventListener("scroll", () => xlEdges(row), { passive: true }); }
+  });
   const words = $("#xlQ").value.trim().toLowerCase().split(/\s+/).filter(Boolean);
   $("#xlClear").hidden = !words.length;
   const list = EX.filter(e => (xlCat === "all" || e.cat === xlCat) && (xlEq === "all" || e.eq === xlEq) && (!xlBeg || !e.adv) && (!xlNoJump || !e.jump))
