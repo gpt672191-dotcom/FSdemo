@@ -1858,3 +1858,10 @@ main:focus { outline: none; }
   .xd-fig { min-height: 0; height: auto; aspect-ratio: 6 / 5; }
   .xd-info { padding: 18px 18px 22px; }
 }
+
+/* ---------- Add plan to calendar (planner.js) ---------- */
+.cal-row { display: flex; flex-wrap: wrap; align-items: center; gap: 8px 12px; margin-top: 14px; padding: 12px 14px; border: 1px dashed var(--line); border-radius: 14px; }
+.cal-row label { font-size: .9rem; font-weight: 600; }
+.cal-row input[type="time"] { padding: 7px 10px; border-radius: 10px; border: 1px solid var(--line); background: var(--surface-2); color: var(--text); font: inherit; }
+.cal-row small { flex-basis: 100%; color: var(--muted); font-size: .8rem; }
+@media print { .cal-row { display: none !important; } }

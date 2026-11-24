@@ -153,10 +153,17 @@ function renderPlan() {
       <button type="button" class="btn" id="saveBtn">${icon("save")}${t.savePlan}</button>
       <button type="button" class="btn ghost" id="regen">${icon("refresh")}${t.regen}</button>
       <button type="button" class="btn ghost" id="printBtn">${icon("printer")}${t.print}</button>
+    </div>
+    <div class="cal-row">
+      <label for="calTime">${CAL_T[lang].time}</label>
+      <input type="time" id="calTime" value="${store.get("fs-cal-time", "18:00")}">
+      <button type="button" class="btn ghost" id="calBtn">${icon("calendar")}${CAL_T[lang].add}</button>
+      <small>${CAL_T[lang].hint}</small>
     </div>`;
   $("#saveBtn").onclick = savePlan;
   $("#regen").onclick = () => generate({ ...lastPlan.answers }, false);
   $("#printBtn").onclick = () => window.print();
+  $("#calBtn").onclick = () => downloadCalendar(days, a);
 }
 
 function generate(a, scroll = true) {
@@ -328,3 +335,41 @@ $("#savedList").addEventListener("click", e => {
     }
   }
 });
+
+/* ---------- Add the plan to the phone's calendar (.ics file, repeats weekly for 8 weeks, reminder 30 min before) ---------- */
+const CAL_T = {
+  th: { time: "เวลาออกกำลังกาย", add: "เพิ่มลงปฏิทิน", hint: "ได้ไฟล์ปฏิทิน เปิดแล้วจะเพิ่มทุกวันที่ต้องฝึก 8 สัปดาห์ พร้อมเตือนก่อน 30 นาที",
+    done: "ดาวน์โหลดไฟล์ปฏิทินแล้ว เปิดไฟล์เพื่อเพิ่มลงปฏิทิน", title: d => `FitStart: ${d}`, remind: "อีก 30 นาทีได้เวลาออกกำลังกาย" },
+  en: { time: "Workout time", add: "Add to calendar", hint: "Downloads a calendar file: every training day for 8 weeks, with a reminder 30 min before.",
+    done: "Calendar file downloaded. Open it to add the workouts.", title: d => `FitStart: ${d}`, remind: "Workout in 30 minutes" }
+};
+function downloadCalendar(days, a) {
+  const tx = T[lang], ct = CAL_T[lang];
+  const tm = ($("#calTime").value || "18:00").split(":").map(Number);
+  store.set("fs-cal-time", $("#calTime").value || "18:00");
+  const pad = n => String(n).padStart(2, "0");
+  const stamp = d => `${d.getFullYear()}${pad(d.getMonth() + 1)}${pad(d.getDate())}T${pad(d.getHours())}${pad(d.getMinutes())}00`;
+  const NL = String.fromCharCode(10), CRLF = String.fromCharCode(13, 10), BS = String.fromCharCode(92);
+  // iCalendar text: backslash, comma and semicolon get a backslash; line breaks become a literal \n
+  const esc = x => String(x).split(BS).join(BS + BS).replace(/([,;])/g, BS + "$1").split(NL).join(BS + "n");
+  const now = new Date(), utc = now.toISOString().replace(/[-:]/g, "").slice(0, 15) + "Z";
+  const ev = days.map((d, i) => {
+    // next date for this weekday (0 = Monday), today counts if the time has not passed yet
+    const start = new Date(now); start.setHours(tm[0], tm[1] || 0, 0, 0);
+    let add = (d.weekday - ((start.getDay() + 6) % 7) + 7) % 7;
+    if (add === 0 && start <= now) add = 7;
+    start.setDate(start.getDate() + add);
+    const name = `${tx.weekFull[d.weekday]} · ${tx.dayType[d.type]}`;
+    const desc = d.list.map((e, k) => `${k + 1}. ${e[lang]}`).join(NL) + NL + NL + "https://gpt672191-dotcom.github.io/FSdemo/planner.html";
+    return ["BEGIN:VEVENT", `UID:fitstart-${now.getTime()}-${i}@fitstart`, `DTSTAMP:${utc}`, `DTSTART:${stamp(start)}`, `DURATION:PT${+a.time}M`,
+      "RRULE:FREQ=WEEKLY;COUNT=8", `SUMMARY:${esc(ct.title(tx.dayType[d.type]))}`, `DESCRIPTION:${esc(name + NL + desc)}`,
+      "BEGIN:VALARM", "ACTION:DISPLAY", `DESCRIPTION:${esc(ct.remind)}`, "TRIGGER:-PT30M", "END:VALARM", "END:VEVENT"].join(CRLF);
+  });
+  const ics = ["BEGIN:VCALENDAR", "VERSION:2.0", "PRODID:-//FitStart AI//Plan//TH", "CALSCALE:GREGORIAN", ...ev, "END:VCALENDAR"].join(CRLF);
+  const blob = new Blob([ics], { type: "text/calendar;charset=utf-8" });
+  const link = document.createElement("a");
+  link.href = URL.createObjectURL(blob); link.download = "fitstart-plan.ics";
+  document.body.append(link); link.click(); link.remove();
+  setTimeout(() => URL.revokeObjectURL(link.href), 1500);
+  toast(ct.done);
+}
