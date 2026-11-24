@@ -1945,3 +1945,9 @@ main:focus { outline: none; }
 .waist-ratio.ok .ic { color: #16a34a; }
 .waist-ratio.warn { background: color-mix(in srgb, var(--warn) 14%, var(--surface)); }
 .waist-ratio.warn .ic { color: var(--warn); }
+.ad-charts2 { margin-top: 16px; grid-template-columns: 1fr 1fr; }
+.ad-charts2 .set-title { margin-bottom: 4px; }
+.ad-hbar.feel-easy i { background: #38bdf8; }
+.ad-hbar.feel-ok i { background: #22c55e; }
+.ad-hbar.feel-hard i { background: #f97316; }
+@media (max-width: 820px) { .ad-charts2 { grid-template-columns: 1fr; } }

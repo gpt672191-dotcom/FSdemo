@@ -10,6 +10,9 @@ const AD_T = {
     guardT: "หน้านี้สำหรับผู้ดูแลระบบเท่านั้น", guardS: "เข้าสู่ระบบด้วยบัญชีที่มีสิทธิ์ผู้ดูแลเพื่อใช้งาน", demoAcc: "บัญชีทดลอง:",
     sUsers: "ผู้ใช้ทั้งหมด", sNew: "สมัครใหม่ 7 วัน", sActive: "ใช้งานใน 7 วัน", sPlans: "แผนที่บันทึก", sWorkouts: "ออกกำลังกายรวม", sBanned: "ถูกระงับ",
     chSign: "ผู้สมัครใหม่ 14 วันล่าสุด", chGoal: "เป้าหมายจากแผนที่บันทึก", noGoal: "ยังไม่มีแผนที่บันทึก",
+    chUse: "การใช้ฟีเจอร์", chUseSub: "สัดส่วนผู้ใช้ที่เคยใช้แต่ละฟีเจอร์", chFeel: "ความรู้สึกหลังออกกำลังกาย", chFeelSub: "จากคำตอบหลังจบโหมดนำออกกำลังกาย",
+    fWork: "โหมดนำออกกำลังกาย", fPlan: "บันทึกแผน", fWater: "ตัวนับน้ำ", fProtein: "ตัวนับโปรตีน", fWeight: "บันทึกน้ำหนัก", fWaist: "บันทึกรอบเอว",
+    feelEasy: "ง่ายไป", feelOk: "พอดี", feelHard: "หนักไป", noFeel: "ยังไม่มีคำตอบ", nUsers: n => `${n} คน`,
     uTitle: "ผู้ใช้", search: "ค้นหาชื่อหรืออีเมล", fAll: "ทั้งหมด", fAdmin: "แอดมิน", fBanned: "ถูกระงับ",
     cUser: "ผู้ใช้", cJoined: "สมัครเมื่อ", cPlans: "แผน", cWorkouts: "ออกกำลังกาย", cBmi: "BMI", cStatus: "สถานะ",
     none: "ไม่พบผู้ใช้", manage: "จัดการ",
@@ -34,6 +37,9 @@ const AD_T = {
     guardT: "This page is for admins only", guardS: "Log in with an admin account to continue.", demoAcc: "Demo account:",
     sUsers: "Total users", sNew: "New in 7 days", sActive: "Active in 7 days", sPlans: "Saved plans", sWorkouts: "Workouts logged", sBanned: "Suspended",
     chSign: "Sign-ups, last 14 days", chGoal: "Goals in saved plans", noGoal: "No saved plans yet",
+    chUse: "Feature use", chUseSub: "Share of users who have used each feature", chFeel: "How workouts felt", chFeelSub: "Answers given at the end of guided workouts",
+    fWork: "Guided workouts", fPlan: "Saved a plan", fWater: "Water tracker", fProtein: "Protein tracker", fWeight: "Weight log", fWaist: "Waist log",
+    feelEasy: "Too easy", feelOk: "Just right", feelHard: "Too hard", noFeel: "No answers yet", nUsers: n => `${n} users`,
     uTitle: "Users", search: "Search name or email", fAll: "All", fAdmin: "Admins", fBanned: "Suspended",
     cUser: "User", cJoined: "Joined", cPlans: "Plans", cWorkouts: "Workouts", cBmi: "BMI", cStatus: "Status",
     none: "No users found", manage: "Manage",
@@ -104,6 +110,26 @@ function renderAdmin() {
     const n = goals[g] || 0, pc = Math.round(n / gTotal * 100);
     return `<div class="ad-hbar"><span>${esc(t()["goal_" + g])}</span><div><i style="width:${pc}%"></i></div><b>${pc}%</b></div>`;
   }).join("") : `<p class="ad-none">${tx.noGoal}</p>`;
+
+  // Feature use (share of users) and workout feelings
+  const used = (f) => list.filter(f).length;
+  const nonEmpty = o => o && Object.keys(o).length > 0;
+  const feats = [
+    [tx.fWork, used(u => (u.log || []).length)], [tx.fPlan, used(u => (u.plans || []).length)],
+    [tx.fWater, used(u => nonEmpty(u.water))], [tx.fProtein, used(u => nonEmpty(u.protein))],
+    [tx.fWeight, used(u => (u.weights || []).length)], [tx.fWaist, used(u => (u.waist || []).length)]
+  ];
+  $("#adUseChart").innerHTML = feats.map(([label, n]) => {
+    const pc = list.length ? Math.round(n / list.length * 100) : 0;
+    return `<div class="ad-hbar"><span>${esc(label)}</span><div><i style="width:${pc}%"></i></div><b title="${tx.nUsers(n)}">${pc}%</b></div>`;
+  }).join("");
+  const feels = { easy: 0, ok: 0, hard: 0 };
+  logs.forEach(l => { if (l.feel in feels) feels[l.feel]++; });
+  const fTotal = feels.easy + feels.ok + feels.hard;
+  $("#adFeelChart").innerHTML = fTotal ? [["easy", tx.feelEasy], ["ok", tx.feelOk], ["hard", tx.feelHard]].map(([k, label]) => {
+    const pc = Math.round(feels[k] / fTotal * 100);
+    return `<div class="ad-hbar feel-${k}"><span>${label}</span><div><i style="width:${pc}%"></i></div><b>${pc}%</b></div>`;
+  }).join("") : `<p class="ad-none">${tx.noFeel}</p>`;
 
   // User table
   $$("#adFilter button").forEach(b => { b.classList.toggle("on", b.dataset.f === adFilter); b.setAttribute("aria-pressed", b.dataset.f === adFilter); });
@@ -266,12 +292,18 @@ $("#adSampleAdd").onclick = async () => {
     const created = now - Math.floor(r() * 14) * DAY - Math.floor(r() * DAY / 2);
     const log = [...Array(Math.floor(r() * 12))].map(() => ({
       d: dayKey(created + Math.floor(r() * (now - created))), t: SAMPLE_WORK[Math.floor(r() * SAMPLE_WORK.length)],
-      sets: 8 + Math.floor(r() * 12), mins: 12 + Math.floor(r() * 30)
+      sets: 8 + Math.floor(r() * 12), mins: 12 + Math.floor(r() * 30), feel: ["easy", "ok", "ok", "ok", "hard"][Math.floor(r() * 5)]
     })).sort((a, b) => (a.d < b.d ? -1 : 1));
+    // some sample users also use the trackers
+    const recent = [...Array(5)].map((_, k) => dayKey(now - k * DAY));
+    const water = r() < 0.6 ? Object.fromEntries(recent.map(d => [d, 3 + Math.floor(r() * 8)])) : {};
+    const protein = r() < 0.45 ? { [recent[0]]: { chicken: 1, egg: 1 + Math.floor(r() * 3) } } : {};
+    const weights = r() < 0.5 ? [{ d: dayKey(created), w }, { d: recent[0], w: Math.round((w - r() * 2) * 10) / 10 }] : [];
+    const waist = r() < 0.35 ? [{ d: dayKey(created), w: Math.round(h * (0.42 + r() * 0.12)) }] : [];
     const plans = [...Array(Math.floor(r() * 3))].map(() => ({
       answers: { ...DEFAULTS, goal: OPTIONS.goal[Math.floor(r() * OPTIONS.goal.length)] }, seed: Math.floor(r() * 1e9), savedAt: created + DAY
     }));
-    users[email] = { name, email, salt, hash, created, lastLogin: log.length ? now - Math.floor(r() * 9) * DAY : created, plans, log,
+    users[email] = { name, email, salt, hash, created, lastLogin: log.length ? now - Math.floor(r() * 9) * DAY : created, plans, log, water, protein, weights, waist,
       profile: { sex, age: 16 + Math.floor(r() * 30), height: h, weight: w }, sample: true, banned: i === 7 };
   });
   setUsers(users);
