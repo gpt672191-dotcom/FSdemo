@@ -88,7 +88,7 @@ function ivRender() {
   if (!sec.dataset.built) {
     sec.dataset.built = 1;
     sec.innerHTML = `<div class="wrap" style="max-width:520px"><div class="panel tool">
-      <h2 class="h3" id="ivTitle"></h2><p id="ivSub"></p>
+      <h2 class="sub-h" id="ivTitle"></h2><p id="ivSub"></p>
       <div class="center" id="ivPresets"></div>
       <div class="iv-fields">
         <div class="field"><label for="ivWork" id="ivWorkL"></label><input id="ivWork" type="number" inputmode="numeric" min="5" max="600" value="30"></div>
