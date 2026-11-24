@@ -2133,3 +2133,9 @@ main:focus { outline: none; }
 @media print { .net-bar { display: none !important; } }
 .net-bar { left: 0; right: 0; margin: 0 auto; width: max-content; transform: none; }
 @media (max-width: 720px) { .net-bar { left: 12px; right: auto; margin: 0; max-width: calc(100% - 92px); } }
+
+/* Recent workouts on phones: name on its own line, date and minutes underneath */
+@media (max-width: 560px) {
+  .pg-recent li { flex-direction: column; gap: 2px; }
+  .pg-recent span { white-space: normal; }
+}
