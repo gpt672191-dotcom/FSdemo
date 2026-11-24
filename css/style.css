@@ -2172,3 +2172,13 @@ input[aria-invalid="true"]:not(.nm-f input), select[aria-invalid="true"] { outli
 /* Jumping to #section: stop below the sticky top bar (and the profile jump menu) instead of under it */
 html { scroll-padding-top: 76px; }
 html:has(.pnav) { scroll-padding-top: 124px; }
+
+/* The header is added by js/layout.js after the page starts drawing. Keep its 65px free until then,
+   so the page doesn't jump down when it appears (layout shift). */
+body:not(:has(> header)) { padding-top: 65px; }
+
+/* Until main.js has drawn the page (texts, cards, header), keep it invisible instead of showing a half-empty page
+   that then jumps around. A safety timer shows it after 3 s even if a script fails. */
+.js-wait body { visibility: hidden; animation: js-reveal 0s linear 3s forwards; }
+@keyframes js-reveal { to { visibility: visible; } }
+.js-wait[data-motion="reduce"] body { visibility: visible !important; } /* "reduce motion" turns animations off, so the safety timer would never fire */

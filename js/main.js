@@ -1,6 +1,8 @@
 // เริ่มต้นหน้าเว็บ — ต้องโหลดเป็นไฟล์สุดท้ายเสมอ (Start-up — always load this file last)
 
 renderAll();
+// show the page now that everything is drawn (see .js-wait in style.css)
+document.documentElement.classList.remove("js-wait");
 if (typeof FIGURES !== "undefined") FIGURES.start(); // animated characters
 
 // Sections hidden until login (e.g. #myplans) can't be scrolled to on load, so scroll after rendering
