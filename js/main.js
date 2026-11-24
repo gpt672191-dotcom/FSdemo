@@ -8,3 +8,8 @@ if (location.hash) {
   const target = document.getElementById(location.hash.slice(1));
   if (target && !target.hidden) setTimeout(() => target.scrollIntoView(), 50);
 }
+
+// Installable app + works offline (sw.js). Only over http(s), not when a file is opened from disk.
+if ("serviceWorker" in navigator && location.protocol.startsWith("http")) {
+  window.addEventListener("load", () => navigator.serviceWorker.register("sw.js").catch(() => {}));
+}
