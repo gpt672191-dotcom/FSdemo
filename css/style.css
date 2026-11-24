@@ -2161,3 +2161,6 @@ a.btn:has(> #pPlans) > span { white-space: nowrap; }
 .caps-warn .ic { width: 14px; height: 14px; flex: none; }
 @media (prefers-color-scheme: dark) { :root:not([data-theme="light"]) .caps-warn { color: #fbbf24; } }
 :root[data-theme="dark"] .caps-warn { color: #fbbf24; }
+/* auth form: the field that has the error gets a red outline and label */
+.nm-f input[aria-invalid="true"] { box-shadow: inset 0 0 0 2px #dc2626; }
+.nm-f input[aria-invalid="true"] + label { color: #dc2626; }

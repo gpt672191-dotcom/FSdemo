@@ -98,6 +98,8 @@ $("#authClose").onclick = closeAuth;
 $("#authModal").addEventListener("click", e => { if (e.target.id === "authModal") closeAuth(); });
 document.addEventListener("keydown", e => { if (e.key === "Escape" && !$("#authModal").hidden) closeAuth(); });
 
+// a field marked wrong goes back to normal as soon as the user edits it
+$("#authForm").addEventListener("input", e => { if (e.target.getAttribute("aria-invalid")) e.target.setAttribute("aria-invalid", "false"); });
 $("#authForm").addEventListener("submit", async e => {
   e.preventDefault();
   await adminReady;
@@ -106,17 +108,23 @@ $("#authForm").addEventListener("submit", async e => {
   const email = $("#aEmail").value.trim().toLowerCase();
   const pw = $("#aPw").value, pw2 = $("#aPw2").value;
   const users = getUsers();
-  const fail = msg => { err.textContent = msg; };
+  // show the message, mark the wrong field and put the cursor in it
+  $$("#authForm [aria-invalid]").forEach(x => x.setAttribute("aria-invalid", "false"));
+  const fail = (msg, id) => {
+    err.textContent = msg;
+    const f = id && document.getElementById(id);
+    if (f) { f.setAttribute("aria-invalid", "true"); f.setAttribute("aria-describedby", "authErr"); f.focus(); }
+  };
 
-  if (!/^[^\s@]+@[^\s@]+\.[^\s@]{2,}$/.test(email)) return fail(tx.errEmail);
+  if (!/^[^\s@]+@[^\s@]+\.[^\s@]{2,}$/.test(email)) return fail(tx.errEmail, "aEmail");
 
   if (authMode === "signup") {
-    if (!name) return fail(tx.errName);
-    if (pw.length < 8) return fail(tx.errPwLen);
-    if (pw !== pw2) return fail(tx.errPwMatch);
+    if (!name) return fail(tx.errName, "aName");
+    if (pw.length < 8) return fail(tx.errPwLen, "aPw");
+    if (pw !== pw2) return fail(tx.errPwMatch, "aPw2");
     const profile = readBody("a");
-    if (profile.error) return fail(tx[profile.error]);
-    if (users[email]) return fail(tx.errTaken);
+    if (profile.error) return fail(tx[profile.error], { errAge: "aAge", errHeight: "aH", errWeight: "aW" }[profile.error]);
+    if (users[email]) return fail(tx.errTaken, "aEmail");
     const salt = newSalt();
     users[email] = { name, email, salt, hash: await hashPw(pw, salt), created: Date.now(), lastLogin: Date.now(), plans: [], profile: profile.data };
     setUsers(users);
@@ -124,7 +132,7 @@ $("#authForm").addEventListener("submit", async e => {
     toast(tx.welcomeNew(name));
   } else {
     const u = users[email];
-    if (!u || (await hashPw(pw, u.salt)) !== u.hash) return fail(tx.errLogin);
+    if (!u || (await hashPw(pw, u.salt)) !== u.hash) return fail(tx.errLogin, "aPw");
     if (u.banned) return fail(tx.errBanned);
     { const all = getUsers(); all[email].lastLogin = Date.now(); setUsers(all); }
     loginAs(email);
