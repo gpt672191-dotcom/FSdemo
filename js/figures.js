@@ -285,7 +285,16 @@ const FIGURES = (() => {
     next();
   }
 
+  // Screen readers: each figure is one labelled picture ("Demo: Squat"), its canvas/SVG inside is hidden
+  function label(el) {
+    const ex = typeof EX !== "undefined" && EX.find(e => e.id === el.dataset.fig);
+    if (!ex) { el.setAttribute("aria-hidden", "true"); return; } // decorative poses (walk, drink) in tip boxes
+    el.setAttribute("role", "img");
+    el.setAttribute("aria-label", (typeof lang !== "undefined" && lang === "en" ? "Demo: " + ex.en : "ท่าสาธิต: " + ex.th.split(" (")[0]));
+  }
+  if (typeof onRender === "function") onRender(() => document.querySelectorAll("[data-fig]").forEach(label)); // language switch
   function mount(el) {
+    label(el);
     if (el._fig) return;
     if (lazy < 2) { if (!el.classList.contains("fig-loading")) { el.classList.add("fig-loading"); waiting.push(el); } load3d(); return; }
     // A 3D backend (js/fig3d.js) takes over when WebGL is available; otherwise the 2D SVG is used
