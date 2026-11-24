@@ -33,7 +33,8 @@ function renderParq() {
   const result = !done ? `<p class="pq-left">${tx.left(tx.q.length - answered)}</p>` :
     `<div class="pq-res ${yesMain ? "warn" : yesJoint ? "mid" : "ok"}">${icon(yesMain ? "alert" : yesJoint ? "heart" : "check")}<span>${yesMain ? tx.see : yesJoint ? tx.joint : tx.ok}</span></div>
      ${yesMain || yesJoint ? `<button type="button" class="btn ${lowOn ? "ghost" : ""} sm" data-pq-low ${lowOn ? "disabled" : ""}>${lowOn ? icon("check") + tx.lowOn : tx.low}</button>` : ""}`;
-  const wasOpen = box.querySelector("details") ? box.querySelector("details").open : !done;
+  // opens by itself only for first-timers (no answers yet and no plan); people with a plan see it closed so the plan is near the top
+  const wasOpen = box.querySelector("details") ? box.querySelector("details").open : !done && !store.get("fs-plan", null);
   box.innerHTML = `<div class="wrap"><details class="panel pq"${wasOpen ? " open" : ""}>
     <summary><span class="pq-ic">${icon("heart")}</span><span class="pq-t"><b>${tx.title}</b><small>${tx.sub}</small></span>${done ? `<span class="tag ${yesMain ? "" : "acc"}">${tx.done}</span>` : ""}${icon("chevron")}</summary>
     <ol class="pq-list">${tx.q.map((q, i) => `<li><span>${q}</span><div class="seg" role="group" aria-label="${esc(q)}">
