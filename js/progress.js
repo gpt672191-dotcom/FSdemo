@@ -127,8 +127,21 @@ function weekGoalHTML(s) {
     </svg>
     <div class="wk-txt"><b>${tx.title}</b><span>${s.weekDays >= goal ? tx.done : tx.left(goal - done)}</span><small>${plan ? tx.sub(goal) : tx.noPlan}</small></div>
     <div class="wk-vs"><small>${tx.vs}</small><span>${diff(s.week, s.lastWeek, tx.times)}</span><span>${diff(s.weekMins, s.lastWeekMins, tx.mins)}</span>${s.weekKcal ? `<span class="wk-kcal">~${s.weekKcal} kcal</span>` : ""}</div>
+    ${s.weekDays ? `<button type="button" class="btn ghost sm wk-share" data-wk-share="${s.weekDays},${s.weekMins}">${lang === "th" ? "แชร์ผลสัปดาห์นี้" : "Share this week"}</button>` : ""}
   </div>`;
 }
+
+// Share this week's result (phone share sheet, or copy the text on computers)
+document.addEventListener("click", async e => {
+  const b = e.target.closest("[data-wk-share]"); if (!b) return;
+  const [days, mins] = b.dataset.wkShare.split(",").map(Number), url = "https://gpt672191-dotcom.github.io/FSdemo/";
+  const text = lang === "th" ? `สัปดาห์นี้ฉันออกกำลังกาย ${days} วัน รวม ${mins} นาที กับ FitStart AI มาเริ่มด้วยกันไหม` : `This week I worked out ${days} day${days > 1 ? "s" : ""}, ${mins} minutes in total, with FitStart AI. Want to start too?`;
+  try {
+    if (navigator.share) { await navigator.share({ title: "FitStart AI", text, url }); return; }
+    await navigator.clipboard.writeText(text + " " + url);
+    toast(lang === "th" ? "คัดลอกข้อความแล้ว วางส่งให้เพื่อนได้เลย" : "Copied. Paste it to a friend.");
+  } catch (err) { if (err && err.name !== "AbortError") toast(text + " " + url); }
+});
 
 /* ---------- Log a workout done outside guided mode (walk, run, football...) ---------- */
 // kcal estimate = MET x body weight (kg) x hours (Compendium of Physical Activities, rounded)
