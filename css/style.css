@@ -1918,3 +1918,24 @@ main:focus { outline: none; }
 .wo-feel button:focus-visible { outline: 2px solid #fde68a; outline-offset: 2px; }
 .hello-today.tip { background: color-mix(in srgb, #f59e0b 12%, var(--surface)); border-color: color-mix(in srgb, #f59e0b 35%, var(--line)); }
 .hello-today.tip > .ic { color: #f59e0b; }
+
+/* ---------- Interval timer (more.html#interval, js/interval.js) ---------- */
+#ivPresets { display: flex; flex-wrap: wrap; gap: 8px; justify-content: center; margin: 14px 0; }
+#ivPresets small { color: var(--muted); font-weight: 500; margin-left: 4px; }
+.iv-fields { display: grid; grid-template-columns: repeat(3, 1fr); gap: 10px; }
+.iv-fields label { font-size: .8rem; }
+.iv-total { text-align: center; color: var(--muted); font-size: .88rem; margin: 10px 0 0; }
+.iv-box { margin: 14px 0; padding: 16px; border-radius: 18px; background: var(--surface-2); text-align: center; transition: background .25s; }
+.iv-box .timer-display { margin: 4px 0; }
+.iv-phase { font-weight: 700; font-size: 1.1rem; min-height: 1.5em; }
+.iv-round { color: var(--muted); font-size: .9rem; min-height: 1.3em; margin-bottom: 8px; }
+.iv-box[data-phase="go"] { background: color-mix(in srgb, #22c55e 22%, var(--surface)); }
+.iv-box[data-phase="go"] .iv-phase { color: #16a34a; }
+.iv-box[data-phase="relax"] { background: color-mix(in srgb, #38bdf8 20%, var(--surface)); }
+.iv-box[data-phase="relax"] .iv-phase { color: #0284c7; }
+.iv-box[data-phase="ready"] { background: color-mix(in srgb, #f59e0b 18%, var(--surface)); }
+.iv-box[data-phase="done"] .iv-phase { color: var(--accent); }
+@media (prefers-color-scheme: dark) { :root:not([data-theme="light"]) .iv-box[data-phase="go"] .iv-phase { color: #4ade80; } :root:not([data-theme="light"]) .iv-box[data-phase="relax"] .iv-phase { color: #7dd3fc; } }
+:root[data-theme="dark"] .iv-box[data-phase="go"] .iv-phase { color: #4ade80; }
+:root[data-theme="dark"] .iv-box[data-phase="relax"] .iv-phase { color: #7dd3fc; }
+@media (max-width: 420px) { .iv-fields { grid-template-columns: 1fr 1fr 1fr; gap: 6px; } .iv-fields label { font-size: .72rem; } }
