@@ -453,6 +453,8 @@ function weighNudge(u) {
   const ws = u.weights || [], last = ws.length ? ws[ws.length - 1].d : null;
   const days = last ? Math.floor((new Date(Progress.key(new Date()) + "T00:00:00") - new Date(last + "T00:00:00")) / 864e5) : null;
   if (last && days < 7) return "";
+  // never weighed + the getting-started list is showing: that list already asks for it (no duplicate box)
+  if (!last && startSteps(u)) return "";
   const th = lang === "th";
   const msg = last ? (th ? `ไม่ได้ชั่งน้ำหนักมา ${days} วันแล้ว ชั่งตอนเช้าหลังเข้าห้องน้ำ สัปดาห์ละครั้งก็พอ` : `${days} days since your last weigh-in. Once a week, in the morning, is enough.`)
     : (th ? "บันทึกน้ำหนักครั้งแรก เพื่อดูกราฟความเปลี่ยนแปลง" : "Log your first weight to start your progress chart.");
