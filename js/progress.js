@@ -104,7 +104,7 @@ function badgesHTML(u, s) {
 }
 
 /* ---------- Profile page: progress panel ---------- */
-function weightChart(ws) {
+function weightChart(ws, unit = "kg", gid = "wg") {
   const pts = ws.slice(-20);
   if (pts.length < 2) return "";
   const W = 900, H = 200, P = 28;
@@ -113,10 +113,10 @@ function weightChart(ws) {
   const line = pts.map((p, i) => `${i ? "L" : "M"}${x(i).toFixed(1)} ${y(p.w).toFixed(1)}`).join("");
   const area = `${line}L${x(pts.length - 1)} ${H - P}L${x(0)} ${H - P}Z`;
   const short = d => d.slice(5).replace("-", "/");
-  return `<svg class="w-chart" viewBox="0 0 ${W} ${H}" role="img" aria-label="weight chart">
-    <defs><linearGradient id="wg" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="var(--accent)" stop-opacity=".35"/><stop offset="1" stop-color="var(--accent)" stop-opacity="0"/></linearGradient></defs>
-    <path d="${area}" fill="url(#wg)"/><path d="${line}" fill="none" stroke="var(--accent)" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"/>
-    ${pts.map((p, i) => `<circle cx="${x(i)}" cy="${y(p.w)}" r="4" fill="var(--surface)" stroke="var(--accent)" stroke-width="2.5"><title>${p.d}: ${p.w} kg</title></circle>`).join("")}
+  return `<svg class="w-chart" viewBox="0 0 ${W} ${H}" role="img" aria-label="${unit === "kg" ? "weight" : "waist"} chart">
+    <defs><linearGradient id="${gid}" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="var(--accent)" stop-opacity=".35"/><stop offset="1" stop-color="var(--accent)" stop-opacity="0"/></linearGradient></defs>
+    <path d="${area}" fill="url(#${gid})"/><path d="${line}" fill="none" stroke="var(--accent)" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"/>
+    ${pts.map((p, i) => `<circle cx="${x(i)}" cy="${y(p.w)}" r="4" fill="var(--surface)" stroke="var(--accent)" stroke-width="2.5"><title>${p.d}: ${p.w} ${unit}</title></circle>`).join("")}
     <text x="${x(0)}" y="${H - 6}" class="w-lbl">${short(pts[0].d)}</text>
     <text x="${x(pts.length - 1)}" y="${H - 6}" class="w-lbl" text-anchor="end">${short(pts[pts.length - 1].d)}</text>
     <text x="${x(pts.length - 1)}" y="${y(pts[pts.length - 1].w) - 12}" class="w-val" text-anchor="end">${pts[pts.length - 1].w}</text>
@@ -169,10 +169,45 @@ function renderProgress() {
             <button type="submit" class="btn">${icon("plus")}${tx.wAdd}</button>
           </form>
         </div>
+        ${waistHTML(u)}
       </div>
     </div>`;
 }
 onRender(renderProgress);
+
+/* ---------- Waist (cm): often shrinks even when the scale doesn't move ---------- */
+const WAIST_T = {
+  th: { title: "รอบเอว", ph: "รอบเอววันนี้ (ซม.)", none: "วัดรอบเอวระดับสะดือ หายใจออกปกติ สัปดาห์ละครั้ง น้ำหนักไม่ลงแต่เอวลดก็ถือว่าได้ผล",
+    ratio: (r, ok) => `รอบเอว/ส่วนสูง = ${r} ${ok ? "อยู่ในเกณฑ์ดี (ต่ำกว่า 0.5)" : "เกิน 0.5 ควรลดรอบเอว (เกณฑ์: รอบเอวไม่ควรเกินครึ่งหนึ่งของส่วนสูง)"}`,
+    change: d => `${d > 0 ? "+" : ""}${d.toFixed(1)} ซม. จากครั้งแรก`, saved: "บันทึกรอบเอวแล้ว", err: "กรอกรอบเอว 40–200 ซม." },
+  en: { title: "Waist", ph: "Today's waist (cm)", none: "Measure at the belly button after a normal breath out, once a week. A smaller waist counts even if your weight stays the same.",
+    ratio: (r, ok) => `Waist-to-height = ${r} ${ok ? "is in the healthy range (under 0.5)" : "is above 0.5; aim to bring your waist under half your height"}`,
+    change: d => `${d > 0 ? "+" : ""}${d.toFixed(1)} cm since first entry`, saved: "Waist saved", err: "Enter a waist from 40 to 200 cm" }
+};
+function waistHTML(u) {
+  const tx = WAIST_T[lang], ws = u.waist || [], last = ws[ws.length - 1], h = u.profile && u.profile.height;
+  const change = ws.length >= 2 ? `<span class="w-change ${last.w - ws[0].w <= 0 ? "down" : "up"}">${tx.change(last.w - ws[0].w)}</span>` : "";
+  const r = last && h ? last.w / h : null;
+  return `<div class="pg-w">
+    <div class="pg-w-head"><div class="pg-sub" style="margin:0">${tx.title}</div>${change}</div>
+    ${weightChart(ws, "cm", "wg2") || `<p class="hint">${tx.none}</p>`}
+    ${r ? `<p class="waist-ratio ${r < 0.5 ? "ok" : "warn"}">${icon(r < 0.5 ? "check" : "alert")}<span>${tx.ratio(r.toFixed(2), r < 0.5)}</span></p>` : ""}
+    <form class="pg-w-form" id="waistForm" novalidate>
+      <input id="waistIn" type="number" inputmode="decimal" step="0.5" min="40" max="200" placeholder="${tx.ph}" value="${last ? last.w : ""}" aria-label="${tx.ph}">
+      <button type="submit" class="btn">${icon("plus")}${pt().wAdd}</button>
+    </form>
+  </div>`;
+}
+document.addEventListener("submit", e => {
+  if (e.target.id !== "waistForm") return;
+  e.preventDefault();
+  const w = num("waistIn", 40, 200), tx = WAIST_T[lang];
+  if (isNaN(w)) { toast(tx.err); return; }
+  const day = Progress.key(new Date());
+  updateUser(u => { u.waist = [...(u.waist || []).filter(x => x.d !== day), { d: day, w: Math.round(w * 2) / 2 }].slice(-200); });
+  renderAll(); toast(tx.saved);
+});
+
 document.addEventListener("submit", e => {
   if (e.target.id !== "wForm") return;
   e.preventDefault();

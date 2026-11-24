@@ -1939,3 +1939,9 @@ main:focus { outline: none; }
 :root[data-theme="dark"] .iv-box[data-phase="go"] .iv-phase { color: #4ade80; }
 :root[data-theme="dark"] .iv-box[data-phase="relax"] .iv-phase { color: #7dd3fc; }
 @media (max-width: 420px) { .iv-fields { grid-template-columns: 1fr 1fr 1fr; gap: 6px; } .iv-fields label { font-size: .72rem; } }
+.waist-ratio { display: flex; gap: 8px; align-items: flex-start; font-size: .88rem; margin: 6px 0 12px; padding: 9px 12px; border-radius: 12px; }
+.waist-ratio .ic { flex: none; width: 17px; height: 17px; margin-top: 2px; }
+.waist-ratio.ok { background: color-mix(in srgb, #22c55e 12%, var(--surface)); }
+.waist-ratio.ok .ic { color: #16a34a; }
+.waist-ratio.warn { background: color-mix(in srgb, var(--warn) 14%, var(--surface)); }
+.waist-ratio.warn .ic { color: var(--warn); }
