@@ -399,6 +399,7 @@ document.addEventListener("submit", e => {
 onRender(() => {
   const box = $("#homeHello"); if (!box) return;
   const u = currentUser();
+  document.body.classList.toggle("signed-in", !!u); // phones: shorter intro for returning users (style.css)
   box.hidden = !u; if (!u) return;
   const tx = pt(), s = Progress.stats(u);
   // Today's workout from the current plan (same schedule the planner uses: SCHEDULE / TEMPLATES in data.js)
