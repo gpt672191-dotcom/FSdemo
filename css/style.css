@@ -2124,3 +2124,12 @@ main:focus { outline: none; }
 .wo-ask-card b { font-size: 1.2rem; }
 .wo-ask-card span { color: rgba(255, 255, 255, .75); margin-bottom: 6px; }
 .wo-ask-card .wo-btn { justify-content: center; width: 100%; }
+
+/* Offline notice */
+.net-bar { position: fixed; left: 50%; transform: translateX(-50%); bottom: 16px; z-index: 60; display: flex; align-items: center; gap: 8px; max-width: calc(100% - 32px); padding: 9px 14px; border-radius: 12px; background: #1f2937; color: #fff; font-size: .88rem; box-shadow: 0 10px 30px -10px rgba(0, 0, 0, .5); }
+.net-bar[hidden] { display: none; }
+.net-bar .ic { width: 16px; height: 16px; color: #fbbf24; flex: none; }
+@media (max-width: 720px) { .net-bar { bottom: calc(76px + env(safe-area-inset-bottom)); } }
+@media print { .net-bar { display: none !important; } }
+.net-bar { left: 0; right: 0; margin: 0 auto; width: max-content; transform: none; }
+@media (max-width: 720px) { .net-bar { left: 12px; right: auto; margin: 0; max-width: calc(100% - 92px); } }

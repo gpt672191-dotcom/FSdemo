@@ -169,3 +169,17 @@ $("main").tabIndex = -1;
   document.body.prepend(skip);
   onRender(() => { skip.textContent = lang === "th" ? "ข้ามไปที่เนื้อหา" : "Skip to content"; });
 }
+
+// Offline notice: the site keeps working without internet (pages are saved by sw.js, data lives in this browser)
+{
+  const bar = document.createElement("div");
+  bar.className = "net-bar"; bar.setAttribute("role", "status"); bar.hidden = true;
+  document.body.append(bar);
+  const draw = () => {
+    const off = navigator.onLine === false;
+    bar.hidden = !off;
+    if (off) bar.innerHTML = `${icon("alert")}<span>${lang === "th" ? "ไม่มีอินเทอร์เน็ต ใช้งานต่อได้ ข้อมูลบันทึกในเครื่องตามปกติ" : "You're offline. Keep going: your data still saves on this device."}</span>`;
+  };
+  addEventListener("online", draw); addEventListener("offline", draw);
+  onRender(draw);
+}
