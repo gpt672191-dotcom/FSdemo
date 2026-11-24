@@ -93,6 +93,7 @@ const KW = {
   busy: ["ไม่มีเวลา", "เวลาน้อย", "ยุ่ง", "busy", "no time", "quick"],
   water: ["ดื่มน้ำ", "กินน้ำ", "น้ำกี่", "น้ำวันละ", "water", "hydrat"],
   warm: ["วอร์ม", "อบอุ่นร่างกาย", "คูลดาวน์", "warm up", "warm-up", "warmup", "cool down", "cool-down"],
+  plateau: ["น้ำหนักไม่ลง", "น้ำหนักขึ้นลง", "ทำไมน้ำหนักขึ้น", "น้ำหนักขึ้นทั้งที่", "น้ำหนักนิ่ง", "ไม่ลดเลย", "not losing weight", "weight went up", "weight is up", "plateau", "scale won't move"],
   week: ["สรุปสัปดาห์", "สัปดาห์นี้เป็นยังไง", "สัปดาห์นี้ทำไปเท่าไหร่", "สรุปผล", "สรุปให้หน่อย", "weekly summary", "this week so far", "how did i do this week", "my week"],
   goalw: ["น้ำหนักเป้าหมาย", "เป้าหมายน้ำหนัก", "เป้าน้ำหนัก", "ถึงเป้า", "อีกนานไหม", "อีกนานแค่ไหน", "goal weight", "target weight", "reach my goal", "how long until"],
   today: ["วันนี้ทำอะไร", "วันนี้ต้องทำ", "วันนี้ออกกำลัง", "วันนี้เล่น", "วันนี้ฝึก", "ของวันนี้", "today"],
@@ -111,6 +112,24 @@ const GROUP_KW = {
   glutes: ["ก้น", "สะโพก", "glute", "butt", "hip"], core: ["หน้าท้อง", "ซิกแพ็ก", "abs", "core", "six pack", "sixpack"]
 };
 const has = (m, list) => list.some(k => m.includes(k));
+
+// "Why isn't my weight going down?": daily swings are normal; look at the weekly average; what to check
+function plateauAnswer(u) {
+  const th = lang === "th", ws = (u && u.weights) || [];
+  const dayN = d => Math.floor(new Date(d + "T00:00:00") / 864e5), n = new Date(), today = dayN(`${n.getFullYear()}-${String(n.getMonth() + 1).padStart(2, "0")}-${String(n.getDate()).padStart(2, "0")}`);
+  const avg = (a, b) => { const xs = ws.filter(x => { const k = today - dayN(x.d); return k >= a && k < b; }).map(x => +x.w); return xs.length ? xs.reduce((p, q) => p + q, 0) / xs.length : null; };
+  const now = avg(0, 7), before = avg(7, 14);
+  let mine = "";
+  if (now !== null && before !== null) {
+    const d = now - before;
+    mine = th ? `<br><br>ข้อมูลของคุณ: เฉลี่ย 7 วันล่าสุด ${now.toFixed(1)} กก. เทียบสัปดาห์ก่อน ${before.toFixed(1)} กก. (${d > 0 ? "+" : ""}${d.toFixed(1)}) ${d <= 0 ? "แนวโน้มลดลงอยู่แล้ว ทำต่อไปครับ" : "ขึ้นเล็กน้อย ลองเช็กข้อด้านบน"}`
+      : `<br><br>Your data: last 7 days average ${now.toFixed(1)} kg vs ${before.toFixed(1)} kg the week before (${d > 0 ? "+" : ""}${d.toFixed(1)}). ${d <= 0 ? "The trend is already going down, keep going." : "A small rise; check the list above."}`;
+  }
+  const text = th
+    ? `น้ำหนักขึ้นลงวันละ 0.5–1 กก. เป็นเรื่องปกติครับ (น้ำ เกลือ อาหารที่ยังอยู่ในท้อง และช่วงแรกที่เริ่มออกกำลังกายกล้ามเนื้อจะเก็บน้ำเพิ่ม) ให้ดู<b>ค่าเฉลี่ยรายสัปดาห์</b>แทนตัวเลขรายวัน<br><br>ถ้าเฉลี่ยไม่ลง 2–3 สัปดาห์ ลองเช็ก:<br>1. กินเกินโดยไม่รู้ตัว (น้ำหวาน ขนม ของทอด)<br>2. นอนน้อยกว่า 7 ชั่วโมง<br>3. เดินน้อย ลองเพิ่มก้าวเดินวันละ 2,000 ก้าว<br>4. ดูรอบเอวด้วย บางทีเอวลดแม้น้ำหนักนิ่ง${mine}`
+    : `Weight moving 0.5–1 kg a day is normal (water, salt, food in your gut, and new exercisers' muscles hold extra water). Watch the <b>weekly average</b>, not single days.<br><br>If the average hasn't dropped for 2–3 weeks, check:<br>1. Hidden extra food (sweet drinks, snacks, fried food)<br>2. Sleep under 7 hours<br>3. Low daily steps; add about 2,000 a day<br>4. Your waist; it can shrink while the scale stays still${mine}`;
+  return { text, links: [{ href: "profile.html#progress", label: th ? "ดูกราฟน้ำหนัก" : "See my weight chart" }] };
+}
 
 // "How was my week?": workouts, minutes, kcal, water and protein since Monday
 function weekAnswer(u) {
@@ -239,6 +258,7 @@ function reply(raw) {
     return { text: tx.waterNeed, links: links(["profile.html", tx.linkProfile]) };
   }
   if (has(m, KW.warm)) return { text: tx.warm, ex: ["march", "wgs", "hamstring", "child"], links: links(["planner.html", tx.linkPlan]) };
+  if (has(m, KW.plateau)) return plateauAnswer(u);
   if (has(m, KW.week)) return weekAnswer(u);
   if (has(m, KW.goalw)) return goalWAnswer(u);
   if (has(m, KW.today)) return todayAnswer(u);
