@@ -16,7 +16,7 @@ const ICONS = {
   trending:  '<path d="M22 7l-8.5 8.5-5-5L2 17"/><path d="M16 7h6v6"/>',
   repeat:    '<path d="M17 2l4 4-4 4"/><path d="M3 11v-1a4 4 0 0 1 4-4h14"/><path d="M7 22l-4-4 4-4"/><path d="M21 13v1a4 4 0 0 1-4 4H3"/>',
   calendar:  '<rect x="3" y="4" width="18" height="18" rx="2"/><path d="M16 2v4M8 2v4M3 10h18"/><path d="M8 15h2M14 15h2"/>',
-  egg:       '<path d="M12 22c4 0 7-3 7-7.5S16 3 12 3 5 10 5 14.5 8 22 12 22z"/><path d="M9.5 15.5a2.5 2.5 0 0 0 2.5 2.5"/>',
+  egg:       '<path d="M6 8.5c1-3 4-4 6-3.2 1.6-1.6 4.8-1 5.7 1.2 2.6.6 3.6 3.6 2.1 5.6 1 2.6-1 5.1-3.6 5-1.5 2.1-5.1 2.1-6.6 0-2.6.4-5-1.6-4.5-4.1C3.4 11.6 4 9 6 8.5z"/><circle cx="12" cy="11.6" r="2.7"/>', // fried egg, so it doesn't look like the water drop
   walk:      '<circle cx="13" cy="4" r="2"/><path d="M7 21l3-6 3 2v4"/><path d="M10 15l-1-5 4-2 2 3h3"/><path d="M9 10l-3 2v3"/>',
   refresh:   '<path d="M3 12a9 9 0 0 1 15.74-6.26L21 8"/><path d="M21 3v5h-5"/><path d="M21 12a9 9 0 0 1-15.74 6.26L3 16"/><path d="M8 16H3v5"/>',
   printer:   '<path d="M6 9V2h12v7"/><path d="M6 18H4a2 2 0 0 1-2-2v-5a2 2 0 0 1 2-2h16a2 2 0 0 1 2 2v5a2 2 0 0 1-2 2h-2"/><rect x="6" y="14" width="12" height="8"/>',
