@@ -346,8 +346,36 @@ onRender(() => {
       <span class="avatar">${esc(u.name.trim().charAt(0).toUpperCase())}</span>
       <div class="hello-txt"><b>${esc(tx.hello(u.name))}</b><span>${s.streak ? icon("flame") : ""}${tx.helloSub(s.streak, s.week)}</span></div>
       <div class="btn-row"><a class="btn sm ghost" href="planner.html#plan">${tx.goPlan}</a><a class="btn sm ghost" href="profile.html#progress">${tx.goProgress}</a></div>
-      ${today}${tip}
+      ${today}${tip}${startSteps(u)}
     </div>`;
+});
+
+// New users: a 4-step "getting started" checklist until every step is done (or it is hidden)
+const STEPS_T = {
+  th: { title: "เริ่มต้นใช้งาน", count: (a, b) => `${a}/${b}`, hide: "ซ่อน", hideL: "ซ่อนรายการเริ่มต้นใช้งาน",
+        s: [["กรอกน้ำหนัก ส่วนสูง อายุ", "profile.html#edit"], ["สร้างแผนออกกำลังกาย", "planner.html"], ["ออกกำลังกายครั้งแรก", "planner.html#plan"], ["บันทึกน้ำหนักวันนี้", "profile.html#progress"]] },
+  en: { title: "Getting started", count: (a, b) => `${a}/${b}`, hide: "Hide", hideL: "Hide the getting started list",
+        s: [["Add your weight, height and age", "profile.html#edit"], ["Make a workout plan", "planner.html"], ["Do your first workout", "planner.html#plan"], ["Log your weight today", "profile.html#progress"]] }
+};
+function startSteps(u) {
+  const hidden = store.get("fs-steps-hide", []);
+  if (Array.isArray(hidden) && hidden.includes(u.email)) return "";
+  const done = [hasBody(u.profile), !!(store.get("fs-plan", null) || (u.plans || []).length), (u.log || []).length > 0, (u.weights || []).length > 0];
+  const n = done.filter(Boolean).length; if (n === done.length) return "";
+  const tx = STEPS_T[lang], next = done.indexOf(false);
+  const items = tx.s.map(([label, href], i) => `<li class="${done[i] ? "ok" : i === next ? "next" : ""}">${done[i] ? `<span class="st-dot">${icon("check")}</span><span class="st-ok">${label}</span>` : `<span class="st-dot">${i + 1}</span><a href="${href}">${label}</a>`}</li>`).join("");
+  return `<div class="hello-steps">
+    <div class="st-head"><b>${tx.title}</b><span class="st-count">${tx.count(n, done.length)}</span><button type="button" class="st-hide" data-steps-hide aria-label="${tx.hideL}">${tx.hide}</button></div>
+    <div class="st-bar" aria-hidden="true"><i style="width:${(n / done.length) * 100}%"></i></div>
+    <ol>${items}</ol>
+  </div>`;
+}
+document.addEventListener("click", e => {
+  if (!e.target.closest("[data-steps-hide]")) return;
+  const u = currentUser(); if (!u) return;
+  const list = store.get("fs-steps-hide", []);
+  store.set("fs-steps-hide", [...(Array.isArray(list) ? list : []), u.email]);
+  renderAll();
 });
 
 // Rest day: a short guided stretch (7 mobility moves, 1 x 45 s each, no extra warm-up)
