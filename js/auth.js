@@ -180,3 +180,20 @@ $("#logoutBtn").onclick = logout;
 $("#userBtn").onclick = e => { e.stopPropagation(); $("#dropdown").hidden = !$("#dropdown").hidden; };
 $("#ddPlans").onclick = () => { $("#dropdown").hidden = true; };
 document.addEventListener("click", e => { if (!e.target.closest(".user-menu")) $("#dropdown").hidden = true; });
+
+// Caps Lock warning on the password fields (a common reason a correct password "doesn't work")
+{
+  const warn = document.createElement("p");
+  warn.className = "caps-warn"; warn.hidden = true; warn.setAttribute("role", "status");
+  const pw = document.getElementById("aPw");
+  if (pw) {
+    pw.closest(".nm-f").after(warn);
+    const check = e => {
+      if (!e.getModifierState) return;
+      const on = e.getModifierState("CapsLock");
+      warn.hidden = !on;
+      if (on) warn.innerHTML = `${icon("alert")}${lang === "th" ? "Caps Lock เปิดอยู่ ตัวอักษรจะเป็นตัวพิมพ์ใหญ่" : "Caps Lock is on"}`;
+    };
+    ["aPw", "aPw2"].forEach(id => { const el = document.getElementById(id); if (el) { el.addEventListener("keydown", check); el.addEventListener("keyup", check); el.addEventListener("blur", () => { warn.hidden = true; }); } });
+  }
+}

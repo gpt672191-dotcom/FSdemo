@@ -2155,3 +2155,9 @@ a.btn:has(> #pPlans) > span { white-space: nowrap; }
 .xl-chips { --fl: 0px; --fr: 0px; -webkit-mask-image: linear-gradient(90deg, transparent 0, #000 var(--fl), #000 calc(100% - var(--fr)), transparent 100%); mask-image: linear-gradient(90deg, transparent 0, #000 var(--fl), #000 calc(100% - var(--fr)), transparent 100%); }
 .xl-chips.more-r { --fr: 36px; }
 .xl-chips.more-l { --fl: 36px; }
+/* Caps Lock warning under the password field */
+.caps-warn { display: flex; align-items: center; gap: 6px; margin: -4px 0 8px; font-size: .82rem; color: #b45309; }
+.caps-warn[hidden] { display: none; }
+.caps-warn .ic { width: 14px; height: 14px; flex: none; }
+@media (prefers-color-scheme: dark) { :root:not([data-theme="light"]) .caps-warn { color: #fbbf24; } }
+:root[data-theme="dark"] .caps-warn { color: #fbbf24; }
