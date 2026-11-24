@@ -698,6 +698,12 @@ section.tight { padding-block: 32px; }
 }
 .eq-tabs button:hover { color: var(--text); }
 .eq-tabs button.on { background: var(--accent); color: var(--accent-ink); box-shadow: 0 4px 14px -4px color-mix(in srgb, var(--accent) 60%, transparent); }
+/* Small phones: three equal tabs that always fit, no sideways scrolling */
+@media (max-width: 480px) {
+  .eq-tabs { display: grid; grid-template-columns: repeat(3, 1fr); width: 100%; }
+  .eq-tabs button { justify-content: center; gap: 5px; padding: 9px 6px; font-size: .84rem; }
+  .eq-tabs button .ic { width: 15px; height: 15px; flex: none; }
+}
 .eq-cat { margin-bottom: 30px; }
 .eq-cat-head { display: flex; align-items: center; gap: 14px; margin-bottom: 14px; padding-bottom: 12px; border-bottom: 1px solid var(--line); }
 .eq-cat-ico {
