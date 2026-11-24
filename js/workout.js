@@ -224,7 +224,7 @@ const Workout = (() => {
     // Save to progress (progress.js), if the page has it and the user is logged in
     let saved = "";
     if (typeof Progress !== "undefined") {
-      saved = Progress.logWorkout({ t: S.title, sets, mins })
+      saved = Progress.logWorkout({ t: S.title, sets, mins, ...(kcal ? { kcal } : {}) })
         ? `<p class="wo-saved">${icon("check")}${pt().logged}</p>
            <div class="wo-feel" id="woFeel"><span>${tx.feelQ}</span><div>
              <button type="button" data-feel="easy">${tx.feelEasy}</button><button type="button" data-feel="ok">${tx.feelOk}</button><button type="button" data-feel="hard">${tx.feelHard}</button>

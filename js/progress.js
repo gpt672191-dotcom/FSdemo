@@ -77,7 +77,7 @@ const Progress = (() => {
     const sumMins = l => l.reduce((a, x) => a + (x.mins || 0), 0);
     return {
       streak, best, total: log.length,
-      week: thisWeek.length, weekMins: sumMins(thisWeek), lastWeek: lastWeek.length, lastWeekMins: sumMins(lastWeek),
+      week: thisWeek.length, weekMins: sumMins(thisWeek), weekKcal: thisWeek.reduce((a, x) => a + (+x.kcal || 0), 0), lastWeek: lastWeek.length, lastWeekMins: sumMins(lastWeek),
       weekDays: new Set(thisWeek.map(x => x.d)).size,
       mins: log.reduce((a, x) => a + (x.mins || 0), 0),
       perDay: log.reduce((m, x) => (m[x.d] = (m[x.d] || 0) + 1, m), {})
@@ -125,7 +125,7 @@ function weekGoalHTML(s) {
       <text x="40" y="45" text-anchor="middle">${done}/${goal}</text>
     </svg>
     <div class="wk-txt"><b>${tx.title}</b><span>${s.weekDays >= goal ? tx.done : tx.left(goal - done)}</span><small>${plan ? tx.sub(goal) : tx.noPlan}</small></div>
-    <div class="wk-vs"><small>${tx.vs}</small><span>${diff(s.week, s.lastWeek, tx.times)}</span><span>${diff(s.weekMins, s.lastWeekMins, tx.mins)}</span></div>
+    <div class="wk-vs"><small>${tx.vs}</small><span>${diff(s.week, s.lastWeek, tx.times)}</span><span>${diff(s.weekMins, s.lastWeekMins, tx.mins)}</span>${s.weekKcal ? `<span class="wk-kcal">~${s.weekKcal} kcal</span>` : ""}</div>
   </div>`;
 }
 
@@ -180,7 +180,7 @@ function historyHTML(u) {
   // keep the original index so delete removes the right entry
   const rows = (u.log || []).map((x, i) => ({ x, i })).sort((a, b) => (a.x.d < b.x.d ? 1 : a.x.d > b.x.d ? -1 : b.i - a.i));
   return `<ul class="hist-list">${rows.map(({ x, i }) => `<li>
-    <div><b>${esc(x.t || "-")}</b><small>${esc(x.d)} · ${ptx.mins2(x.mins || 0)}${x.sets ? ` · ${x.sets} ${lang === "th" ? "เซ็ต" : "sets"}` : ""}${x.part ? ` · ${lang === "th" ? "ทำบางส่วน" : "partial"}` : ""}${x.feel && ptx.feel[x.feel] ? ` · ${ptx.feel[x.feel]}` : ""}</small></div>
+    <div><b>${esc(x.t || "-")}</b><small>${esc(x.d)} · ${ptx.mins2(x.mins || 0)}${x.sets ? ` · ${x.sets} ${lang === "th" ? "เซ็ต" : "sets"}` : ""}${x.kcal ? ` · ~${x.kcal} kcal` : ""}${x.part ? ` · ${lang === "th" ? "ทำบางส่วน" : "partial"}` : ""}${x.feel && ptx.feel[x.feel] ? ` · ${ptx.feel[x.feel]}` : ""}</small></div>
     <button type="button" class="btn ghost danger sm" data-hist-del="${i}" aria-label="${esc(tx.delLabel(x.t || "-", x.d))}">${histArmed === i ? tx.sure : icon("trash")}</button>
   </li>`).join("")}</ul>`;
 }

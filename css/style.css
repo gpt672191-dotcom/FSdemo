@@ -2142,3 +2142,4 @@ main:focus { outline: none; }
 /* four boxes when the kcal estimate shows */
 .wo-stats:has(> div:nth-child(4)) { grid-template-columns: repeat(4, 1fr); width: min(520px, 100%); }
 @media (max-width: 480px) { .wo-stats:has(> div:nth-child(4)) { grid-template-columns: repeat(2, 1fr); } }
+.wk-vs .wk-kcal { color: var(--muted); font-size: .85rem; }
