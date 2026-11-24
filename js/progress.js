@@ -180,7 +180,7 @@ function historyHTML(u) {
   // keep the original index so delete removes the right entry
   const rows = (u.log || []).map((x, i) => ({ x, i })).sort((a, b) => (a.x.d < b.x.d ? 1 : a.x.d > b.x.d ? -1 : b.i - a.i));
   return `<ul class="hist-list">${rows.map(({ x, i }) => `<li>
-    <div><b>${esc(x.t || "-")}</b><small>${esc(x.d)} · ${ptx.mins2(x.mins || 0)}${x.sets ? ` · ${x.sets} ${lang === "th" ? "เซ็ต" : "sets"}` : ""}${x.feel && ptx.feel[x.feel] ? ` · ${ptx.feel[x.feel]}` : ""}</small></div>
+    <div><b>${esc(x.t || "-")}</b><small>${esc(x.d)} · ${ptx.mins2(x.mins || 0)}${x.sets ? ` · ${x.sets} ${lang === "th" ? "เซ็ต" : "sets"}` : ""}${x.part ? ` · ${lang === "th" ? "ทำบางส่วน" : "partial"}` : ""}${x.feel && ptx.feel[x.feel] ? ` · ${ptx.feel[x.feel]}` : ""}</small></div>
     <button type="button" class="btn ghost danger sm" data-hist-del="${i}" aria-label="${esc(tx.delLabel(x.t || "-", x.d))}">${histArmed === i ? tx.sure : icon("trash")}</button>
   </li>`).join("")}</ul>`;
 }
@@ -228,7 +228,7 @@ function renderProgress() {
     const k = Progress.key(d), n = s.perDay[k] || 0, future = d > end;
     cells += `<i class="hm l${Math.min(n, 3)}${future ? " fut" : ""}" title="${k}${n ? ` · ${n}` : ""}"></i>`;
   }
-  const recent = [...(u.log || [])].sort((a, b) => (a.d < b.d ? -1 : 1)).slice(-5).reverse().map(x => `<li><b>${esc(x.t)}</b><span>${x.d.slice(5).replace("-", "/")} · ${tx.mins2(x.mins || 0)}${x.feel ? ` · ${tx.feel[x.feel]}` : ""}</span></li>`).join("");
+  const recent = [...(u.log || [])].sort((a, b) => (a.d < b.d ? -1 : 1)).slice(-5).reverse().map(x => `<li><b>${esc(x.t)}</b><span>${x.d.slice(5).replace("-", "/")} · ${tx.mins2(x.mins || 0)}${x.part ? ` · ${lang === "th" ? "ทำบางส่วน" : "partial"}` : ""}${x.feel ? ` · ${tx.feel[x.feel]}` : ""}</span></li>`).join("");
   const ws = u.weights || [];
   const change = ws.length >= 2 ? `<span class="w-change ${ws[ws.length - 1].w - ws[0].w <= 0 ? "down" : "up"}">${tx.wChange(ws[ws.length - 1].w - ws[0].w)}</span>` : "";
   box.innerHTML = `

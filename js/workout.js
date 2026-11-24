@@ -295,7 +295,7 @@ const Workout = (() => {
     if (act === "quit") return stop();
     if (act === "save-exit") {
       const tx = wt(), n = setsDone(), mins = Math.max(1, Math.round((Date.now() - S.started) / 60000));
-      const ok = typeof Progress !== "undefined" && Progress.logWorkout({ t: S.title, sets: n, mins });
+      const ok = typeof Progress !== "undefined" && Progress.logWorkout({ t: S.title, sets: n, mins, part: true });
       stop(); if (ok) toast(tx.savedPart);
       return;
     }

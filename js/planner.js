@@ -292,7 +292,7 @@ function dayDone(d) {
   const m = new Date(); m.setDate(m.getDate() - ((m.getDay() + 6) % 7));
   const since = `${m.getFullYear()}-${String(m.getMonth() + 1).padStart(2, "0")}-${String(m.getDate()).padStart(2, "0")}`;
   const titles = ["th", "en"].map(l => `${T[l].weekFull[d.weekday]} · ${T[l].dayType[d.type]}`);
-  return u.log.some(x => x.d >= since && titles.includes(x.t));
+  return u.log.some(x => x.d >= since && !x.part && titles.includes(x.t)); // a workout left part-way does not count
 }
 // redraw the plan after a workout is saved, so the day shows its "done" mark straight away
 document.addEventListener("fs-logged", () => { if (lastPlan) renderPlan(); });
