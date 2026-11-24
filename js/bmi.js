@@ -16,7 +16,40 @@ function renderBMI() {
     <div class="bmi-bar"><i style="left:${pos}%"></i></div>
     <div style="color:var(--muted);font-size:.92rem">${tx.bmiAdvice[idx]}</div>
     <p style="margin:10px 0 0;font-size:.92rem">${tx.idealRange(lo, hi)}</p>
+    ${pathHTML(w, +lo, +hi)}
     <p style="margin:10px 0 0"><a href="${BMI_LINKS[idx]}" style="color:var(--accent);font-weight:600;text-decoration:none">${tx.bmiLink[idx]}</a></p>`;
+}
+
+/* ---------- Path to a healthy weight: how many kg and how long at a safe pace ---------- */
+// Safe pace: lose 0.25–0.5 kg a week; gain 0.25–0.5 kg a week (with strength training)
+const PATH_T = {
+  th: { title: "เส้นทางสู่น้ำหนักที่เหมาะสม", in: "น้ำหนักอยู่ในช่วงที่เหมาะสมแล้ว เป้าหมายคือรักษาไว้ ออกกำลังกายสม่ำเสมอและกินให้สมดุล",
+    lose: (kg, a, b) => `ลดอีกประมาณ <b>${kg} กก.</b> จะถึงช่วงที่เหมาะสม ในจังหวะที่ปลอดภัย (0.25–0.5 กก./สัปดาห์) ใช้เวลาประมาณ <b>${a}–${b} สัปดาห์</b>`,
+    gain: (kg, a, b) => `เพิ่มอีกประมาณ <b>${kg} กก.</b> จะถึงช่วงที่เหมาะสม แนะนำเพิ่มช้าๆ (0.25–0.5 กก./สัปดาห์) พร้อมฝึกสร้างกล้าม ใช้เวลาประมาณ <b>${a}–${b} สัปดาห์</b>`,
+    first: kg => `ก้าวแรก: ลด 5% ของน้ำหนักตัว (${kg} กก.) ก็ช่วยสุขภาพได้แล้ว`,
+    planLose: "สร้างแผนลดน้ำหนัก", planGain: "สร้างแผนเพิ่มกล้าม", planKeep: "สร้างแผนรักษาสุขภาพ", note: "ตัวเลขเป็นค่าประมาณ ใช้เป็นแนวทาง ไม่ใช่คำแนะนำทางการแพทย์" },
+  en: { title: "Path to a healthy weight", in: "You're in the healthy range. The goal is to stay there with regular exercise and balanced meals.",
+    lose: (kg, a, b) => `About <b>${kg} kg</b> to lose to reach the healthy range. At a safe pace (0.25–0.5 kg a week) that's roughly <b>${a}–${b} weeks</b>.`,
+    gain: (kg, a, b) => `About <b>${kg} kg</b> to gain to reach the healthy range. Go slowly (0.25–0.5 kg a week) with strength training: roughly <b>${a}–${b} weeks</b>.`,
+    first: kg => `First step: losing 5% of your weight (${kg} kg) already helps your health.`,
+    planLose: "Make a weight-loss plan", planGain: "Make a muscle plan", planKeep: "Make a stay-healthy plan", note: "Estimates only, not medical advice." }
+};
+function pathHTML(w, lo, hi) {
+  const tx = PATH_T[lang];
+  let body, link;
+  if (w > hi) {
+    const kg = Math.round((w - hi) * 10) / 10;
+    body = tx.lose(kg, Math.ceil(kg / 0.5), Math.ceil(kg / 0.25)) + (kg > 5 ? `<br><small>${tx.first(Math.round(w * 0.05 * 10) / 10)}</small>` : "");
+    link = `<a class="btn sm" href="planner.html?goal=lose">${icon("sparkle")}${tx.planLose}</a>`;
+  } else if (w < lo) {
+    const kg = Math.round((lo - w) * 10) / 10;
+    body = tx.gain(kg, Math.ceil(kg / 0.5), Math.ceil(kg / 0.25));
+    link = `<a class="btn sm" href="planner.html?goal=muscle">${icon("sparkle")}${tx.planGain}</a>`;
+  } else {
+    body = tx.in;
+    link = `<a class="btn ghost sm" href="planner.html?goal=endure">${icon("sparkle")}${tx.planKeep}</a>`;
+  }
+  return `<div class="bmi-path"><b class="bmi-path-t">${icon("trending")}${tx.title}</b><p>${body}</p>${link}<small class="bmi-path-n">${tx.note}</small></div>`;
 }
 
 function renderBmiTable() {
