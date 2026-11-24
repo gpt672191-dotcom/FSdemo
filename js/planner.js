@@ -136,6 +136,7 @@ function renderPlan() {
               <div class="pex-cue">${lang === "th" ? ex.cth : ex.cen}</div>
               <span class="pex-dose">${dose(ex, a)}</span>
             </div>
+            <button type="button" class="pex-swap" data-swap="${n},${k}" title="${SWAP_T[lang].btn}" aria-label="${esc(SWAP_T[lang].label(ex[lang]))}">${icon("repeat")}</button>
             ${ticks}
           </li>`).join("")}
       </ol>
@@ -235,6 +236,8 @@ $("#plan").addEventListener("click", e => {
   if (b) openAuth(b.dataset.gate, () => generate({ ...answers }));
   const d = e.target.closest("[data-wo-day]");
   if (d) { startDayWorkout(+d.dataset.woDay); return; }
+  const sw = e.target.closest("[data-swap]");
+  if (sw) { const [dn, k] = sw.dataset.swap.split(",").map(Number); swapMove(dn, k); return; }
   if (e.target.closest("[data-all-days]")) {
     const n = $$("#plan .pday").length;
     openDays = openDays.size === n ? new Set() : new Set([...Array(n).keys()]);
@@ -293,7 +296,7 @@ function savePlan() {
   if (u.plans.some(p => p.seed === lastPlan.seed && JSON.stringify(p.answers) === JSON.stringify(lastPlan.answers))) {
     toast(tx.alreadySaved); return;
   }
-  u.plans.unshift({ answers: lastPlan.answers, seed: lastPlan.seed, savedAt: Date.now() });
+  u.plans.unshift({ answers: lastPlan.answers, seed: lastPlan.seed, savedAt: Date.now(), ...(lastPlan.swaps ? { swaps: lastPlan.swaps } : {}) });
   setUsers(users);
   renderSaved();
   toast(tx.savedMsg);
@@ -329,7 +332,7 @@ $("#savedList").addEventListener("click", e => {
   if (!u) return;
   if (openI !== undefined) {
     const p = u.plans[+openI];
-    lastPlan = { answers: p.answers, seed: p.seed };
+    lastPlan = { answers: p.answers, seed: p.seed, ...(p.swaps ? { swaps: p.swaps } : {}) };
     answers = { ...p.answers };
     store.set("fs-plan", lastPlan); store.set("fs-answers", answers);
     renderChips(); renderPlan();
@@ -382,4 +385,35 @@ function downloadCalendar(days, a) {
   document.body.append(link); link.click(); link.remove();
   setTimeout(() => URL.revokeObjectURL(link.href), 1500);
   toast(ct.done);
+}
+
+/* ---------- Swap a move in the plan (can't do it / don't like it) ---------- */
+// lastPlan.swaps = { "dayIndex,position": "exerciseId" }; kept with saved plans too
+const SWAP_T = {
+  th: { btn: "เปลี่ยนท่า", label: n => `เปลี่ยนท่า ${n} เป็นท่าอื่น`, done: (a, b) => `เปลี่ยน ${a} เป็น ${b} แล้ว`, none: "ไม่มีท่าอื่นในหมวดนี้ที่ตรงกับอุปกรณ์ของคุณ" },
+  en: { btn: "Swap move", label: n => `Swap ${n} for another move`, done: (a, b) => `Swapped ${a} for ${b}`, none: "No other move in this group fits your equipment" }
+};
+const buildPlanRaw = buildPlan;
+buildPlan = function (a, seed) {
+  const days = buildPlanRaw(a, seed);
+  const sw = (lastPlan && lastPlan.seed === seed && lastPlan.swaps) || {};
+  return days.map((d, n) => ({ ...d, list: d.list.map((ex, k) => (sw[n + "," + k] && EX.find(e => e.id === sw[n + "," + k])) || ex) }));
+};
+function swapMove(n, k) {
+  if (!lastPlan) return;
+  const a = lastPlan.answers, tx = SWAP_T[lang], days = buildPlan(a, lastPlan.seed), d = days[n], cur = d.list[k];
+  const eqOK = allowedEquip(a.equip);
+  const used = new Set(d.list.map(e => e.id));
+  const pool = EX.filter(e => e.cat === cur.cat && eqOK.includes(e.eq) && !(a.level === "beg" && e.adv) && !(a.impact === "low" && e.jump));
+  // next move in the group after the current one, skipping moves already in this day
+  const start = pool.findIndex(e => e.id === cur.id);
+  let next = null;
+  for (let i = 1; i <= pool.length; i++) { const c = pool[(start + i + pool.length) % pool.length]; if (c && !used.has(c.id)) { next = c; break; } }
+  if (!next) { toast(tx.none); return; }
+  lastPlan.swaps = { ...(lastPlan.swaps || {}), [n + "," + k]: next.id };
+  store.set("fs-plan", lastPlan);
+  // keep a saved copy of this plan in sync
+  if (typeof currentUser === "function" && currentUser()) updateUser(u => { (u.plans || []).forEach(p => { if (p.seed === lastPlan.seed && JSON.stringify(p.answers) === JSON.stringify(lastPlan.answers)) p.swaps = lastPlan.swaps; }); });
+  renderPlan();
+  toast(tx.done(cur[lang], next[lang]));
 }
