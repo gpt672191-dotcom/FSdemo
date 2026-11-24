@@ -404,9 +404,23 @@ onRender(() => {
       <span class="avatar">${esc(u.name.trim().charAt(0).toUpperCase())}</span>
       <div class="hello-txt"><b>${esc(tx.hello(u.name))}</b><span>${s.streak ? icon("flame") : ""}${tx.helloSub(s.streak, s.week)}</span></div>
       <div class="btn-row"><a class="btn sm ghost" href="planner.html#plan">${tx.goPlan}</a><a class="btn sm ghost" href="profile.html#progress">${tx.goProgress}</a></div>
-      ${today}${tip}${startSteps(u)}
+      ${today}${dailyBits(u)}${tip}${startSteps(u)}
     </div>`;
 });
+
+// Today's water and protein in one line (the trackers live on the For you page)
+function dailyBits(u) {
+  if (!hasBody(u.profile)) return "";
+  const k = Progress.key(new Date()), w = +u.profile.weight;
+  const glasses = (u.water || {})[k] || 0, goal = Math.min(16, Math.max(6, Math.round(w * 33 / 250))); // same as waterGoal() in water.js
+  const day = (u.protein || {})[k] || {}, grams = FOODS.reduce((a, f) => a + f.g * (day[f.id] || 0), 0);
+  const th = lang === "th";
+  return `<a class="hello-bits" href="for-you.html#fyWater">
+    <span class="${glasses >= goal ? "ok" : ""}">${icon("droplet")}${th ? `น้ำ ${glasses}/${goal} แก้ว` : `Water ${glasses}/${goal} glasses`}</span>
+    <span>${icon("egg")}${th ? `โปรตีน ${grams} กรัม` : `Protein ${grams} g`}</span>
+    <em>${th ? "บันทึก" : "Log"} ${icon("chevron")}</em>
+  </a>`;
+}
 
 // New users: a 4-step "getting started" checklist until every step is done (or it is hidden)
 const STEPS_T = {

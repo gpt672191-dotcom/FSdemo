@@ -2190,3 +2190,11 @@ body:not(:has(> header)) { padding-top: 65px; }
 .pr-week .wt-day i { background: linear-gradient(180deg, #f0abfc, #f59e0b); }
 .pr-week .wt-day.ok i { background: #16a34a; }
 .wt-week:not(.pr-week) .wt-day.ok i { background: #16a34a; } /* water: days the goal was reached */
+/* Home: today's water and protein */
+.hello-bits { flex-basis: 100%; display: flex; align-items: center; gap: 14px; flex-wrap: wrap; margin-top: 4px; padding: 9px 12px; border-radius: 12px; border: 1px solid var(--line); background: var(--surface-2); color: var(--text); text-decoration: none; font-size: .9rem; }
+.hello-bits span { display: inline-flex; align-items: center; gap: 6px; }
+.hello-bits .ic { width: 16px; height: 16px; color: var(--accent); }
+.hello-bits span.ok .ic { color: #16a34a; }
+.hello-bits em { margin-left: auto; font-style: normal; color: var(--muted); display: inline-flex; align-items: center; gap: 2px; font-size: .85rem; }
+.hello-bits em .ic { width: 14px; height: 14px; transform: rotate(-90deg); color: var(--muted); }
+.hello-bits:hover { border-color: var(--accent); }
