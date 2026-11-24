@@ -128,6 +128,46 @@ function weekGoalHTML(s) {
   </div>`;
 }
 
+/* ---------- Log a workout done outside guided mode (walk, run, football...) ---------- */
+// kcal estimate = MET x body weight (kg) x hours (Compendium of Physical Activities, rounded)
+const ACTS = [["walk", 3.5], ["run", 8], ["bike", 6], ["swim", 6], ["ball", 7], ["gym", 5], ["yoga", 2.5], ["other", 4]];
+const MAN_T = {
+  th: { title: "บันทึกการออกกำลังกายเอง", sub: "ออกกำลังกายนอกโหมดนำ เช่น เดิน วิ่ง เตะบอล ก็นับรวมวันต่อเนื่อง เหรียญ และเป้าสัปดาห์ได้",
+    act: "กิจกรรม", mins: "กี่นาที", date: "วันที่", feel: "รู้สึก", add: "บันทึก", err: "กรอกเวลา 1–600 นาที และวันที่ไม่เกินวันนี้",
+    saved: (k) => `บันทึกแล้ว เผาผลาญประมาณ ${k} kcal`,
+    names: { walk: "เดินเร็ว", run: "วิ่ง", bike: "ปั่นจักรยาน", swim: "ว่ายน้ำ", ball: "ฟุตบอล / กีฬา", gym: "ฟิตเนส", yoga: "โยคะ / ยืดเหยียด", other: "อื่นๆ" },
+    feels: { "": "-", easy: "ง่ายไป", ok: "พอดี", hard: "หนักไป" } },
+  en: { title: "Log a workout yourself", sub: "Exercise outside guided mode, like walking, running or football, still counts toward your streak, badges and weekly goal.",
+    act: "Activity", mins: "Minutes", date: "Date", feel: "Felt", add: "Save", err: "Enter 1–600 minutes and a date that isn't in the future",
+    saved: (k) => `Saved. About ${k} kcal burned`,
+    names: { walk: "Brisk walk", run: "Run", bike: "Cycling", swim: "Swimming", ball: "Football / sport", gym: "Gym", yoga: "Yoga / stretching", other: "Other" },
+    feels: { "": "-", easy: "Too easy", ok: "Just right", hard: "Too hard" } }
+};
+function manualHTML() {
+  const tx = MAN_T[lang], today = Progress.key(new Date());
+  return `<form class="man-log" id="manForm" novalidate>
+    <div class="pg-sub" style="margin:0">${tx.title}</div><p class="hint" style="margin:2px 0 10px">${tx.sub}</p>
+    <div class="man-grid">
+      <div class="field"><label for="manAct">${tx.act}</label><select id="manAct">${ACTS.map(([id]) => `<option value="${id}">${tx.names[id]}</option>`).join("")}</select></div>
+      <div class="field"><label for="manMin">${tx.mins}</label><input id="manMin" type="number" inputmode="numeric" min="1" max="600" value="30"></div>
+      <div class="field"><label for="manDate">${tx.date}</label><input id="manDate" type="date" max="${today}" value="${today}"></div>
+      <div class="field"><label for="manFeel">${tx.feel}</label><select id="manFeel">${Object.entries(tx.feels).map(([k, v]) => `<option value="${k}">${v}</option>`).join("")}</select></div>
+      <button type="submit" class="btn">${icon("plus")}${tx.add}</button>
+    </div>
+  </form>`;
+}
+document.addEventListener("submit", e => {
+  if (e.target.id !== "manForm") return;
+  e.preventDefault();
+  const tx = MAN_T[lang], u = currentUser(); if (!u) return;
+  const mins = Math.round(+$("#manMin").value), d = $("#manDate").value, act = $("#manAct").value, feel = $("#manFeel").value;
+  if (!(mins >= 1 && mins <= 600) || !/^\d{4}-\d{2}-\d{2}$/.test(d) || d > Progress.key(new Date())) { toast(tx.err); return; }
+  const met = (ACTS.find(a => a[0] === act) || ACTS[ACTS.length - 1])[1];
+  const kcal = Math.round(met * ((u.profile && u.profile.weight) || 60) * mins / 60);
+  updateUser(x => { x.log = [...(x.log || []), { d, t: tx.names[act], sets: 0, mins, kcal, manual: act, ...(feel ? { feel } : {}) }].sort((a, b) => (a.d < b.d ? -1 : 1)).slice(-500); });
+  renderAll(); toast(tx.saved(kcal));
+});
+
 /* ---------- Full workout history, with delete (second tap confirms) ---------- */
 const HIST_T = {
   th: { show: n => `ดูประวัติทั้งหมด (${n})`, hide: "ซ่อนประวัติ", del: "ลบ", sure: "ยืนยันลบ", deleted: "ลบรายการแล้ว", delLabel: (t, d) => `ลบ ${t} วันที่ ${d}` },
@@ -215,6 +255,7 @@ function renderProgress() {
             ${histOpen ? historyHTML(u) : ""}
           </div>
         </div>
+        ${manualHTML()}
         <div class="pg-w">
           <div class="pg-w-head"><div class="pg-sub" style="margin:0">${tx.wTitle}</div>${change}</div>
           ${weightChart(ws) || `<p class="hint">${tx.wNone}</p>`}

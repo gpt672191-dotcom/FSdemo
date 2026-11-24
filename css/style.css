@@ -2007,3 +2007,9 @@ main:focus { outline: none; }
 .hist-list b { font-size: .9rem; font-weight: 600; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
 .hist-list small { color: var(--muted); font-size: .8rem; }
 .hist-list .btn { flex: none; min-width: 38px; justify-content: center; }
+/* ---------- Manual workout log (profile) ---------- */
+.man-log { margin-top: 22px; padding-top: 18px; border-top: 1px solid var(--line); }
+.man-grid { display: grid; grid-template-columns: 1.4fr .8fr 1.1fr 1fr auto; gap: 10px; align-items: end; }
+.man-grid .field input, .man-grid .field select { width: 100%; }
+.man-grid input[type="date"] { padding: 10px 10px; border-radius: 10px; border: 1px solid var(--line); background: var(--surface-2); color: var(--text); font: inherit; }
+@media (max-width: 760px) { .man-grid { grid-template-columns: 1fr 1fr; } .man-grid .btn { grid-column: 1 / -1; justify-content: center; } }
