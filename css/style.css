@@ -2060,3 +2060,18 @@ main:focus { outline: none; }
 .pw-dots i.on { background: var(--accent); }
 .plan-week p { margin: 6px 0 0; font-size: .9rem; color: var(--muted); }
 .pw-new { color: var(--accent); font-weight: 600; }
+
+/* ---------- Readable colours (WCAG contrast 4.5:1 for small text) ----------
+   Light theme: darker green / red / orange for small coloured text. Dark theme: lighter versions. */
+.myth-face.front small { color: #b91c1c; }
+.myth-face.back small, .wk-vs b.up, .w-change.down { color: #166534; }
+.pg-stat.hot b, .pg-stat.hot .ic { color: #c2410c; }
+.btn.ghost.danger { color: #b91c1c; }
+@media (prefers-color-scheme: dark) {
+  :root:not([data-theme="light"]) .myth-face.front small, :root:not([data-theme="light"]) .btn.ghost.danger { color: #f87171; }
+  :root:not([data-theme="light"]) .myth-face.back small, :root:not([data-theme="light"]) .wk-vs b.up, :root:not([data-theme="light"]) .w-change.down { color: #4ade80; }
+  :root:not([data-theme="light"]) .pg-stat.hot b, :root:not([data-theme="light"]) .pg-stat.hot .ic { color: #fb923c; }
+}
+:root[data-theme="dark"] .myth-face.front small, :root[data-theme="dark"] .btn.ghost.danger { color: #f87171; }
+:root[data-theme="dark"] .myth-face.back small, :root[data-theme="dark"] .wk-vs b.up, :root[data-theme="dark"] .w-change.down { color: #4ade80; }
+:root[data-theme="dark"] .pg-stat.hot b, :root[data-theme="dark"] .pg-stat.hot .ic { color: #fb923c; }
