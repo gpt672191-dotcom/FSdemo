@@ -36,6 +36,7 @@ const COACH_T = {
     badges: "ดูความคืบหน้า วันต่อเนื่อง ปฏิทินการฝึก และ <b>เหรียญรางวัล 9 เหรียญ</b> ได้ในหน้าข้อมูลส่วนตัว ออกกำลังกายด้วยโหมดนำ ระบบจะบันทึกให้เอง",
     library: "ดูท่าทั้งหมด 55 ท่าได้ที่คลังท่าในหน้าสร้างกล้าม ค้นหาชื่อท่า หรือกรองตามส่วนของร่างกายและอุปกรณ์ได้",
     install: "ติดตั้งเว็บนี้เป็นแอปได้ครับ<br>Android: เมนู Chrome แล้วเลือก \"เพิ่มลงในหน้าจอหลัก\"<br>iPhone: ปุ่มแชร์ใน Safari แล้วเลือก \"เพิ่มไปยังหน้าจอโฮม\"<br>เปิดหน้าที่เคยดูได้แม้ไม่มีเน็ต",
+    progressA: "ร่างกายต้องการความท้าทายเพิ่มทีละน้อยครับ แผนในเว็บเพิ่มให้อัตโนมัติ (สัปดาห์ละ +1 ครั้งต่อเซ็ต และ +5 วินาทีในท่าจับเวลา จนครบ 4 สัปดาห์)<br>ถ้ายังง่ายไป: กด \"เปลี่ยนท่า\" เป็นท่าที่ยากขึ้น ดูท่ายากขึ้นในหน้าต่างรายละเอียดท่า หรือสร้างแผนใหม่ระดับกลาง<br>หลังจบแต่ละครั้งตอบว่า \"ง่ายไป\" ระบบจะแนะนำเพิ่มระดับให้",
     linkForYou: "หน้าแนะนำ", linkLib: "คลังท่า", linkProgress: "ความคืบหน้า"
   },
   en: {
@@ -71,6 +72,7 @@ const COACH_T = {
     badges: "Your progress, streak, training calendar and <b>9 badges</b> are on your profile page. Guided workouts are logged automatically.",
     library: "All 55 exercises are in the library on the Build muscle page. Search by name or filter by body part and equipment.",
     install: "You can install this site as an app.<br>Android: Chrome menu, then \"Add to Home screen\"<br>iPhone: Share button in Safari, then \"Add to Home Screen\"<br>Pages you've opened work offline too.",
+    progressA: "Your body needs a little more challenge over time. Your plan here steps up automatically (+1 rep per set and +5 s on timed moves each week for 4 weeks).<br>Still too easy? Use \"Swap move\" to pick a harder one, check the harder version in the exercise window, or make an intermediate plan.<br>Answer \"Too easy\" after workouts and we'll suggest moving up.",
     linkForYou: "For you", linkLib: "Exercise library", linkProgress: "Progress"
   }
 };
@@ -93,6 +95,7 @@ const KW = {
   warm: ["วอร์ม", "อบอุ่นร่างกาย", "คูลดาวน์", "warm up", "warm-up", "warmup", "cool down", "cool-down"],
   remind: ["เตือน", "ปฏิทิน", "ลืม", "remind", "calendar", "forget"],
   badges: ["เหรียญ", "รางวัล", "ความคืบหน้า", "ต่อเนื่อง", "badge", "progress", "streak", "achievement"],
+  progress: ["เพิ่มความหนัก", "ง่ายไป", "ไม่หนักแล้ว", "ไม่เหนื่อย", "ไม่เห็นผล", "ทำยังไงต่อ", "ขั้นต่อไป", "progress", "too easy", "plateau", "next step", "harder"],
   library: ["ท่าทั้งหมด", "คลังท่า", "ค้นหาท่า", "all exercise", "exercise list", "library"],
   install: ["ติดตั้ง", "แอป", "หน้าจอหลัก", "ออฟไลน์", "install", " app", "home screen", "offline"],
   sleep: ["นอน", "พักผ่อน", "sleep", "rest"],
@@ -160,6 +163,7 @@ function reply(raw) {
   if (has(m, KW.warm)) return { text: tx.warm, ex: ["march", "wgs", "hamstring", "child"], links: links(["planner.html", tx.linkPlan]) };
   if (has(m, KW.remind)) return { text: tx.remind, links: links(["planner.html#plan", tx.linkPlan]) };
   if (has(m, KW.badges)) return { text: tx.badges, links: links(["profile.html#progress", tx.linkProgress]) };
+  if (has(m, KW.progress)) return { text: tx.progressA, links: links(["planner.html#plan", tx.linkPlan], ["muscle.html#allex", tx.linkLib]) };
   if (has(m, KW.library)) return { text: tx.library, links: links(["muscle.html#allex", tx.linkLib]) };
   if (has(m, KW.install)) return { text: tx.install };
 

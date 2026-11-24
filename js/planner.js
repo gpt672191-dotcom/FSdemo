@@ -303,7 +303,7 @@ function savePlan() {
   if (u.plans.some(p => p.seed === lastPlan.seed && JSON.stringify(p.answers) === JSON.stringify(lastPlan.answers))) {
     toast(tx.alreadySaved); return;
   }
-  u.plans.unshift({ answers: lastPlan.answers, seed: lastPlan.seed, savedAt: Date.now(), ...(lastPlan.swaps ? { swaps: lastPlan.swaps } : {}) });
+  u.plans.unshift({ answers: lastPlan.answers, seed: lastPlan.seed, savedAt: Date.now(), created: lastPlan.created || Date.now(), ...(lastPlan.swaps ? { swaps: lastPlan.swaps } : {}) });
   setUsers(users);
   renderSaved();
   toast(tx.savedMsg);
@@ -339,7 +339,7 @@ $("#savedList").addEventListener("click", e => {
   if (!u) return;
   if (openI !== undefined) {
     const p = u.plans[+openI];
-    lastPlan = { answers: p.answers, seed: p.seed, ...(p.swaps ? { swaps: p.swaps } : {}) };
+    lastPlan = { answers: p.answers, seed: p.seed, created: p.created || p.savedAt || Date.now(), ...(p.swaps ? { swaps: p.swaps } : {}) };
     answers = { ...p.answers };
     store.set("fs-plan", lastPlan); store.set("fs-answers", answers);
     renderChips(); renderPlan();

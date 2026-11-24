@@ -92,7 +92,7 @@ function cleanImport(d) {
   const okAnswers = a => a && typeof a === "object" && Object.keys(OPTIONS).every(k => a[k] === undefined || OPTIONS[k].includes(String(a[k])));
   const p = obj(d.profile);
   return {
-    plans: arr(d.plans).filter(x => x && num(x.seed, 0, 1e10) && okAnswers(x.answers)).map(x => ({ answers: { ...DEFAULTS, ...x.answers }, seed: x.seed, savedAt: num(x.savedAt, 0, 1e14) ? x.savedAt : Date.now(),
+    plans: arr(d.plans).filter(x => x && num(x.seed, 0, 1e10) && okAnswers(x.answers)).map(x => ({ answers: { ...DEFAULTS, ...x.answers }, seed: x.seed, savedAt: num(x.savedAt, 0, 1e14) ? x.savedAt : Date.now(), ...(num(x.created, 0, 1e14) ? { created: x.created } : {}),
       swaps: Object.fromEntries(Object.entries(obj(x.swaps)).filter(([k, v]) => /^\d{1,2},\d{1,2}$/.test(k) && EX.some(e => e.id === v))) })),
     log: arr(d.log).filter(x => x && isDay(x.d)).map(x => ({ d: x.d, t: String(x.t || "").slice(0, 80), sets: num(x.sets, 0, 500) ? x.sets : 0, mins: num(x.mins, 0, 600) ? Math.round(x.mins) : 0,
       ...(["easy", "ok", "hard"].includes(x.feel) ? { feel: x.feel } : {}) })),
