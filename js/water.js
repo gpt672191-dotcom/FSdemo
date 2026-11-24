@@ -27,8 +27,10 @@ function renderWater() {
   const tx = wt(), g = waterGoal(u), n = (u.water || {})[dayStr()] || 0, pc = Math.min(100, Math.round(n / g * 100));
   const glasses = [...Array(Math.max(g, n))].map((_, i) =>
     `<button type="button" class="wt-glass${i < n ? " on" : ""}${i >= g ? " extra" : ""}" data-i="${i}" aria-label="${tx.glass(i + 1, i < n)}" aria-pressed="${i < n}">${icon("droplet")}</button>`).join("");
+  const vals = [];
   const week = [...Array(7)].map((_, k) => { const d = new Date(); d.setDate(d.getDate() - (6 - k)); const v = (u.water || {})[dayStr(d)] || 0;
-    return `<div class="wt-day" title="${dayStr(d)}: ${v}"><i style="height:${Math.min(100, v / g * 100)}%"></i><small>${d.toLocaleDateString(lang === "th" ? "th-TH" : "en-GB", { weekday: "narrow" })}</small></div>`; }).join("");
+    vals.push(v);
+    return `<div class="wt-day${v >= g ? " ok" : ""}" title="${dayStr(d)}: ${v}"><i style="height:${Math.min(100, v / g * 100)}%"></i><small>${d.toLocaleDateString(lang === "th" ? "th-TH" : "en-GB", { weekday: "narrow" })}</small></div>`; }).join("");
   box.innerHTML = `
     <h2 class="panel-title">${icon("droplet")} ${tx.title}</h2>
     <p class="wt-goal">${tx.goal(g, g * GLASS)}</p>
@@ -41,7 +43,7 @@ function renderWater() {
     </div>
     <div class="wt-bar" role="progressbar" aria-valuemin="0" aria-valuemax="100" aria-valuenow="${pc}"><i style="width:${pc}%"></i></div>
     <div class="wt-glasses">${glasses}</div>
-    <div class="wt-week" aria-label="${tx.week}">${week}</div>
+    <div class="wt-week" role="img" aria-label="${tx.week}: ${vals.join(", ")} / ${g}">${week}</div>
     <p class="hint">${tx.note}</p>`;
 }
 onRender(renderWater);

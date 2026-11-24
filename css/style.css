@@ -2189,3 +2189,4 @@ body:not(:has(> header)) { padding-top: 65px; }
 /* protein: 7-day bars in the protein colours; days that reached the goal are green */
 .pr-week .wt-day i { background: linear-gradient(180deg, #f0abfc, #f59e0b); }
 .pr-week .wt-day.ok i { background: #16a34a; }
+.wt-week:not(.pr-week) .wt-day.ok i { background: #16a34a; } /* water: days the goal was reached */
